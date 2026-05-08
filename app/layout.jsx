@@ -2,6 +2,7 @@ import { ThemeProvider } from "../components/theme-provider.jsx"
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "../components/header.jsx"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <Header />
+          <Toaster />
 
           {/* Fixed: Added pt-16 so content isn't hidden under the fixed header */}
           <main className="min-h-screen pt-16">
