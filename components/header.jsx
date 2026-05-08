@@ -20,7 +20,10 @@ export default async function Header() {
                 <nav className="flex items-center gap-4">
                     {user ? (
                         <div className="flex items-center gap-4">
-                            <span className="hidden md:inline text-sm text-muted-foreground">
+                            <Link href="/profile" className="hidden md:inline text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">
+                                Profile
+                            </Link>
+                            <span className="hidden md:inline text-sm text-muted-foreground border-l pl-4">
                                 {user.email}
                             </span>
                             <form action={signout}>
