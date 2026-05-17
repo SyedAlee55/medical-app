@@ -22,10 +22,12 @@ export default function VerifyMfaPage() {
         return
       }
 
-      // Self-cleaning: if there is an unverified factor in 'all' list, unenroll it
-      const unverified = data.all?.find(f => f.status === 'unverified')
-      if (unverified) {
-        await supabase.auth.mfa.unenroll({ factorId: unverified.id })
+      // Self-cleaning: unenroll ALL unverified factors to prevent friendly name conflicts
+      const unverifiedFactors = data.all?.filter(f => f.status === 'unverified') || []
+      if (unverifiedFactors.length > 0) {
+        for (const factor of unverifiedFactors) {
+          await supabase.auth.mfa.unenroll({ factorId: factor.id })
+        }
         
         // Re-fetch factors after deletion
         const { data: refetched, error: refetchError } = await supabase.auth.mfa.listFactors()
