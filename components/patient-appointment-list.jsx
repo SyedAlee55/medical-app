@@ -43,7 +43,7 @@ export default function PatientAppointmentList({ initialAppointments, userId }) 
         switch (status) {
             case 'pending':
                 return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-yellow-200">Pending Approval</Badge>
-            case 'accepted':
+            case 'confirmed':
                 return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">Confirmed</Badge>
             case 'rejected':
                 return <Badge className="bg-red-100 text-red-700 hover:bg-red-100 border-red-200">Declined</Badge>
@@ -87,7 +87,7 @@ export default function PatientAppointmentList({ initialAppointments, userId }) 
                             <div className="flex flex-col gap-1 text-sm text-slate-500">
                                 <div className="flex items-center gap-2">
                                     <Calendar className="h-4 w-4" />
-                                    {format(new Date(apt.appointment_date), 'PPPP p')}
+                                    {format(new Date(apt.scheduled_at), 'MMM d, yyyy • h:mm a')}
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Stethoscope className="h-4 w-4" />

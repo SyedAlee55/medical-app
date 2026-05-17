@@ -1,7 +1,5 @@
-// app/patient/onboarding/page.jsx
-"use client"
-
-import { useRouter } from 'next/navigation'
+import { createClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -9,20 +7,15 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { updatePatientProfile } from './actions'
 
-export default function PatientOnboarding() {
-    const router = useRouter()
+export default async function PatientOnboardingPage({ searchParams }) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) redirect('/login')
 
-    async function handleSubmit(event) {
-        event.preventDefault()
-        const formData = new FormData(event.currentTarget)
 
-        try {
-            await updatePatientProfile(formData)
-            router.push('/patient/dashboard')
-        } catch (error) {
-            alert("Error updating profile. Please try again.")
-        }
-    }
+
+    const params = await searchParams
+    const hasError = params?.error === 'save_failed'
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
@@ -35,7 +28,12 @@ export default function PatientOnboarding() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    {hasError && (
+                        <div className="mb-4 p-3 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-md animate-in fade-in duration-300">
+                            Something went wrong saving your profile. Please try again.
+                        </div>
+                    )}
+                    <form action={updatePatientProfile} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="dob">Date of Birth</Label>
@@ -43,11 +41,17 @@ export default function PatientOnboarding() {
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="gender">Gender</Label>
-                                <select name="gender" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" required>
+                                <select 
+                                    id="gender"
+                                    name="gender" 
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" 
+                                    required
+                                >
                                     <option value="">Select...</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                     <option value="other">Other</option>
+                                    <option value="prefer_not_to_say">Prefer not to say</option>
                                 </select>
                             </div>
                         </div>

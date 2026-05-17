@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { createAppointment } from '@/app/patient/dashboard/book/actions'
+import { bookAppointment } from '@/app/appointments/actions'
 
 export default function BookingForm({ specialties, doctors }) {
     const [loading, setLoading] = useState(false)
@@ -17,9 +17,23 @@ export default function BookingForm({ specialties, doctors }) {
 
     async function handleSubmit(formData) {
         setLoading(true)
-        const result = await createAppointment(formData)
-        if (result?.error) {
-            alert(result.error)
+        
+        // Convert local datetime to UTC ISO string for absolute time storage
+        const dateValue = formData.get('scheduledAt')
+        if (dateValue) {
+            formData.set('scheduledAt', new Date(dateValue).toISOString())
+        }
+
+        // Note: bookAppointment returns a redirect on success, or redirect with error param
+        // To handle errors properly via standard UI we can just await it since redirect throws
+        try {
+            await bookAppointment(formData)
+        } catch (error) {
+            // Next.js redirect throws an error, so we let it propagate if it's a redirect
+            if (error?.message?.includes('NEXT_REDIRECT')) {
+                throw error;
+            }
+            alert(error.message)
         }
         setLoading(false)
     }
@@ -32,7 +46,7 @@ export default function BookingForm({ specialties, doctors }) {
                     <div className="space-y-2">
                         <label className="text-sm font-medium">1. Select Specialty</label>
                         <Select 
-                            name="specialty_id" 
+                            name="specialtyId" 
                             required 
                             onValueChange={(val) => {
                                 setSelectedSpecialty(val)
@@ -56,7 +70,7 @@ export default function BookingForm({ specialties, doctors }) {
                     <div className="space-y-2">
                         <label className="text-sm font-medium">2. Select Doctor</label>
                         <Select 
-                            name="doctor_id" 
+                            name="doctorId" 
                             required 
                             disabled={!selectedSpecialty}
                             value={selectedDoctor}
@@ -93,7 +107,12 @@ export default function BookingForm({ specialties, doctors }) {
 
                     <div className="space-y-2">
                         <label className="text-sm font-medium">3. Appointment Date & Time</label>
-                        <Input type="datetime-local" name="date" required />
+                        <Input 
+                            type="datetime-local" 
+                            name="scheduledAt" 
+                            required 
+                            min={new Date().toISOString().slice(0, 16)} // Prevents selecting past dates
+                        />
                     </div>
 
                     <div className="space-y-2">

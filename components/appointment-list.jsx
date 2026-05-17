@@ -5,8 +5,9 @@ import { createClient } from '@/utils/supabase/client'
 import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { updateAppointmentStatus } from '@/app/actions/appointments'
-import { Check, X, Loader2 } from 'lucide-react'
+import { respondToAppointment } from '@/app/appointments/actions'
+import { Check, Trash2, Loader2, Info } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function AppointmentList({ initialAppointments, userId }) {
     const [appointments, setAppointments] = useState(initialAppointments)
@@ -25,12 +26,23 @@ export default function AppointmentList({ initialAppointments, userId }) {
                     filter: `doctor_id=eq.${userId}`
                 },
                 (payload) => {
+                    const now = new Date()
                     if (payload.eventType === 'INSERT') {
-                        setAppointments((prev) => [payload.new, ...prev])
+                        // Add if pending/confirmed AND in the future
+                        const isFuture = new Date(payload.new.scheduled_at) >= now
+                        if (['pending', 'confirmed'].includes(payload.new.status) && !payload.new.deleted_at && isFuture) {
+                            setAppointments((prev) => [payload.new, ...prev])
+                        }
                     } else if (payload.eventType === 'UPDATE') {
-                        setAppointments((prev) =>
-                            prev.map(apt => apt.id === payload.new.id ? { ...apt, ...payload.new } : apt)
-                        )
+                        const isFuture = new Date(payload.new.scheduled_at) >= now
+                        // Remove if rejected, deleted, cancelled, or past
+                        if (['rejected', 'cancelled'].includes(payload.new.status) || payload.new.deleted_at || !isFuture) {
+                            setAppointments((prev) => prev.filter(apt => apt.id !== payload.new.id))
+                        } else {
+                            setAppointments((prev) =>
+                                prev.map(apt => apt.id === payload.new.id ? { ...apt, ...payload.new } : apt)
+                            )
+                        }
                     }
                 }
             )
@@ -39,95 +51,90 @@ export default function AppointmentList({ initialAppointments, userId }) {
         return () => supabase.removeChannel(channel)
     }, [userId, supabase])
 
-    async function handleStatusUpdate(id, status) {
-        setProcessingId(id)
-        const result = await updateAppointmentStatus(id, status)
-        if (result.error) {
-            alert(result.error)
-        }
-        setProcessingId(null)
-    }
-
-    const getStatusBadge = (status) => {
-        switch (status) {
-            case 'pending':
-                return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-yellow-200">Pending</Badge>
-            case 'accepted':
-                return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">Accepted</Badge>
-            case 'rejected':
-                return <Badge className="bg-red-100 text-red-700 hover:bg-red-100 border-red-200">Rejected</Badge>
-            default:
-                return <Badge variant="outline">{status}</Badge>
-        }
-    }
-
-    if (appointments.length === 0) {
-        return <p className="text-slate-500 text-sm py-4">No appointments scheduled today.</p>
-    }
-
     return (
         <div className="space-y-4">
-            {appointments.map((apt) => (
-                <div key={apt.id} className="flex flex-col md:flex-row md:items-center justify-between p-5 bg-white border rounded-xl shadow-sm gap-4">
-                    <div className="flex-1">
-                        <div className="flex flex-wrap items-center gap-3 mb-1">
-                            <p className="font-bold text-slate-900 text-lg">
-                                {apt.profiles?.full_name || 'New Patient'}
-                            </p>
-                            {getStatusBadge(apt.status)}
-                            {apt.specialties?.name && (
-                                <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-blue-100">
-                                    {apt.specialties.name}
-                                </Badge>
-                            )}
-                        </div>
-                        <p className="text-sm text-slate-500 font-medium">
-                            {format(new Date(apt.appointment_date), 'PPP p')}
-                        </p>
-                        <p className="text-sm text-slate-600 mt-2 line-clamp-2">
-                            <span className="font-semibold text-slate-400 mr-1">Reason:</span>
-                            {apt.reason_for_visit}
-                        </p>
+            {appointments.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+                    <div className="bg-slate-100 p-4 rounded-full mb-4">
+                        <Check className="h-8 w-8 text-slate-400" />
                     </div>
+                    <h3 className="text-lg font-semibold text-slate-900">No upcoming consultations</h3>
+                    <p className="text-slate-500 max-w-xs mx-auto text-sm">
+                        All set! New patient requests will appear here in real-time.
+                    </p>
+                </div>
+            ) : (
+                appointments.map((apt) => (
+                    <div key={apt.id} className="flex flex-col md:flex-row md:items-center justify-between p-5 bg-white border rounded-xl shadow-sm gap-4 transition-all hover:border-blue-200 dark:bg-slate-900 dark:border-slate-800">
+                        <div className="flex-1">
+                            <div className="flex flex-wrap items-center gap-3 mb-1">
+                                <p className="font-bold text-slate-900 text-lg">
+                                    {apt.profiles?.full_name || 'Patient'}
+                                </p>
+                                {apt.status === 'pending' ? (
+                                    <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-yellow-200">Pending</Badge>
+                                ) : (
+                                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">Confirmed</Badge>
+                                )}
+                                {apt.specialties?.name && (
+                                    <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-blue-100">
+                                        {apt.specialties.name}
+                                    </Badge>
+                                )}
+                            </div>
+                            <p className="text-sm text-slate-500 font-medium">
+                                {format(new Date(apt.scheduled_at), 'MMM d, yyyy • h:mm a')}
+                            </p>
+                            <div className="flex items-start gap-2 mt-2">
+                                <Info className="h-4 w-4 text-slate-300 mt-0.5" />
+                                <p className="text-sm text-slate-600 italic">
+                                    {apt.reason_for_visit}
+                                </p>
+                            </div>
+                        </div>
 
-                    <div className="flex items-center gap-2">
-                        {apt.status === 'pending' && (
-                            <>
+                        <div className="flex items-center gap-2">
+                            {apt.status === 'pending' && (
+                                <form action={respondToAppointment}>
+                                    <input type="hidden" name="appointmentId" value={apt.id} />
+                                    <input type="hidden" name="status" value="confirmed" />
+                                    <Button
+                                        type="submit"
+                                        size="sm"
+                                        className="bg-blue-600 hover:bg-blue-700 text-white gap-2 px-4"
+                                        onClick={() => setProcessingId(apt.id)}
+                                        disabled={!!processingId}
+                                    >
+                                        {processingId === apt.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                                        Accept
+                                    </Button>
+                                </form>
+                            )}
+
+                            <form action={respondToAppointment}>
+                                <input type="hidden" name="appointmentId" value={apt.id} />
+                                <input type="hidden" name="status" value="rejected" />
                                 <Button
-                                    size="sm"
-                                    className="bg-green-600 hover:bg-green-700 text-white gap-1"
-                                    disabled={!!processingId}
-                                    onClick={() => handleStatusUpdate(apt.id, 'accepted')}
-                                >
-                                    {processingId === apt.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                                    Accept
-                                </Button>
-                                <Button
+                                    type="submit"
                                     size="sm"
                                     variant="outline"
-                                    className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 gap-1"
+                                    className="border-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 gap-2 px-4"
+                                    onClick={() => {
+                                        setProcessingId(apt.id)
+                                        // Optimistic hide
+                                        setAppointments(prev => prev.filter(a => a.id !== apt.id))
+                                    }}
                                     disabled={!!processingId}
-                                    onClick={() => handleStatusUpdate(apt.id, 'rejected')}
+                                    title="Reject Appointment"
                                 >
-                                    {processingId === apt.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
-                                    Reject
+                                    <Trash2 className="h-4 w-4" />
+                                    {apt.status === 'confirmed' ? 'Cancel' : 'Reject'}
                                 </Button>
-                            </>
-                        )}
-                        {apt.status !== 'pending' && (
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                className="text-slate-400"
-                                onClick={() => handleStatusUpdate(apt.id, 'pending')}
-                                disabled={!!processingId}
-                            >
-                                Undo
-                            </Button>
-                        )}
+                            </form>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))
+            )}
         </div>
     )
 }
