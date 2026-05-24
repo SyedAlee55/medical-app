@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "../components/header.jsx"
 import { Toaster } from "@/components/ui/sonner"
+import LayoutShell from "@/components/layout-shell"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,7 +14,6 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    // Fixed: Ensure suppressHydrationWarning is on the <html> tag
     <html lang="en" suppressHydrationWarning className={`${inter.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <ThemeProvider
@@ -22,22 +22,22 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
+          {/* Toaster is always present across all routes */}
           <Toaster />
 
-          {/* Fixed: Added pt-16 so content isn't hidden under the fixed header */}
-          <main className="min-h-screen pt-16">
+          {/*
+            LayoutShell passes <Header /> as a prop (not an import inside a
+            client component) — the correct Next.js pattern for using a Server
+            Component inside a Client Component. On the landing page (/) the
+            shell is bypassed entirely; all other routes get the standard
+            Header + padded main + footer wrapper.
+          */}
+          <LayoutShell header={<Header />}>
             {children}
-          </main>
-
-          <footer className="bg-muted/50 py-12">
-            <div className="container mx-auto px-4 text-center text-gray-200">
-              <p>Made by Alee</p>
-            </div>
-          </footer>
+          </LayoutShell>
 
         </ThemeProvider>
       </body>
     </html>
   );
-}
+}

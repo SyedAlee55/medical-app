@@ -1,10 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { saveDoctorProfile } from './actions'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
 
 export default async function DoctorOnboardingPage({ searchParams }) {
   const supabase = await createClient()
@@ -28,41 +24,93 @@ export default async function DoctorOnboardingPage({ searchParams }) {
   const hasError = params?.error === 'save_failed'
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <Card className="w-full max-w-lg border-t-4 border-t-blue-600 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold text-slate-800">
-            Complete your professional profile
-          </CardTitle>
-          <p className="text-sm text-slate-500">
+    <div className="min-h-screen bg-[#f8faff] flex items-center justify-center p-6">
+      <div className="bg-white rounded-2xl shadow-sm border border-zinc-100 p-8 w-full max-w-lg">
+        {/* Progress indicator */}
+        <div className="flex items-center justify-between mb-8 max-w-xs mx-auto">
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 font-semibold text-sm flex items-center justify-center">
+              1
+            </div>
+            <span className="text-[10px] text-zinc-400 font-semibold tracking-wider uppercase">Account</span>
+          </div>
+          <div className="flex-1 h-0.5 bg-brand-100 mx-2 -mt-4" />
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="w-8 h-8 rounded-full bg-brand-600 text-white font-semibold text-sm flex items-center justify-center">
+              2
+            </div>
+            <span className="text-[10px] text-brand-600 font-semibold tracking-wider uppercase">Profile</span>
+          </div>
+          <div className="flex-1 h-0.5 bg-zinc-100 mx-2 -mt-4" />
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="w-8 h-8 rounded-full bg-zinc-100 text-zinc-400 font-semibold text-sm flex items-center justify-center">
+              3
+            </div>
+            <span className="text-[10px] text-zinc-400 font-semibold tracking-wider uppercase">Review</span>
+          </div>
+        </div>
+
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h2 className="type-h3 text-zinc-900 font-bold">Complete your professional profile</h2>
+          <p className="type-body text-zinc-500 text-sm mt-1.5">
             Your profile will be reviewed by the administrator before your account is activated.
           </p>
-        </CardHeader>
-        <CardContent>
-          {hasError && (
-            <div className="mb-4 p-3 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-md">
-              Something went wrong saving your profile. Please try again.
-            </div>
-          )}
-          <form action={saveDoctorProfile} className="grid gap-4">
+        </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="full_name">Full name</Label>
-              <Input id="full_name" name="full_name" defaultValue={profile.full_name || ''} required />
+        {hasError && (
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
+            Something went wrong saving your profile. Please try again.
+          </div>
+        )}
+
+        {/* Form */}
+        <form action={saveDoctorProfile} className="flex flex-col gap-5">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="full_name" className="type-label">Full name</label>
+            <input
+              id="full_name"
+              name="full_name"
+              type="text"
+              defaultValue={profile.full_name || ''}
+              required
+              className="w-full rounded-lg border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="phone" className="type-label">Phone number</label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                defaultValue={profile.phone || ''}
+                className="w-full rounded-lg border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+              />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="phone">Phone number</Label>
-              <Input id="phone" name="phone" type="tel" defaultValue={profile.phone || ''} />
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="employee_id" className="type-label">Employee ID</label>
+              <input
+                id="employee_id"
+                name="employee_id"
+                type="text"
+                defaultValue={profile.employee_id || ''}
+                placeholder="Your hospital-issued ID"
+                className="w-full rounded-lg border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+              />
             </div>
+          </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="specialty_id">Specialty</Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="specialty_id" className="type-label">Specialty</label>
               <select
                 id="specialty_id"
                 name="specialty_id"
                 defaultValue={profile.specialty_id || ''}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full rounded-lg border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition bg-white"
               >
                 <option value="">Select a specialty</option>
                 {specialties?.map(s => (
@@ -71,35 +119,39 @@ export default async function DoctorOnboardingPage({ searchParams }) {
               </select>
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="department">Department</Label>
-              <Input id="department" name="department" defaultValue={profile.department || ''} placeholder="e.g. Cardiology" />
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="bio">Bio</Label>
-              <textarea
-                id="bio"
-                name="bio"
-                rows={3}
-                defaultValue={profile.bio || ''}
-                placeholder="Brief professional background and qualifications..."
-                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="department" className="type-label">Department</label>
+              <input
+                id="department"
+                name="department"
+                type="text"
+                defaultValue={profile.department || ''}
+                placeholder="e.g. Cardiology"
+                className="w-full rounded-lg border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
               />
             </div>
+          </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="employee_id">Employee ID</Label>
-              <Input id="employee_id" name="employee_id" defaultValue={profile.employee_id || ''} placeholder="Your hospital-issued ID" />
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="bio" className="type-label">Bio</label>
+            <textarea
+              id="bio"
+              name="bio"
+              rows={3}
+              defaultValue={profile.bio || ''}
+              placeholder="Brief professional background and qualifications..."
+              className="w-full rounded-lg border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition min-h-[100px] resize-y"
+            />
+          </div>
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 mt-2">
-              Submit profile for review
-            </Button>
-
-          </form>
-        </CardContent>
-      </Card>
+          <button
+            type="submit"
+            className="w-full bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg py-3 text-base transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(6,148,162,0.3)] active:scale-[0.98] cursor-pointer mt-2"
+          >
+            Submit profile for review
+          </button>
+        </form>
+      </div>
     </div>
   )
 }
