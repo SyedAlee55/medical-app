@@ -1,42 +1,25 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import BookingForm from './BookingForm'
+import { CheckCircle2, AlertCircle, ExternalLink, Calendar, Clock, TrendingUp, XCircle } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 function parseExternalReason(reason) {
   if (reason && reason.startsWith('[External:')) {
-    const match = reason.match(/^\[External:\s*([^,\]]+)(?:,\s*([^\]]+))?\]\s*(.*)$/);
-    if (match) {
-      return {
-        isExternal: true,
-        name: match[1],
-        contact: match[2] || '',
-        reason: match[3]
-      };
-    }
+    const match = reason.match(/^\[External:\s*([^,\]]+)(?:,\s*([^\]]+))?\]\s*(.*)$/)
+    if (match) return { isExternal: true, name: match[1], contact: match[2] || '', reason: match[3] }
   }
-  return {
-    isExternal: false,
-    name: '',
-    contact: '',
-    reason: reason || ''
-  };
+  return { isExternal: false, name: '', contact: '', reason: reason || '' }
 }
 
-const getStatusBadge = (status) => {
-  switch (status) {
-    case 'completed': return <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">Completed</Badge>
-    case 'confirmed': return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Confirmed</Badge>
-    case 'pending': return <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">Pending</Badge>
-    case 'cancelled': return <Badge className="bg-red-100 text-red-800 border-red-200">Cancelled</Badge>
-    case 'rejected': return <Badge className="bg-red-100 text-red-800 border-red-200">Rejected</Badge>
-    default: return <Badge variant="secondary" className="capitalize">{status}</Badge>
-  }
+const STATUS_CLASSES = {
+  completed: 'bg-zinc-50 text-zinc-600 border border-zinc-200',
+  confirmed: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
+  pending:   'bg-amber-50 text-amber-700 border border-amber-100',
+  cancelled: 'bg-red-50 text-red-700 border border-red-100',
+  rejected:  'bg-red-50 text-red-700 border border-red-100',
 }
 
 export default async function AdminAppointmentsPage({ searchParams }) {
@@ -61,7 +44,6 @@ export default async function AdminAppointmentsPage({ searchParams }) {
     { data: allAppointments },
     { data: doctors },
     { data: patients },
-    { data: specialties }
   ] = await Promise.all([
     supabase
       .from('appointments')
@@ -73,243 +55,221 @@ export default async function AdminAppointmentsPage({ searchParams }) {
       .order('scheduled_at', { ascending: false }),
     supabase.from('profiles').select('id, full_name, email, department, specialties(name)').eq('role', 'doctor').eq('status', 'active'),
     supabase.from('profiles').select('id, full_name, email').eq('role', 'patient').eq('status', 'active').neq('email', 'external_patient_placeholder@system.local'),
-    supabase.from('specialties').select('*')
   ])
 
   const appointments = allAppointments || []
 
-  // Derived Stats
-  const now = new Date()
+  // Derived stats
+  const now       = new Date()
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
-  const todayEnd = todayStart + 24 * 60 * 60 * 1000 - 1
+  const todayEnd   = todayStart + 24 * 60 * 60 * 1000 - 1
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime()
 
-  const totalToday = appointments.filter(a => {
-    const t = new Date(a.scheduled_at).getTime()
-    return t >= todayStart && t <= todayEnd
-  }).length
+  const totalToday         = appointments.filter(a => { const t = new Date(a.scheduled_at).getTime(); return t >= todayStart && t <= todayEnd }).length
+  const upcomingCount      = appointments.filter(a => ['pending','confirmed'].includes(a.status) && new Date(a.scheduled_at).getTime() >= now.getTime()).length
+  const completedThisMonth = appointments.filter(a => a.status === 'completed' && new Date(a.scheduled_at).getTime() >= monthStart).length
+  const cancelledThisMonth = appointments.filter(a => ['cancelled','rejected'].includes(a.status) && new Date(a.scheduled_at).getTime() >= monthStart).length
 
-  const upcomingCount = appointments.filter(a => 
-    ['pending', 'confirmed'].includes(a.status) && new Date(a.scheduled_at).getTime() >= now.getTime()
-  ).length
-
-  const completedThisMonth = appointments.filter(a => 
-    a.status === 'completed' && new Date(a.scheduled_at).getTime() >= monthStart
-  ).length
-
-  const cancelledThisMonth = appointments.filter(a => 
-    ['cancelled', 'rejected'].includes(a.status) && new Date(a.scheduled_at).getTime() >= monthStart
-  ).length
-
-  // Tab Filtering
+  // Tab filtering
   const activeTab = params?.tab || 'upcoming'
-
   let filteredAppointments = []
-  if (activeTab === 'upcoming') {
-    filteredAppointments = appointments
-      .filter(a => ['pending', 'confirmed'].includes(a.status) && new Date(a.scheduled_at).getTime() >= now.getTime())
-      .sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at)) // Soonest first
-  } else if (activeTab === 'completed') {
-    filteredAppointments = appointments.filter(a => a.status === 'completed')
-  } else if (activeTab === 'cancelled') {
-    filteredAppointments = appointments.filter(a => ['cancelled', 'rejected'].includes(a.status))
-  } else {
-    filteredAppointments = appointments
-  }
+  if (activeTab === 'upcoming')   filteredAppointments = appointments.filter(a => ['pending','confirmed'].includes(a.status) && new Date(a.scheduled_at).getTime() >= now.getTime()).sort((a,b) => new Date(a.scheduled_at)-new Date(b.scheduled_at))
+  else if (activeTab === 'completed') filteredAppointments = appointments.filter(a => a.status === 'completed')
+  else if (activeTab === 'cancelled') filteredAppointments = appointments.filter(a => ['cancelled','rejected'].includes(a.status))
+  else filteredAppointments = appointments
 
-  // Count Badges
   const counts = {
-    upcoming: upcomingCount,
+    upcoming:  upcomingCount,
     completed: appointments.filter(a => a.status === 'completed').length,
-    cancelled: appointments.filter(a => ['cancelled', 'rejected'].includes(a.status)).length,
-    all: appointments.length
+    cancelled: appointments.filter(a => ['cancelled','rejected'].includes(a.status)).length,
+    all:       appointments.length,
   }
-
   const tabs = [
-    { id: 'upcoming', label: 'Upcoming' },
+    { id: 'upcoming',  label: 'Upcoming'  },
     { id: 'completed', label: 'Completed' },
     { id: 'cancelled', label: 'Cancelled' },
-    { id: 'all', label: 'All' },
+    { id: 'all',       label: 'All'       },
   ]
-
-  // Error messaging map
   const errorMessages = {
-    missing_fields: "Please fill in all required fields",
-    past_datetime: "Appointment time must be in the future",
-    invalid_doctor: "Selected doctor is not available",
-    invalid_patient: "Selected patient account is not active",
-    create_failed: "An error occurred while booking the appointment"
+    missing_fields: 'Please fill in all required fields',
+    past_datetime:  'Appointment time must be in the future',
+    invalid_doctor: 'Selected doctor is not available',
+    invalid_patient:'Selected patient account is not active',
+    create_failed:  'An error occurred while booking the appointment',
   }
 
   return (
     <div className="space-y-8">
+      {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Appointments</h1>
-        <p className="text-zinc-500">Manage all appointments across the system.</p>
+        <h1 className="text-2xl font-extrabold text-zinc-900 tracking-tight">Appointments</h1>
+        <p className="type-body text-zinc-500 text-sm mt-0.5">Manage all appointments across the platform.</p>
       </div>
 
+      {/* Banners */}
       {params?.success === 'created' && (
-        <div className="p-3 text-sm font-medium text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-md">
-          Appointment successfully booked.
+        <div className="p-4 text-sm font-medium text-emerald-800 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center gap-2.5">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          <span>Appointment successfully booked.</span>
         </div>
       )}
-
       {params?.error && (
-        <div className="p-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-md">
-          {errorMessages[params.error] || "An unexpected error occurred."}
+        <div className="p-4 text-sm font-medium text-red-800 bg-red-50 border border-red-100 rounded-xl flex items-center gap-2.5">
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+          <span>{errorMessages[params.error] || 'An unexpected error occurred.'}</span>
         </div>
       )}
 
-      {/* External Requests Section */}
-      <Card className="border-l-4 border-l-indigo-600 bg-white dark:bg-zinc-900 shadow-sm">
-        <CardContent className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-zinc-50">External Appointment Requests</h2>
-            <p className="text-sm text-zinc-500 max-w-2xl">
-              Appointments booked via the public Calendly form are sent to the admin email. Review them there and use the &apos;Book New Appointment&apos; form below to add them into the system manually.
-            </p>
-          </div>
-          <Button asChild className="bg-indigo-600 hover:bg-indigo-700 text-white shrink-0">
-            <a 
-              href="https://calendly.com/app/scheduled_events" 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              Open Calendly Dashboard
-            </a>
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Section 1 - Summary Stats Bar */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-sm font-medium text-zinc-500 mb-1">Total Today</div>
-            <div className="text-2xl font-bold">{totalToday}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-sm font-medium text-zinc-500 mb-1">Upcoming</div>
-            <div className="text-2xl font-bold text-blue-600">{upcomingCount}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-sm font-medium text-zinc-500 mb-1">Completed (Month)</div>
-            <div className="text-2xl font-bold text-emerald-600">{completedThisMonth}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-sm font-medium text-zinc-500 mb-1">Cancelled (Month)</div>
-            <div className="text-2xl font-bold text-red-600">{cancelledThisMonth}</div>
-          </CardContent>
-        </Card>
+      {/* External Requests Notice */}
+      <div className="bg-white rounded-2xl border-l-4 border-l-brand-500 border border-zinc-100 shadow-sm p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-base font-semibold text-zinc-900">External Appointment Requests</h2>
+          <p className="text-xs text-zinc-500 mt-1 max-w-xl leading-relaxed">
+            Appointments booked via the public Calendly form are sent to the admin email. Review them there and use the &apos;Book New Appointment&apos; form below to add them into the system manually.
+          </p>
+        </div>
+        <a
+          href="https://calendly.com/app/scheduled_events"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg px-4 py-2.5 text-xs transition shadow-[0_1px_2px_rgba(0,0,0,0.08)] active:scale-[0.98] inline-flex items-center gap-1.5 shrink-0 cursor-pointer"
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+          Open Calendly Dashboard
+        </a>
       </div>
 
-      {/* Section 2 - Upcoming & Ongoing Appointments Table */}
-      <Card>
-        <div className="border-b border-zinc-200 dark:border-zinc-800 px-4 flex gap-6 overflow-x-auto">
+      {/* Summary stat cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        {[
+          { label: 'Total Today',        value: totalToday,         icon: Calendar,    colorClass: 'bg-zinc-50 text-zinc-500' },
+          { label: 'Upcoming',           value: upcomingCount,      icon: Clock,       colorClass: 'bg-brand-50 text-brand-600' },
+          { label: 'Completed (Month)',  value: completedThisMonth, icon: TrendingUp,  colorClass: 'bg-emerald-50 text-emerald-600' },
+          { label: 'Cancelled (Month)',  value: cancelledThisMonth, icon: XCircle,     colorClass: 'bg-red-50 text-red-600' },
+        ].map(({ label, value, icon: Icon, colorClass }) => (
+          <div key={label} className="bg-white rounded-2xl border border-zinc-100 p-5 flex items-center justify-between shadow-sm">
+            <div>
+              <p className="type-label text-zinc-400">{label}</p>
+              <h3 className="text-2xl font-bold text-zinc-900 mt-1">{value}</h3>
+            </div>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colorClass}`}>
+              <Icon className="w-5 h-5" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Appointments Table with tab bar */}
+      <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        {/* Tab bar */}
+        <div className="border-b border-zinc-100 px-6 flex gap-1 overflow-x-auto">
           {tabs.map(tab => (
-            <Link 
+            <Link
               key={tab.id}
               href={`/admin/appointments?tab=${tab.id}`}
-              className={`py-4 text-sm font-medium border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
-                activeTab === tab.id 
-                  ? 'border-slate-900 text-slate-900 dark:border-white dark:text-white' 
-                  : 'border-transparent text-zinc-500 hover:text-zinc-700 hover:border-zinc-300'
+              className={`py-4 px-3 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
+                activeTab === tab.id
+                  ? 'border-brand-500 text-brand-700'
+                  : 'border-transparent text-zinc-400 hover:text-zinc-700'
               }`}
             >
               {tab.label}
-              <span className={`px-2 py-0.5 rounded-full text-xs ${
-                activeTab === tab.id 
-                  ? 'bg-slate-100 text-slate-900 dark:bg-zinc-800 dark:text-zinc-100' 
-                  : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                activeTab === tab.id
+                  ? 'bg-brand-50 text-brand-700'
+                  : 'bg-zinc-100 text-zinc-500'
               }`}>
                 {counts[tab.id]}
               </span>
             </Link>
           ))}
         </div>
-        
+
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left whitespace-nowrap">
-            <thead className="bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 text-xs uppercase tracking-wide border-b border-zinc-200 dark:border-zinc-800">
-              <tr>
-                <th className="px-6 py-4 font-medium">Patient</th>
-                <th className="px-6 py-4 font-medium">Doctor</th>
-                <th className="px-6 py-4 font-medium">Date & Time</th>
-                <th className="px-6 py-4 font-medium">Reason</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-6 py-4 font-medium text-right">Actions</th>
+          <table className="w-full text-left border-collapse whitespace-nowrap">
+            <thead>
+              <tr className="bg-zinc-50 border-b border-zinc-100 text-zinc-400 font-semibold tracking-wider text-[10px] uppercase">
+                <th className="px-6 py-3">Patient</th>
+                <th className="px-6 py-3">Doctor</th>
+                <th className="px-6 py-3">Date &amp; Time</th>
+                <th className="px-6 py-3">Reason</th>
+                <th className="px-6 py-3">Status</th>
+                <th className="px-6 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+            <tbody className="divide-y divide-zinc-100 text-sm">
               {filteredAppointments.length > 0 ? (
                 filteredAppointments.map(a => {
-                  const parsed = parseExternalReason(a.reason_for_visit);
+                  const parsed = parseExternalReason(a.reason_for_visit)
+                  const statusClass = STATUS_CLASSES[a.status] || 'bg-zinc-50 text-zinc-600 border border-zinc-200'
                   return (
-                    <tr key={a.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
-                      <td className="px-6 py-4 font-medium text-slate-900 dark:text-zinc-100">
+                    <tr key={a.id} className="hover:bg-zinc-50/50 transition">
+                      <td className="px-6 py-4 font-semibold text-zinc-900">
                         {parsed.isExternal ? (
                           <div className="flex flex-col">
-                            <span className="font-semibold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
+                            <span className="flex items-center gap-1.5">
                               {parsed.name}
-                              <Badge className="bg-amber-100 text-amber-800 border-amber-200 text-[10px] py-0 px-1.5 h-4">External</Badge>
+                              <span className="bg-amber-50 text-amber-700 border border-amber-100 text-[10px] font-bold px-1.5 py-0.5 rounded-full">External</span>
                             </span>
-                            <span className="text-xs text-zinc-500 font-normal">{parsed.contact}</span>
+                            <span className="text-xs text-zinc-400 font-normal">{parsed.contact}</span>
                           </div>
                         ) : (
                           a.patient?.full_name || 'Unknown'
                         )}
                       </td>
-                      <td className="px-6 py-4">
-                        {a.doctor?.full_name || 'Unknown'}
-                      </td>
-                      <td className="px-6 py-4 text-zinc-600 dark:text-zinc-300">
+                      <td className="px-6 py-4 text-zinc-700">{a.doctor?.full_name || 'Unknown'}</td>
+                      <td className="px-6 py-4 text-xs font-medium text-zinc-500">
                         {new Date(a.scheduled_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
                       </td>
-                      <td className="px-6 py-4 max-w-[200px] truncate text-zinc-500" title={parsed.isExternal ? parsed.reason : a.reason_for_visit}>
-                        {parsed.isExternal ? parsed.reason : (a.reason_for_visit || '-')}
+                      <td className="px-6 py-4 max-w-[180px] truncate text-xs text-zinc-400" title={parsed.isExternal ? parsed.reason : a.reason_for_visit}>
+                        {parsed.isExternal ? parsed.reason : (a.reason_for_visit || '—')}
                       </td>
                       <td className="px-6 py-4">
-                        {getStatusBadge(a.status)}
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${statusClass}`}>
+                          {a.status}
+                        </span>
                       </td>
-                      <td className="px-6 py-4 flex justify-end gap-2">
-                        {parsed.isExternal ? (
-                          <Button variant="outline" size="sm" disabled>
-                            External Patient
-                          </Button>
-                        ) : (
-                          <Button variant="outline" size="sm" asChild>
-                            <Link href={`/admin/users/${a.patient_id}`}>View Patient</Link>
-                          </Button>
-                        )}
-                        <Button variant="outline" size="sm" asChild>
-                          <Link href={`/admin/users/${a.doctor_id}`}>View Doctor</Link>
-                        </Button>
+                      <td className="px-6 py-4">
+                        <div className="flex justify-end gap-2">
+                          {parsed.isExternal ? (
+                            <span className="border border-zinc-200 text-zinc-400 font-semibold rounded-lg px-2.5 py-1.5 text-xs">
+                              External Patient
+                            </span>
+                          ) : (
+                            <Link
+                              href={`/admin/users/${a.patient_id}`}
+                              className="border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer"
+                            >
+                              View Patient
+                            </Link>
+                          )}
+                          <Link
+                            href={`/admin/users/${a.doctor_id}`}
+                            className="border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer"
+                          >
+                            View Doctor
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   )
                 })
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
-                    {activeTab === 'upcoming' && 'No upcoming appointments scheduled.'}
+                  <td colSpan={6} className="px-6 py-14 text-center text-zinc-400 italic text-sm">
+                    {activeTab === 'upcoming'  && 'No upcoming appointments scheduled.'}
                     {activeTab === 'completed' && 'No completed appointments found.'}
                     {activeTab === 'cancelled' && 'No cancelled appointments found.'}
-                    {activeTab === 'all' && 'No appointments found.'}
+                    {activeTab === 'all'       && 'No appointments found.'}
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
 
-      {/* Section 3 - Book Appointment Form */}
+      {/* Book Appointment Form */}
       <BookingForm patients={patients || []} doctors={doctors || []} />
     </div>
   )

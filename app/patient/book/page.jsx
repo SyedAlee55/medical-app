@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import BookingInterface from './BookingInterface'
+import { AlertCircle, Filter, X } from 'lucide-react'
 
 export default async function BookAppointmentPage({ searchParams }) {
   const supabase = await createClient()
@@ -33,71 +33,77 @@ export default async function BookAppointmentPage({ searchParams }) {
   }
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
+    <div className="p-8 bg-zinc-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
+        
+        {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight">
             Book an Appointment
           </h1>
-          <p className="text-slate-500 mt-1">
+          <p className="type-body text-zinc-500 mt-1">
             Browse available doctors and send a consultation request.
           </p>
         </div>
 
+        {/* Error Banner */}
         {params?.error && (
-          <div className="mb-6 p-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg">
-            {errorMessages[params.error] || 'Something went wrong. Please try again.'}
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 flex items-center gap-2.5 animate-fade-in">
+            <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
+            <span>{errorMessages[params.error] || 'Something went wrong. Please try again.'}</span>
           </div>
         )}
 
-        {/* Specialty filter — URL param based, no client state */}
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <form method="GET" className="flex flex-wrap gap-3 items-end">
-              <div className="flex flex-col gap-1.5 flex-1 min-w-48">
-                <label className="text-xs font-medium text-slate-600">
-                  Filter by specialty
-                </label>
-                <select
-                  name="specialty"
-                  defaultValue={selectedSpecialtyId || ''}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <option value="">All specialties</option>
-                  {specialties?.map(s => (
-                    <option key={s.id} value={s.id}>{s.name}</option>
-                  ))}
-                </select>
-              </div>
+        {/* Specialty Filter Card */}
+        <div className="bg-white rounded-2xl border border-zinc-100 p-6 shadow-sm mb-6">
+          <form method="GET" className="flex flex-wrap gap-4 items-end">
+            <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
+              <label className="type-label">
+                Filter by specialty
+              </label>
+              <select
+                name="specialty"
+                defaultValue={selectedSpecialtyId || ''}
+                className="w-full rounded-lg border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+              >
+                <option value="">All specialties</option>
+                {specialties?.map(s => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="flex items-center gap-2">
               <button
                 type="submit"
-                className="h-10 px-4 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium"
+                className="bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg px-5 py-2.5 text-sm transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.08)] active:scale-[0.98] inline-flex items-center gap-1.5 cursor-pointer h-[42px]"
               >
+                <Filter className="w-4 h-4" />
                 Filter
               </button>
+              
               {selectedSpecialtyId && (
                 <a
                   href="/patient/book"
-                  className="h-10 px-4 rounded-md border border-slate-200 text-slate-600 text-sm font-medium flex items-center"
+                  className="border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-semibold rounded-lg px-4 py-2.5 text-sm transition inline-flex items-center gap-1.5 h-[42px]"
                 >
+                  <X className="w-4 h-4" />
                   Clear
                 </a>
               )}
-            </form>
-          </CardContent>
-        </Card>
+            </div>
+          </form>
+        </div>
 
-        {/* Doctor list with booking forms */}
+        {/* Doctor List */}
         {!doctors || doctors.length === 0 ? (
-          <Card>
-            <CardContent className="pt-6">
-              <p className="text-sm text-slate-500 text-center py-8">
-                {selectedSpecialtyId
-                  ? 'No doctors available in this specialty right now.'
-                  : 'No doctors are currently available.'}
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white rounded-2xl border border-zinc-100 p-12 text-center shadow-sm">
+            <p className="text-sm text-zinc-400 font-medium">
+              {selectedSpecialtyId
+                ? 'No doctors available in this specialty right now.'
+                : 'No doctors are currently available.'}
+            </p>
+          </div>
         ) : (
           <div className="flex flex-col gap-4">
             {doctors.map(doctor => (
@@ -105,6 +111,7 @@ export default async function BookAppointmentPage({ searchParams }) {
             ))}
           </div>
         )}
+
       </div>
     </div>
   )

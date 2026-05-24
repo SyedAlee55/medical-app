@@ -1,11 +1,8 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { approveDoctor, rejectDoctor } from '@/app/admin/actions'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { CheckCircle2, AlertCircle } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CheckCircle2 } from 'lucide-react'
 
 // Force dynamic so it re-fetches stats on every reload
 export const dynamic = 'force-dynamic'
@@ -50,127 +47,164 @@ export default async function AdminApprovalsPage({ searchParams }) {
     .order('updated_at', { ascending: false })
     .limit(50)
 
+  const ROLE_CLASSES = {
+    doctor: 'bg-brand-50 text-brand-700 border border-brand-100',
+    staff: 'bg-blue-50 text-blue-700 border border-blue-100',
+  }
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Application Reviews</h1>
+      <div>
+        <h1 className="text-2xl font-extrabold text-zinc-900 tracking-tight">Application Reviews</h1>
+        <p className="type-body text-zinc-500 text-sm mt-0.5">Manage signup requests from healthcare providers and administrators</p>
+      </div>
 
       {params?.success === 'approved' && (
-        <div className="p-3 text-sm font-medium text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-md">
-          Application approved successfully. The user can now access the portal.
+        <div className="p-4 text-sm font-medium text-emerald-800 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center gap-2.5 animate-fade-in">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          <span>Application approved successfully. The user can now access the portal.</span>
         </div>
       )}
       
       {params?.success === 'rejected' && (
-        <div className="p-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-md">
-          Application rejected.
+        <div className="p-4 text-sm font-medium text-red-800 bg-red-50 border border-red-100 rounded-xl flex items-center gap-2.5 animate-fade-in">
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+          <span>Application rejected.</span>
         </div>
       )}
 
       <Tabs defaultValue="pending" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="pending" className="flex gap-2">
+        {/* Custom styled TabsList */}
+        <TabsList className="bg-zinc-100 rounded-xl p-1 flex gap-1 mb-6 w-fit h-auto">
+          <TabsTrigger 
+            value="pending" 
+            className="px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-sm text-zinc-500 hover:text-zinc-700"
+          >
             Pending
             {pendingApplicants?.length > 0 && (
-              <span className="bg-red-100 text-red-700 text-xs px-1.5 py-0.5 rounded-full font-bold">
+              <span className="bg-red-50 text-red-700 border border-red-100 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
                 {pendingApplicants.length}
               </span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="reviewed">Reviewed</TabsTrigger>
+          <TabsTrigger 
+            value="reviewed"
+            className="px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-sm text-zinc-500 hover:text-zinc-700"
+          >
+            Reviewed
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="pending" className="space-y-4">
           {pendingApplicants?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-12 bg-white dark:bg-zinc-900 rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700">
-              <CheckCircle2 className="h-12 w-12 text-emerald-500 mb-4 opacity-80" />
-              <h3 className="text-lg font-medium text-slate-900 dark:text-zinc-100">No pending applications</h3>
-              <p className="text-sm text-slate-500 dark:text-zinc-400 text-center mt-1">
-                You're all caught up! Any new doctor or staff sign-ups will appear here.
+            <div className="flex flex-col items-center justify-center p-16 bg-white rounded-2xl border border-zinc-100 shadow-sm text-center">
+              <CheckCircle2 className="h-12 w-12 text-emerald-500 mb-4" />
+              <h3 className="text-base font-semibold text-zinc-900">No pending applications</h3>
+              <p className="text-xs text-zinc-400 font-medium max-w-sm mt-1">
+                You&apos;re all caught up! Any new doctor or staff sign-ups will appear here for review.
               </p>
             </div>
           ) : (
-            pendingApplicants?.map((applicant) => (
-              <Card key={applicant.id}>
-                <CardContent className="p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            pendingApplicants?.map((applicant) => {
+              const roleClass = ROLE_CLASSES[applicant.role] || 'bg-zinc-50 text-zinc-600 border border-zinc-200'
+              return (
+                <div key={applicant.id} className="bg-white rounded-2xl border border-zinc-100 p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-lg text-slate-900 dark:text-white">{applicant.full_name}</h3>
-                      <Badge variant="outline" className="capitalize">{applicant.role}</Badge>
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <h3 className="font-semibold text-base text-zinc-900">{applicant.full_name}</h3>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${roleClass}`}>
+                        {applicant.role}
+                      </span>
                     </div>
-                    <p className="text-sm text-zinc-500">{applicant.email}</p>
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                      <span className="font-medium text-slate-700 dark:text-zinc-300">Applied:</span> {new Date(applicant.created_at).toLocaleDateString()}
+                    <p className="text-xs font-medium text-zinc-400">{applicant.email}</p>
+                    <p className="text-xs text-zinc-500 font-medium mt-2">
+                      <span className="font-semibold text-zinc-700">Applied:</span> {new Date(applicant.created_at).toLocaleDateString('en-US', {
+                        month: 'short', day: 'numeric', year: 'numeric'
+                      })}
                     </p>
                   </div>
                   
-                  <div className="flex gap-3 w-full md:w-auto">
+                  <div className="flex gap-3 w-full md:w-auto mt-2 md:mt-0">
                     <form action={rejectDoctor} className="flex-1 md:flex-none">
                       <input type="hidden" name="userId" value={applicant.id} />
-                      <Button type="submit" variant="destructive" className="w-full">
+                      <button 
+                        type="submit" 
+                        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg px-4 py-2.5 text-xs transition duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.08)] active:scale-[0.98] cursor-pointer"
+                      >
                         Reject
-                      </Button>
+                      </button>
                     </form>
                     
                     <form action={approveDoctor} className="flex-1 md:flex-none">
                       <input type="hidden" name="userId" value={applicant.id} />
-                      <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
+                      <button 
+                        type="submit" 
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg px-4 py-2.5 text-xs transition duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.08)] active:scale-[0.98] cursor-pointer"
+                      >
                         Approve
-                      </Button>
+                      </button>
                     </form>
                   </div>
-                </CardContent>
-              </Card>
-            ))
+                </div>
+              )
+            })
           )}
         </TabsContent>
 
         <TabsContent value="reviewed">
-          <Card>
-            <CardContent className="p-0">
-              <div className="border rounded-md overflow-hidden bg-white dark:bg-zinc-900">
-                <table className="w-full text-sm text-left">
-                  <thead className="bg-zinc-50 dark:bg-zinc-800 text-zinc-500 text-xs uppercase tracking-wide">
-                    <tr>
-                      <th className="px-4 py-3 font-medium">Full Name</th>
-                      <th className="px-4 py-3 font-medium">Email</th>
-                      <th className="px-4 py-3 font-medium">Role</th>
-                      <th className="px-4 py-3 font-medium">Status</th>
-                      <th className="px-4 py-3 font-medium">Reviewed Date</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                    {reviewedApplicants?.map((applicant) => (
-                      <tr key={applicant.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
-                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-zinc-100">
+          <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-zinc-50 border-b border-zinc-100 text-zinc-400 font-semibold tracking-wider text-[10px] uppercase">
+                    <th className="px-6 py-3">Full Name</th>
+                    <th className="px-6 py-3">Email</th>
+                    <th className="px-6 py-3">Role</th>
+                    <th className="px-6 py-3">Status</th>
+                    <th className="px-6 py-3">Reviewed Date</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-100 text-zinc-700 text-sm">
+                  {reviewedApplicants?.map((applicant) => {
+                    const roleClass = ROLE_CLASSES[applicant.role] || 'bg-zinc-50 text-zinc-600 border border-zinc-200'
+                    const statusClass = applicant.status === 'active' 
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                      : 'bg-red-50 text-red-700 border border-red-100'
+                    return (
+                      <tr key={applicant.id} className="hover:bg-zinc-50/50 transition">
+                        <td className="px-6 py-4 font-semibold text-zinc-900">
                           {applicant.full_name}
                         </td>
-                        <td className="px-4 py-3 text-zinc-500">{applicant.email}</td>
-                        <td className="px-4 py-3">
-                          <Badge variant="outline" className="capitalize">{applicant.role}</Badge>
+                        <td className="px-6 py-4 text-xs font-medium text-zinc-500">{applicant.email}</td>
+                        <td className="px-6 py-4">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${roleClass}`}>
+                            {applicant.role}
+                          </span>
                         </td>
-                        <td className="px-4 py-3">
-                          <Badge 
-                            variant={applicant.status === 'active' ? 'default' : 'destructive'} 
-                            className={applicant.status === 'active' ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-emerald-200' : ''}
-                          >
+                        <td className="px-6 py-4">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${statusClass}`}>
                             {applicant.status}
-                          </Badge>
+                          </span>
                         </td>
-                        <td className="px-4 py-3 text-zinc-500">
-                          {new Date(applicant.updated_at).toLocaleDateString()}
+                        <td className="px-6 py-4 text-xs text-zinc-400 font-medium">
+                          {new Date(applicant.updated_at).toLocaleDateString('en-US', {
+                            month: 'short', day: 'numeric', year: 'numeric'
+                          })}
                         </td>
                       </tr>
-                    ))}
-                    {!reviewedApplicants?.length && (
-                      <tr>
-                        <td colSpan={5} className="px-4 py-8 text-center text-zinc-500">No reviewed applications found.</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+                    )
+                  })}
+                  {!reviewedApplicants?.length && (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-12 text-center text-zinc-400 italic">
+                        No reviewed applications found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

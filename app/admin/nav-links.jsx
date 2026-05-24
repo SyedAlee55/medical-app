@@ -26,19 +26,19 @@ export default function NavLinks({ pendingCount = 0, pendingApptsCount = 0 }) {
           <Link
             key={link.name}
             href={link.href}
-            className={`flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer ${
               isActive 
-                ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' 
-                : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
+                ? 'bg-brand-50 text-brand-700' 
+                : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
             }`}
           >
-            <div className="flex items-center gap-3">
-              {Icon && <Icon className="w-4 h-4" />}
-              {link.name}
+            <div className="flex items-center gap-2.5">
+              {Icon && <Icon className="w-4 h-4 shrink-0" />}
+              <span>{link.name}</span>
             </div>
             
             {link.badge > 0 && (
-              <span className="bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-400 text-xs font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-red-50 text-red-700 border border-red-100 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
                 {link.badge}
               </span>
             )}

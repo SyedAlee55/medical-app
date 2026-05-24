@@ -1,7 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Users, Stethoscope, Briefcase, Calendar } from 'lucide-react'
 
 // Force dynamic so it re-fetches stats on every reload
 export const dynamic = 'force-dynamic'
@@ -51,93 +50,118 @@ export default async function AdminDashboardPage() {
     .order('created_at', { ascending: false })
     .limit(10)
 
+  const ROLE_CLASSES = {
+    admin: 'bg-red-50 text-red-700 border border-red-100',
+    ceo: 'bg-indigo-50 text-indigo-700 border border-indigo-100',
+    doctor: 'bg-brand-50 text-brand-700 border border-brand-100',
+    staff: 'bg-blue-50 text-blue-700 border border-blue-100',
+    patient: 'bg-zinc-50 text-zinc-600 border border-zinc-200',
+  }
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
-
-      {/* Summary Stat Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{patientsCount || 0}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Doctors</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{doctorsCount || 0}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Staff</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{staffCount || 0}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Appointments Today</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{appointmentsTodayCount || 0}</div>
-          </CardContent>
-        </Card>
+      <div>
+        <h1 className="text-2xl font-extrabold text-zinc-900 tracking-tight">Admin Dashboard</h1>
+        <p className="type-body text-zinc-500 text-sm mt-0.5">Platform metrics and registration logs</p>
       </div>
 
-      {/* Recent Activity Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity (Newest Users)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="border rounded-md overflow-hidden bg-white dark:bg-zinc-900">
-            <table className="w-full text-sm text-left">
-              <thead className="bg-zinc-50 dark:bg-zinc-800 text-zinc-500 text-xs uppercase tracking-wide">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Full Name</th>
-                  <th className="px-4 py-3 font-medium">Role</th>
-                  <th className="px-4 py-3 font-medium">Registered Date</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                {recentProfiles?.map((profile) => (
-                  <tr key={profile.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
-                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-zinc-100">
+      {/* Summary Stat Cards */}
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        
+        {/* Patients Card */}
+        <div className="bg-white rounded-2xl border border-zinc-100 p-6 flex items-center justify-between shadow-sm">
+          <div>
+            <p className="type-label text-zinc-400">Total Patients</p>
+            <h3 className="text-2xl font-bold text-zinc-900 mt-1">{patientsCount || 0}</h3>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-500">
+            <Users className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Doctors Card */}
+        <div className="bg-white rounded-2xl border border-zinc-100 p-6 flex items-center justify-between shadow-sm">
+          <div>
+            <p className="type-label text-zinc-400">Total Doctors</p>
+            <h3 className="text-2xl font-bold text-zinc-900 mt-1">{doctorsCount || 0}</h3>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center text-brand-600">
+            <Stethoscope className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Staff Card */}
+        <div className="bg-white rounded-2xl border border-zinc-100 p-6 flex items-center justify-between shadow-sm">
+          <div>
+            <p className="type-label text-zinc-400">Total Staff</p>
+            <h3 className="text-2xl font-bold text-zinc-900 mt-1">{staffCount || 0}</h3>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+            <Briefcase className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* Appointments Card */}
+        <div className="bg-white rounded-2xl border border-zinc-100 p-6 flex items-center justify-between shadow-sm">
+          <div>
+            <p className="type-label text-zinc-400">Appointments Today</p>
+            <h3 className="text-2xl font-bold text-zinc-900 mt-1">{appointmentsTodayCount || 0}</h3>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <Calendar className="w-5 h-5" />
+          </div>
+        </div>
+
+      </div>
+
+      {/* Recent Activity Table Card */}
+      <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+        <div className="px-6 py-5 border-b border-zinc-100">
+          <h3 className="font-semibold text-zinc-900 text-sm">Recent Activity (Newest Users)</h3>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-zinc-50 border-b border-zinc-100 text-zinc-400 font-semibold tracking-wider text-[10px] uppercase">
+                <th className="px-6 py-3">Full Name</th>
+                <th className="px-6 py-3">Role</th>
+                <th className="px-6 py-3">Registered Date</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-100 text-zinc-700 text-sm">
+              {recentProfiles?.map((profile) => {
+                const roleClass = ROLE_CLASSES[profile.role] || 'bg-zinc-50 text-zinc-600 border border-zinc-200'
+                return (
+                  <tr key={profile.id} className="hover:bg-zinc-50/50 transition">
+                    <td className="px-6 py-4 font-semibold text-zinc-900">
                       {profile.full_name || 'N/A'}
                     </td>
-                    <td className="px-4 py-3">
-                      <Badge variant="outline" className="capitalize">
+                    <td className="px-6 py-4">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${roleClass}`}>
                         {profile.role}
-                      </Badge>
+                      </span>
                     </td>
-                    <td className="px-4 py-3 text-zinc-500">
+                    <td className="px-6 py-4 text-xs text-zinc-400 font-medium">
                       {new Date(profile.created_at).toLocaleDateString('en-US', {
                         month: 'short', day: 'numeric', year: 'numeric',
                         hour: '2-digit', minute: '2-digit'
                       })}
                     </td>
                   </tr>
-                ))}
-                {!recentProfiles?.length && (
-                  <tr>
-                    <td colSpan={3} className="px-4 py-8 text-center text-zinc-500">No users found.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                )
+              })}
+              {!recentProfiles?.length && (
+                <tr>
+                  <td colSpan={3} className="px-6 py-12 text-center text-zinc-400 italic">
+                    No users found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }
