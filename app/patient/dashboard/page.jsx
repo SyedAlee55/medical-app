@@ -2,6 +2,18 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import PatientAppointmentList from "@/components/patient-appointment-list";
 
+function SuccessBanner({ message }) {
+  return <div className="mb-6 p-3 text-sm font-medium text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-md animate-in fade-in duration-300">{message}</div>;
+}
+
+function InfoBanner({ message }) {
+  return <div className="mb-6 p-3 text-sm font-medium text-slate-600 bg-slate-50 border border-slate-200 rounded-md animate-in fade-in duration-300">{message}</div>;
+}
+
+function ErrorBanner({ message }) {
+  return <div className="mb-6 p-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-md animate-in fade-in duration-300">{message}</div>;
+}
+
 export default async function PatientDashboard({ searchParams }) {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -29,12 +41,11 @@ export default async function PatientDashboard({ searchParams }) {
     const { data: appointments } = await supabase
         .from('appointments')
         .select(`
-            id,
-            scheduled_at,
-            reason_for_visit,
-            status,
-            profiles:doctor_id (full_name),
-            specialties:specialty_id (name)
+            id, status, scheduled_at, reason_for_visit, notes,
+            rejection_reason, cancellation_reason, duration_minutes,
+            confirmed_at, created_at,
+            profiles!appointments_doctor_id_fkey(full_name),
+            specialties(name)
         `)
         .eq('patient_id', user.id)
         .is('deleted_at', null)
@@ -43,14 +54,22 @@ export default async function PatientDashboard({ searchParams }) {
     const params = await searchParams
     const isWelcome = params?.welcome === 'true'
 
+    const banners = {
+        booked: { msg: 'Your appointment request has been sent. The doctor will respond shortly.', color: 'emerald' },
+        cancelled: { msg: 'Your appointment has been cancelled.', color: 'slate' },
+    }
+    const errorBanners = {
+        cannot_cancel: 'This appointment cannot be cancelled.',
+        too_late_to_cancel: 'Appointments cannot be cancelled within 2 hours of the scheduled time.',
+    }
+
     return (
         <div className="p-8 bg-slate-50 min-h-screen">
             <div className="max-w-5xl mx-auto">
-                {isWelcome && (
-                    <div className="mb-6 p-3 text-sm font-medium text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-md animate-in fade-in duration-300">
-                        Your profile has been saved. Welcome to Tj's Medical Hub.
-                    </div>
-                )}
+                {isWelcome && <SuccessBanner message="Your profile has been saved. Welcome to Tj's Medical Hub." />}
+                {params?.booked && <SuccessBanner message={banners.booked.msg} />}
+                {params?.cancelled && <InfoBanner message={banners.cancelled.msg} />}
+                {params?.error && <ErrorBanner message={errorBanners[params.error] || 'An error occurred'} />}
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>

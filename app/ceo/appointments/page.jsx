@@ -45,6 +45,22 @@ export default async function AppointmentsPage({ searchParams }) {
     <div>
       <h1 className="text-2xl font-bold mb-6">Appointments Directory</h1>
       
+      {params?.error === 'reschedule_conflict' && (
+        <div className="mb-6 p-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-md">
+          Conflict detected: The doctor already has an appointment at the requested time.
+        </div>
+      )}
+      {params?.error === 'not_found' && (
+        <div className="mb-6 p-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-md">
+          Appointment not found.
+        </div>
+      )}
+      {params?.success === 'overridden' && (
+        <div className="mb-6 p-3 text-sm font-medium text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-md">
+          Appointment successfully overridden.
+        </div>
+      )}
+
       <AppointmentsFilter />
 
       <div className="border border-zinc-200 dark:border-zinc-700 rounded overflow-hidden bg-white dark:bg-zinc-900">
@@ -73,7 +89,7 @@ export default async function AppointmentsPage({ searchParams }) {
                 </td>
                 <td className="px-4 py-3 text-zinc-500">{formatDate(a.created_at)}</td>
                 <td className="px-4 py-3">
-                  <OverrideAction appointmentId={a.id} currentStatus={a.status} />
+                  <OverrideAction appointmentId={a.id} currentStatus={a.status} currentScheduledAt={a.scheduled_at} />
                 </td>
               </tr>
             ))}

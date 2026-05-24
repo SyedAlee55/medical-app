@@ -1,103 +1,157 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import { format } from 'date-fns'
+import { useState } from 'react'
+import { cancelAppointment } from '@/app/appointments/actions'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, User, Stethoscope } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
-export default function PatientAppointmentList({ initialAppointments, userId }) {
-    const [appointments, setAppointments] = useState(initialAppointments)
-    const supabase = createClient()
+const STATUS_BADGE = {
+  pending:    { label: 'Pending',    variant: 'secondary' },
+  confirmed:  { label: 'Confirmed',  variant: 'default'   },
+  rejected:   { label: 'Rejected',   variant: 'destructive' },
+  cancelled:  { label: 'Cancelled',  variant: 'outline'   },
+  completed:  { label: 'Completed',  variant: 'outline'   },
+  overridden: { label: 'Rescheduled', variant: 'secondary' },
+}
 
-    useEffect(() => {
-        const channel = supabase
-            .channel('patient-appointments')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'public',
-                    table: 'appointments',
-                    filter: `patient_id=eq.${userId}`
-                },
-                (payload) => {
-                    if (payload.eventType === 'INSERT') {
-                        // For inserts, we'd need to fetch the doctor's name, 
-                        // but usually the patient just created this.
-                        // For now, let's just refresh or add it.
-                        window.location.reload() 
-                    } else if (payload.eventType === 'UPDATE') {
-                        setAppointments((prev) =>
-                            prev.map(apt => apt.id === payload.new.id ? { ...apt, ...payload.new } : apt)
-                        )
-                    }
-                }
-            )
-            .subscribe()
+function canCancel(appt) {
+  if (!['pending','confirmed'].includes(appt.status)) return false
+  const twoHoursMs = 2 * 60 * 60 * 1000
+  return Date.now() < new Date(appt.scheduled_at).getTime() - twoHoursMs
+}
 
-        return () => supabase.removeChannel(channel)
-    }, [userId, supabase])
+function AppointmentCard({ appt }) {
+  const [cancelling, setCancelling] = useState(false)
+  const [showCancelForm, setShowCancelForm] = useState(false)
+  const badge = STATUS_BADGE[appt.status] || { label: appt.status, variant: 'outline' }
 
-    const getStatusBadge = (status) => {
-        switch (status) {
-            case 'pending':
-                return <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-yellow-200">Pending Approval</Badge>
-            case 'confirmed':
-                return <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">Confirmed</Badge>
-            case 'rejected':
-                return <Badge className="bg-red-100 text-red-700 hover:bg-red-100 border-red-200">Declined</Badge>
-            default:
-                return <Badge variant="outline">{status}</Badge>
-        }
-    }
-
-    if (appointments.length === 0) {
-        return (
-            <div className="mt-10 p-12 border-2 border-dashed border-slate-200 rounded-2xl text-center bg-slate-50/50">
-                <Calendar className="mx-auto h-12 w-12 text-slate-300 mb-4" />
-                <h3 className="text-lg font-semibold text-slate-900">No appointments yet</h3>
-                <p className="text-slate-500 max-w-xs mx-auto">
-                    Your upcoming consultations and medical history will appear here once booked.
-                </p>
-            </div>
-        )
-    }
-
-    return (
-        <div className="grid gap-4 mt-8">
-            {appointments.map((apt) => (
-                <div key={apt.id} className="bg-white border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                                {getStatusBadge(apt.status)}
-                                {apt.specialties?.name && (
-                                    <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50/50">
-                                        {apt.specialties.name}
-                                    </Badge>
-                                )}
-                            </div>
-                            
-                            <div className="flex items-center gap-2 text-slate-900 font-bold text-lg">
-                                <User className="h-5 w-5 text-blue-500" />
-                                <span>Dr. {apt.profiles?.full_name || 'Assigned Specialist'}</span>
-                            </div>
-
-                            <div className="flex flex-col gap-1 text-sm text-slate-500">
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4" />
-                                    {format(new Date(apt.scheduled_at), 'MMM d, yyyy • h:mm a')}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Stethoscope className="h-4 w-4" />
-                                    Reason: {apt.reason_for_visit}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ))}
+  return (
+    <div className="flex flex-col gap-3 p-4 bg-white rounded-lg border border-slate-200">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="font-semibold text-slate-900">
+            Dr. {appt.profiles?.full_name || 'Unknown'}
+          </p>
+          <p className="text-xs text-slate-500 mt-0.5">
+            {appt.specialties?.name || 'General'}
+          </p>
+          <p className="text-sm text-slate-600 mt-1">
+            {new Date(appt.scheduled_at).toLocaleDateString('en-US', {
+              weekday: 'long', year: 'numeric',
+              month: 'long', day: 'numeric',
+              hour: '2-digit', minute: '2-digit'
+            })}
+          </p>
+          {appt.reason_for_visit && (
+            <p className="text-xs text-slate-500 mt-1">{appt.reason_for_visit}</p>
+          )}
+          {appt.rejection_reason && appt.status === 'rejected' && (
+            <p className="text-xs text-red-500 mt-1">
+              Reason: {appt.rejection_reason}
+            </p>
+          )}
         </div>
-    )
+        <div className="flex flex-col items-end gap-2">
+          <Badge variant={badge.variant}>{badge.label}</Badge>
+          {canCancel(appt) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-red-500 hover:text-red-700 text-xs"
+              onClick={() => setShowCancelForm(!showCancelForm)}
+            >
+              {showCancelForm ? 'Keep appointment' : 'Cancel'}
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {showCancelForm && (
+        <form
+          action={async (fd) => { setCancelling(true); await cancelAppointment(fd) }}
+          className="border-t border-slate-100 pt-3 grid gap-3"
+        >
+          <input type="hidden" name="appointmentId" value={appt.id} />
+          <div className="grid gap-1.5">
+            <label className="text-xs font-medium text-slate-600">
+              Reason for cancellation (optional)
+            </label>
+            <input
+              name="cancellationReason"
+              type="text"
+              placeholder="Let the doctor know why you're cancelling..."
+              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+          </div>
+          <Button
+            type="submit"
+            variant="destructive"
+            size="sm"
+            disabled={cancelling}
+          >
+            {cancelling ? 'Cancelling...' : 'Confirm cancellation'}
+          </Button>
+        </form>
+      )}
+    </div>
+  )
+}
+
+export default function PatientAppointmentList({ initialAppointments }) {
+  const [filter, setFilter] = useState('active')
+
+  const active = initialAppointments.filter(a =>
+    ['pending','confirmed'].includes(a.status))
+  const history = initialAppointments.filter(a =>
+    ['completed','rejected','cancelled','overridden'].includes(a.status))
+
+  const displayed = filter === 'active' ? active : history
+
+  return (
+    <div className="space-y-4">
+      {/* Tab switcher */}
+      <div className="flex rounded-lg border border-slate-200 overflow-hidden w-fit">
+        <button
+          onClick={() => setFilter('active')}
+          className={`px-4 py-2 text-sm font-medium transition-colors ${
+            filter === 'active'
+              ? 'bg-slate-900 text-white'
+              : 'text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          Active ({active.length})
+        </button>
+        <button
+          onClick={() => setFilter('history')}
+          className={`px-4 py-2 text-sm font-medium transition-colors border-l border-slate-200 ${
+            filter === 'history'
+              ? 'bg-slate-900 text-white'
+              : 'text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          History ({history.length})
+        </button>
+      </div>
+
+      {displayed.length === 0 ? (
+        <p className="text-sm text-slate-500 py-4">
+          {filter === 'active'
+            ? 'No active appointments. Book one below.'
+            : 'No appointment history yet.'}
+        </p>
+      ) : (
+        displayed.map(appt => <AppointmentCard key={appt.id} appt={appt} />)
+      )}
+
+      {filter === 'active' && (
+        <a
+          href="/patient/book"
+          className="inline-flex items-center justify-center h-10 px-4 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium mt-2"
+        >
+          + Book new appointment
+        </a>
+      )}
+    </div>
+  )
 }
