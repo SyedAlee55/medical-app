@@ -1,140 +1,150 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import { format } from 'date-fns'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { useState } from 'react'
 import { respondToAppointment } from '@/app/appointments/actions'
-import { Check, Trash2, Loader2, Info } from 'lucide-react'
-import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+
+const STATUS_BADGE = {
+  pending:   { label: 'Pending Review', variant: 'secondary'   },
+  confirmed: { label: 'Confirmed',      variant: 'default'     },
+  rejected:  { label: 'Rejected',       variant: 'destructive' },
+  cancelled: { label: 'Cancelled',      variant: 'outline'     },
+  completed: { label: 'Completed',      variant: 'outline'     },
+}
+
+function parseExternalReason(reason) {
+  if (reason && reason.startsWith('[External:')) {
+    const match = reason.match(/^\[External:\s*([^,\]]+)(?:,\s*([^\]]+))?\]\s*(.*)$/);
+    if (match) {
+      return {
+        isExternal: true,
+        name: match[1],
+        contact: match[2] || '',
+        reason: match[3]
+      };
+    }
+  }
+  return {
+    isExternal: false,
+    name: '',
+    contact: '',
+    reason: reason || ''
+  };
+}
+
+function RequestCard({ appt }) {
+  const [responding, setResponding] = useState(false)
+  const [showRejectForm, setShowRejectForm] = useState(false)
+  const badge = STATUS_BADGE[appt.status] || { label: appt.status, variant: 'outline' }
+  const isPending = appt.status === 'pending'
+  const parsed = parseExternalReason(appt.reason_for_visit)
+
+  return (
+    <div className="p-4 bg-white rounded-lg border border-slate-200 space-y-3">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="font-semibold text-slate-900">
+            {parsed.isExternal ? `${parsed.name} (External)` : (appt.profiles?.full_name || 'Patient')}
+          </p>
+          {parsed.isExternal && (
+            <p className="text-xs text-zinc-500 font-medium mt-0.5">Contact: {parsed.contact}</p>
+          )}
+          <p className="text-sm text-slate-600 mt-0.5">
+            {new Date(appt.scheduled_at).toLocaleDateString('en-US', {
+              weekday: 'short', month: 'short', day: 'numeric',
+              hour: '2-digit', minute: '2-digit'
+            })}
+          </p>
+          {(parsed.isExternal ? parsed.reason : appt.reason_for_visit) && (
+            <p className="text-xs text-slate-500 mt-1.5 bg-slate-50 px-2 py-1 rounded">
+              {parsed.isExternal ? parsed.reason : appt.reason_for_visit}
+            </p>
+          )}
+        </div>
+        <Badge variant={badge.variant}>{badge.label}</Badge>
+      </div>
+
+      {isPending && !showRejectForm && (
+        <div className="flex gap-2 pt-1">
+          <form action={async (fd) => { setResponding(true); await respondToAppointment(fd) }}>
+            <input type="hidden" name="appointmentId" value={appt.id} />
+            <input type="hidden" name="status" value="confirmed" />
+            <Button type="submit" size="sm" className="bg-blue-600 hover:bg-blue-700" disabled={responding}>
+              {responding ? 'Confirming...' : 'Accept'}
+            </Button>
+          </form>
+          <Button
+            variant="outline" size="sm"
+            onClick={() => setShowRejectForm(true)}
+          >
+            Decline
+          </Button>
+        </div>
+      )}
+
+      {showRejectForm && (
+        <form
+          action={async (fd) => { setResponding(true); await respondToAppointment(fd) }}
+          className="border-t border-slate-100 pt-3 grid gap-3"
+        >
+          <input type="hidden" name="appointmentId" value={appt.id} />
+          <input type="hidden" name="status" value="rejected" />
+          <div className="grid gap-1.5">
+            <label className="text-xs font-medium text-slate-600">
+              Reason for declining (optional but recommended)
+            </label>
+            <input
+              name="rejectionReason"
+              type="text"
+              placeholder="e.g. Not available at this time, please rebook..."
+              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+          </div>
+          <div className="flex gap-2">
+            <Button type="submit" variant="destructive" size="sm" disabled={responding}>
+              {responding ? 'Declining...' : 'Confirm decline'}
+            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={() => setShowRejectForm(false)}>
+              Go back
+            </Button>
+          </div>
+        </form>
+      )}
+    </div>
+  )
+}
 
 export default function AppointmentList({ initialAppointments, userId }) {
-    const [appointments, setAppointments] = useState(initialAppointments)
-    const [processingId, setProcessingId] = useState(null)
-    const supabase = createClient()
+  const pending   = initialAppointments.filter(a => a.status === 'pending')
+  const confirmed = initialAppointments.filter(a => a.status === 'confirmed')
 
-    useEffect(() => {
-        const channel = supabase
-            .channel('doctor-appointments')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'public',
-                    table: 'appointments',
-                    filter: `doctor_id=eq.${userId}`
-                },
-                (payload) => {
-                    const now = new Date()
-                    if (payload.eventType === 'INSERT') {
-                        // Add if pending/confirmed AND in the future
-                        const isFuture = new Date(payload.new.scheduled_at) >= now
-                        if (['pending', 'confirmed'].includes(payload.new.status) && !payload.new.deleted_at && isFuture) {
-                            setAppointments((prev) => [payload.new, ...prev])
-                        }
-                    } else if (payload.eventType === 'UPDATE') {
-                        const isFuture = new Date(payload.new.scheduled_at) >= now
-                        // Remove if rejected, deleted, cancelled, or past
-                        if (['rejected', 'cancelled'].includes(payload.new.status) || payload.new.deleted_at || !isFuture) {
-                            setAppointments((prev) => prev.filter(apt => apt.id !== payload.new.id))
-                        } else {
-                            setAppointments((prev) =>
-                                prev.map(apt => apt.id === payload.new.id ? { ...apt, ...payload.new } : apt)
-                            )
-                        }
-                    }
-                }
-            )
-            .subscribe()
+  if (initialAppointments.length === 0) {
+    return <p className="text-sm text-slate-500 italic">No active consultations.</p>
+  }
 
-        return () => supabase.removeChannel(channel)
-    }, [userId, supabase])
-
-    return (
-        <div className="space-y-4">
-            {appointments.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-                    <div className="bg-slate-100 p-4 rounded-full mb-4">
-                        <Check className="h-8 w-8 text-slate-400" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-slate-900">No upcoming consultations</h3>
-                    <p className="text-slate-500 max-w-xs mx-auto text-sm">
-                        All set! New patient requests will appear here in real-time.
-                    </p>
-                </div>
-            ) : (
-                appointments.map((apt) => (
-                    <div key={apt.id} className="flex flex-col md:flex-row md:items-center justify-between p-5 bg-white border rounded-xl shadow-sm gap-4 transition-all hover:border-blue-200 dark:bg-slate-900 dark:border-slate-800">
-                        <div className="flex-1">
-                            <div className="flex flex-wrap items-center gap-3 mb-1">
-                                <p className="font-bold text-slate-900 text-lg">
-                                    {apt.profiles?.full_name || 'Patient'}
-                                </p>
-                                {apt.status === 'pending' ? (
-                                    <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-yellow-200">Pending</Badge>
-                                ) : (
-                                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">Confirmed</Badge>
-                                )}
-                                {apt.specialties?.name && (
-                                    <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-blue-100">
-                                        {apt.specialties.name}
-                                    </Badge>
-                                )}
-                            </div>
-                            <p className="text-sm text-slate-500 font-medium">
-                                {format(new Date(apt.scheduled_at), 'MMM d, yyyy • h:mm a')}
-                            </p>
-                            <div className="flex items-start gap-2 mt-2">
-                                <Info className="h-4 w-4 text-slate-300 mt-0.5" />
-                                <p className="text-sm text-slate-600 italic">
-                                    {apt.reason_for_visit}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            {apt.status === 'pending' && (
-                                <form action={respondToAppointment}>
-                                    <input type="hidden" name="appointmentId" value={apt.id} />
-                                    <input type="hidden" name="status" value="confirmed" />
-                                    <Button
-                                        type="submit"
-                                        size="sm"
-                                        className="bg-blue-600 hover:bg-blue-700 text-white gap-2 px-4"
-                                        onClick={() => setProcessingId(apt.id)}
-                                        disabled={!!processingId}
-                                    >
-                                        {processingId === apt.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                                        Accept
-                                    </Button>
-                                </form>
-                            )}
-
-                            <form action={respondToAppointment}>
-                                <input type="hidden" name="appointmentId" value={apt.id} />
-                                <input type="hidden" name="status" value="rejected" />
-                                <Button
-                                    type="submit"
-                                    size="sm"
-                                    variant="outline"
-                                    className="border-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 gap-2 px-4"
-                                    onClick={() => {
-                                        setProcessingId(apt.id)
-                                        // Optimistic hide
-                                        setAppointments(prev => prev.filter(a => a.id !== apt.id))
-                                    }}
-                                    disabled={!!processingId}
-                                    title="Reject Appointment"
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                    {apt.status === 'confirmed' ? 'Cancel' : 'Reject'}
-                                </Button>
-                            </form>
-                        </div>
-                    </div>
-                ))
-            )}
+  return (
+    <div className="space-y-4">
+      {pending.length > 0 && (
+        <div>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+            Awaiting response ({pending.length})
+          </p>
+          <div className="space-y-3">
+            {pending.map(a => <RequestCard key={a.id} appt={a} />)}
+          </div>
         </div>
-    )
+      )}
+      {confirmed.length > 0 && (
+        <div>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+            Upcoming confirmed ({confirmed.length})
+          </p>
+          <div className="space-y-3">
+            {confirmed.map(a => <RequestCard key={a.id} appt={a} />)}
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }

@@ -11,7 +11,7 @@ const ROUTE_PERMISSIONS = {
   '/ceo': ['ceo'],
   '/onboarding/patient': ['patient'],
   '/employee/onboarding': ['doctor', 'staff'],
-  '/verify-mfa': ['ceo'],
+  '/verify-mfa': ['ceo', 'admin'],
 }
 
 // Where each role goes after a successful login
@@ -19,7 +19,7 @@ const ROLE_HOME = {
   patient: '/patient/dashboard',
   doctor: '/employee/dashboard',
   staff: '/employee/dashboard',
-  admin: '/admin/dashboard',
+  admin: '/verify-mfa',
   ceo: '/verify-mfa',
 }
 
@@ -32,6 +32,7 @@ const PUBLIC_ROUTES = [
   '/403',
   '/404',
   '/',
+  '/schedule',
 ]
 
 function isPublic(pathname) {
@@ -54,7 +55,7 @@ export async function middleware(request) {
   response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
   response.headers.set(
     'Content-Security-Policy',
-    "default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'"
+    "default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: https://*.supabase.co https://assets.calendly.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://assets.calendly.com; frame-src 'self' https://calendly.com"
   )
 
   // ── Build Supabase client that reads/writes cookies ───────────────────────
@@ -75,7 +76,7 @@ export async function middleware(request) {
           response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
           response.headers.set(
             'Content-Security-Policy',
-            "default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'"
+            "default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: https://*.supabase.co https://assets.calendly.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://assets.calendly.com; frame-src 'self' https://calendly.com"
           )
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options))
@@ -131,7 +132,7 @@ export async function middleware(request) {
   }
 
   // ── GATE 4: CEO must complete MFA before accessing anything ───────────────
-  if (role === 'ceo') {
+  if (role === 'ceo' || role === 'admin') {
     const { data: mfaData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
     const mfaLevel = mfaData?.currentLevel || 'aal1'
     if (mfaLevel !== 'aal2' && !pathname.startsWith('/verify-mfa')) {

@@ -58,6 +58,11 @@ export default async function Header() {
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">
+                            <Link href="/schedule">
+                                <Button variant="outline" size="sm" className="border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 dark:border-blue-900/30 dark:text-red-400">
+                                    Book Appointment
+                                </Button>
+                            </Link>
                             <Link href="/login">
                                 <Button variant="ghost" size="sm">Log in</Button>
                             </Link>

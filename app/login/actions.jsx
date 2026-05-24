@@ -97,7 +97,7 @@ export async function login(formData) {
   // A doctor trying to log in through the patient portal is blocked.
 
   const patientPortalRoles = ['patient']
-  const doctorPortalRoles = ['doctor', 'staff', 'ceo']
+  const doctorPortalRoles = ['doctor', 'staff', 'ceo', 'admin']
 
   if (submittedRole === 'patient' && !patientPortalRoles.includes(profile.role)) {
     // A doctor/staff/CEO tried to use the patient login portal

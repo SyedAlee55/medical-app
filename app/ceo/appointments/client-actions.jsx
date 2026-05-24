@@ -1,54 +1,80 @@
 'use client'
 
 import { useState } from 'react'
-import { overrideAppointment } from '@/app/ceo/actions'
-import { useRouter } from 'next/navigation'
+import { ceoOverrideAppointment } from '@/app/appointments/actions'
 
-export function OverrideAction({ appointmentId, currentStatus }) {
+export function OverrideAction({ appointmentId, currentStatus, currentScheduledAt }) {
   const [editing, setEditing] = useState(false)
   const [newStatus, setNewStatus] = useState(currentStatus)
+  const [newDate, setNewDate] = useState(currentScheduledAt ? new Date(currentScheduledAt).toISOString().slice(0, 16) : '')
+  const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
 
-  async function handleConfirm() {
-    if (newStatus === currentStatus) {
-      setEditing(false)
-      return
-    }
+  async function handleConfirm(formData) {
     setLoading(true)
-    const formData = new FormData()
-    formData.append('appointmentId', appointmentId)
-    formData.append('status', newStatus)
-    await overrideAppointment(formData)
+    await ceoOverrideAppointment(formData)
     setLoading(false)
     setEditing(false)
-    router.refresh()
   }
 
   if (editing) {
     return (
-      <div className="flex items-center gap-2">
-        <select 
-          value={newStatus} 
-          onChange={e => setNewStatus(e.target.value)}
-          className="border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-xs p-1 rounded"
-          disabled={loading}
-        >
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="rejected">Rejected</option>
-          <option value="cancelled">Cancelled</option>
-          <option value="completed">Completed</option>
-          <option value="overridden">Overridden</option>
-        </select>
-        <button disabled={loading} onClick={handleConfirm} className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-2 py-1 text-xs rounded">Confirm</button>
-        <button disabled={loading} onClick={() => setEditing(false)} className="text-xs text-zinc-500 hover:text-zinc-900">Cancel</button>
-      </div>
+      <form action={handleConfirm} className="flex flex-col gap-2 p-3 border border-zinc-200 bg-zinc-50 rounded min-w-[220px] shadow-sm z-10 relative">
+        <input type="hidden" name="appointmentId" value={appointmentId} />
+        
+        <div className="flex flex-col gap-1">
+            <label className="text-xs font-semibold text-zinc-600">Status</label>
+            <select 
+            name="status"
+            value={newStatus} 
+            onChange={e => setNewStatus(e.target.value)}
+            className="border border-zinc-200 bg-white text-xs p-1.5 rounded"
+            disabled={loading}
+            >
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="rejected">Rejected</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="completed">Completed</option>
+            <option value="overridden">Overridden</option>
+            </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+            <label className="text-xs font-semibold text-zinc-600">Reschedule</label>
+            <input 
+            type="datetime-local" 
+            name="scheduledAt"
+            value={newDate}
+            onChange={e => setNewDate(e.target.value)}
+            className="border border-zinc-200 bg-white text-xs p-1.5 rounded"
+            disabled={loading}
+            />
+        </div>
+
+        <div className="flex flex-col gap-1">
+            <label className="text-xs font-semibold text-zinc-600">Override Notes</label>
+            <input 
+            type="text" 
+            name="notes"
+            value={notes}
+            onChange={e => setNotes(e.target.value)}
+            placeholder="Reason for override..."
+            className="border border-zinc-200 bg-white text-xs p-1.5 rounded"
+            disabled={loading}
+            />
+        </div>
+
+        <div className="flex gap-2 mt-2">
+          <button type="submit" disabled={loading} className="flex-1 bg-blue-600 text-white px-2 py-1.5 text-xs font-medium rounded hover:bg-blue-700">Confirm</button>
+          <button type="button" disabled={loading} onClick={() => setEditing(false)} className="flex-1 border border-zinc-200 text-zinc-700 bg-white px-2 py-1.5 text-xs font-medium rounded hover:bg-zinc-100">Cancel</button>
+        </div>
+      </form>
     )
   }
 
   return (
-    <button onClick={() => setEditing(true)} className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+    <button onClick={() => setEditing(true)} className="text-xs font-medium bg-zinc-100 px-3 py-1 rounded border border-zinc-200 text-zinc-700 hover:bg-zinc-200">
       Override
     </button>
   )
