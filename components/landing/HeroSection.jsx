@@ -1,39 +1,27 @@
-'use client'
-
 import { PlayCircle } from 'lucide-react'
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#f8faff] py-20 lg:py-32">
+    <section className="relative overflow-hidden bg-[#f8faff] min-h-[calc(100dvh-4rem)] flex items-center py-8 lg:py-10">
       {/* Blurred teal background accent */}
       <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-brand-100/60 blur-3xl -z-10" />
       <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-brand-100/40 blur-3xl -z-10" />
 
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-12px); }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-      `}</style>
-
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           
           {/* Left Column: Content */}
           <div className="flex flex-col items-start animate-fade-up">
-            <span className="type-label text-brand-600 mb-4 tracking-wider">
+            <span className="type-label text-brand-600 mb-3 tracking-wider">
               TRUSTED BY 50,000+ PATIENTS
             </span>
             
-            <h1 className="type-hero mb-6 text-zinc-900 leading-tight">
+            <h1 className="type-hero mb-4 text-zinc-900 leading-tight">
               Modern healthcare, <br />
               <span className="text-brand-600">finally built around you</span>
             </h1>
             
-            <p className="type-body text-zinc-500 max-w-lg mb-8 text-base md:text-lg">
+            <p className="type-body text-zinc-500 max-w-lg mb-6 text-base md:text-lg">
               We connect patients with top-rated, verified doctors — for in-person visits, telemedicine, and everything in between. Your health journey, managed in one place.
             </p>
             
@@ -55,7 +43,7 @@ export default function HeroSection() {
             </div>
 
             {/* Social Proof Strip */}
-            <div className="flex items-center gap-4 mt-10">
+            <div className="flex items-center gap-4 mt-6">
               <div className="flex -space-x-2">
                 {[
                   'bg-brand-100 text-brand-700',
@@ -73,7 +61,9 @@ export default function HeroSection() {
                 ))}
               </div>
               <p className="text-sm text-zinc-500">
-                Join <strong className="font-semibold text-zinc-800">50,000+</strong> patients already using Tj&apos;s Medical Hub
+                Join{' '}
+                <strong className="font-semibold text-zinc-800">50,000+</strong>
+                {' patients already using Tj\'s Medical Hub'}
               </p>
             </div>
           </div>

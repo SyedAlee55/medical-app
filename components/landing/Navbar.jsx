@@ -107,13 +107,13 @@ export default function Navbar() {
           </div>
 
           <a href="/schedule" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
-            Pricing
+            Book in app
           </a>
           <a href="#" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
             About
           </a>
-          <a href="#" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
-            Blog
+          <a href="/team" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
+            Team
           </a>
         </div>
 
@@ -159,9 +159,9 @@ export default function Navbar() {
           </div>
           <hr className="border-zinc-100" />
           <div className="flex flex-col gap-2">
-            <a href="/login" className="text-zinc-700 hover:text-zinc-950 font-medium py-1">Pricing</a>
+            <a href="/schedule" className="text-zinc-700 hover:text-zinc-950 font-medium py-1">Book in app</a>
             <a href="#" className="text-zinc-700 hover:text-zinc-950 font-medium py-1">About</a>
-            <a href="#" className="text-zinc-700 hover:text-zinc-950 font-medium py-1">Blog</a>
+            <a href="/team" className="text-zinc-700 hover:text-zinc-950 font-medium py-1">Team</a>
           </div>
           <hr className="border-zinc-100" />
           <div className="flex flex-col gap-3">

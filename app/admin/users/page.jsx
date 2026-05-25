@@ -1,19 +1,9 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
-import { suspendUser, reactivateUser, deleteUser } from '@/app/admin/actions'
+import { suspendUser, reactivateUser } from '@/app/admin/actions'
 import Link from 'next/link'
 import { CheckCircle2, AlertCircle } from 'lucide-react'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import { DeleteUserDialog } from '@/components/admin/delete-user-dialog'
 
 export const dynamic = 'force-dynamic'
 
@@ -161,35 +151,35 @@ export default async function AdminUsersPage({ searchParams }) {
       {/* Users Table */}
       <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse whitespace-nowrap">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-zinc-50 border-b border-zinc-100 text-zinc-400 font-semibold tracking-wider text-[10px] uppercase">
-                <th className="px-6 py-3">Name</th>
-                <th className="px-6 py-3">Email</th>
-                <th className="px-6 py-3">Role</th>
-                <th className="px-6 py-3">Status</th>
-                <th className="px-6 py-3">Last Login</th>
-                <th className="px-6 py-3 text-right">Actions</th>
+              <tr className="bg-zinc-50 border-b border-zinc-100 text-zinc-400 font-semibold tracking-wider text-[10px] uppercase whitespace-nowrap">
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Email</th>
+                <th className="px-4 py-3">Role</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Last Login</th>
+                <th className="px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 text-zinc-700 text-sm">
               {users?.length > 0 ? (
                 users.map(u => (
                   <tr key={u.id} className="hover:bg-zinc-50/50 transition">
-                    <td className="px-6 py-4 font-semibold text-zinc-900">{u.full_name || 'N/A'}</td>
-                    <td className="px-6 py-4 text-xs text-zinc-500 font-medium">{u.email}</td>
-                    <td className="px-6 py-4">{getRoleBadge(u.role)}</td>
-                    <td className="px-6 py-4">{getStatusBadge(u.status)}</td>
-                    <td className="px-6 py-4 text-xs text-zinc-400 font-medium">
+                    <td className="px-4 py-4 font-semibold text-zinc-900 whitespace-nowrap">{u.full_name || 'N/A'}</td>
+                    <td className="px-4 py-4 text-xs text-zinc-500 font-medium truncate max-w-[120px] sm:max-w-[200px] md:max-w-none">{u.email}</td>
+                    <td className="px-4 py-4 whitespace-nowrap">{getRoleBadge(u.role)}</td>
+                    <td className="px-4 py-4 whitespace-nowrap">{getStatusBadge(u.status)}</td>
+                    <td className="px-4 py-4 text-xs text-zinc-400 font-medium whitespace-nowrap">
                       {u.last_login_at ? new Date(u.last_login_at).toLocaleDateString() : 'Never'}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="inline-flex items-center gap-2">
+                    <td className="px-4 py-4 text-right">
+                      <div className="flex justify-end items-center gap-1.5 flex-wrap sm:flex-nowrap">
                         <Link 
                           href={`/admin/users/${u.id}`}
-                          className="border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer"
+                          className="border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-semibold rounded-lg px-2 py-1.5 text-[11px] sm:text-xs transition cursor-pointer whitespace-nowrap"
                         >
-                          View Profile
+                          View
                         </Link>
                         
                         {u.role !== 'ceo' && u.status !== 'suspended' && (
@@ -197,7 +187,7 @@ export default async function AdminUsersPage({ searchParams }) {
                             <input type="hidden" name="userId" value={u.id} />
                             <button 
                               type="submit" 
-                              className="border border-orange-200 text-orange-600 hover:bg-orange-50 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer"
+                              className="border border-orange-200 text-orange-600 hover:bg-orange-50 font-semibold rounded-lg px-2 py-1.5 text-[11px] sm:text-xs transition cursor-pointer whitespace-nowrap"
                             >
                               Suspend
                             </button>
@@ -209,7 +199,7 @@ export default async function AdminUsersPage({ searchParams }) {
                             <input type="hidden" name="userId" value={u.id} />
                             <button 
                               type="submit" 
-                              className="border border-emerald-200 text-emerald-600 hover:bg-emerald-50 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer"
+                              className="border border-emerald-200 text-emerald-600 hover:bg-emerald-50 font-semibold rounded-lg px-2 py-1.5 text-[11px] sm:text-xs transition cursor-pointer whitespace-nowrap"
                             >
                               Reactivate
                             </button>
@@ -217,30 +207,17 @@ export default async function AdminUsersPage({ searchParams }) {
                         )}
 
                         {u.role !== 'ceo' && (
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <button 
-                                className="border border-red-200 text-red-600 hover:bg-red-50 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer"
+                          <DeleteUserDialog
+                            userId={u.id}
+                            trigger={
+                              <button
+                                type="button"
+                                className="border border-red-200 text-red-600 hover:bg-red-50 font-semibold rounded-lg px-2 py-1.5 text-[11px] sm:text-xs transition cursor-pointer whitespace-nowrap"
                               >
                                 Delete
                               </button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="bg-white rounded-2xl p-6 border border-zinc-100">
-                              <AlertDialogHeader>
-                                <AlertDialogTitle className="font-bold text-zinc-900 text-lg">Are you absolutely sure?</AlertDialogTitle>
-                                <AlertDialogDescription className="text-zinc-500 text-sm mt-2">
-                                  This action is permanent and cannot be undone. This will delete the user&apos;s account, profile, and all associated data.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter className="mt-6 flex gap-3">
-                                <AlertDialogCancel className="px-4 py-2.5 border border-zinc-200 text-zinc-600 rounded-lg text-xs font-semibold hover:bg-zinc-50 cursor-pointer">Cancel</AlertDialogCancel>
-                                <form action={deleteUser}>
-                                  <input type="hidden" name="userId" value={u.id} />
-                                  <AlertDialogAction type="submit" className="bg-red-600 text-white hover:bg-red-700 font-semibold px-4 py-2.5 rounded-lg text-xs transition cursor-pointer">Delete</AlertDialogAction>
-                                </form>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                            }
+                          />
                         )}
                       </div>
                     </td>
@@ -248,7 +225,7 @@ export default async function AdminUsersPage({ searchParams }) {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-zinc-400 italic">
+                  <td colSpan={6} className="px-4 py-12 text-center text-zinc-400 italic">
                     No users match your filters.
                   </td>
                 </tr>
