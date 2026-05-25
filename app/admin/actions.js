@@ -310,50 +310,69 @@ export async function reactivateUser(formData) {
   redirect('/admin/users?success=reactivated')
 }
 
-// ─── DELETE USER ──────────────────────────────────────────────────────────────
+// ─── DELETE USER (FORCE — bypasses all appointment guards) ────────────────────
 export async function deleteUser(formData) {
   const supabase = await createClient()
   const { user, profile } = await requireAdminOrCeo(supabase)
   const targetId = formData.get('userId')
 
+  // Confirm target exists and is not CEO
   const { data: target } = await supabase
     .from('profiles')
-    .select('role')
+    .select('role, full_name, email')
     .eq('id', targetId)
     .single()
   if (!target || target.role === 'ceo') redirect('/403')
 
-  const { data: activeAppointments } = await supabase
-    .from('appointments')
-    .select('id')
-    .or(`patient_id.eq.${targetId},doctor_id.eq.${targetId}`)
-    .in('status', ['pending', 'confirmed'])
-    .limit(1)
-
-  if (activeAppointments && activeAppointments.length > 0) {
-    redirect('/admin/users?error=has_active_appointments')
-  }
-
+  // Use service-role client to bypass RLS for all cleanup steps
   const supabaseAdmin = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
   )
-  const { error } = await supabaseAdmin.auth.admin.deleteUser(targetId)
-  if (error) {
-    console.error('Delete user failed:', error)
+
+  // 1. Hard-delete ALL appointments where this user is patient, doctor, or overrider
+  //    (appointments.patient_id / doctor_id reference profiles with no ON DELETE CASCADE,
+  //     so we must remove them first or the auth user delete will hit an FK violation)
+  const { error: aptError } = await supabaseAdmin
+    .from('appointments')
+    .delete()
+    .or(`patient_id.eq.${targetId},doctor_id.eq.${targetId},overridden_by.eq.${targetId}`)
+  if (aptError) {
+    console.error('DELETE_USER: appointments cleanup failed:', aptError.message)
     redirect('/admin/users?error=delete_failed')
   }
 
+  // 2. Remove user sessions
+  await supabaseAdmin
+    .from('user_sessions')
+    .delete()
+    .eq('user_id', targetId)
+
+  // 3. Nullify actor_id on audit logs so history is preserved but the FK doesn't block
+  await supabaseAdmin
+    .from('audit_logs')
+    .update({ actor_id: null })
+    .eq('actor_id', targetId)
+
+  // 4. Delete the auth user — this cascades to profiles via ON DELETE CASCADE
+  const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(targetId)
+  if (authError) {
+    console.error('DELETE_USER: auth deletion failed:', authError.message)
+    redirect('/admin/users?error=delete_failed')
+  }
+
+  // Log before redirecting (actor still exists so logging works)
   logAudit(supabase, {
     p_actor_id: user.id,
     p_actor_role: profile.role,
-    p_action: 'USER_DELETED',
+    p_action: 'USER_FORCE_DELETED',
     p_target_type: 'profile',
     p_target_id: targetId,
-    p_metadata: { target_role: target.role },
+    p_metadata: { target_role: target.role, target_email: target.email },
     p_ip_address: null,
     p_user_agent: null
   })
 
   redirect('/admin/users?success=deleted')
 }
+
