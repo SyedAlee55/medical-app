@@ -206,3 +206,4 @@
 .animate-fade-in    { animation: fadeIn 0.4s ease-out forwards; }
 .animate-marquee    { animation: marquee 30s linear infinite; }
 .animate-float      { animation: float 6s ease-in-out infinite; }
+.animate-float      { animation: float 6s ease-in-out infinite; }
