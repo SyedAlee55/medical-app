@@ -4,6 +4,7 @@ import { suspendUser, reactivateUser } from '@/app/admin/actions'
 import Link from 'next/link'
 import { CheckCircle2, AlertCircle } from 'lucide-react'
 import { DeleteUserDialog } from '@/components/admin/delete-user-dialog'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 export const dynamic = 'force-dynamic'
 
@@ -171,7 +172,7 @@ export default async function AdminUsersPage({ searchParams }) {
                     <td className="px-4 py-4 whitespace-nowrap">{getRoleBadge(u.role)}</td>
                     <td className="px-4 py-4 whitespace-nowrap">{getStatusBadge(u.status)}</td>
                     <td className="px-4 py-4 text-xs text-zinc-400 font-medium whitespace-nowrap">
-                      {u.last_login_at ? new Date(u.last_login_at).toLocaleDateString() : 'Never'}
+                      {u.last_login_at ? new Date(u.last_login_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE }) : 'Never'}
                     </td>
                     <td className="px-4 py-4 text-right">
                       <div className="flex justify-end items-center gap-1.5 flex-wrap sm:flex-nowrap">

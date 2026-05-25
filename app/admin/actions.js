@@ -2,6 +2,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
+import { localDateTimeToUTC } from '@/utils/time'
 
 async function logAudit(supabase, payload) {
   try {
@@ -180,17 +181,18 @@ export async function createAppointment(formData) {
   const externalName = formData.get('external_name')
   const externalContact = formData.get('external_contact')
   const doctorId     = formData.get('doctor_id')
-  const scheduledAt  = formData.get('scheduled_at')
+  const scheduledAtRaw = formData.get('scheduled_at')
+  const scheduledAt    = localDateTimeToUTC(scheduledAtRaw)
   let reason         = (formData.get('reason_for_visit') || '').slice(0, 500)
   const notes        = (formData.get('notes') || '').slice(0, 500)
 
   // Validate fields based on type
   if (patientType === 'external') {
-    if (!externalName || !externalContact || !doctorId || !scheduledAt || !reason) {
+    if (!externalName || !externalContact || !doctorId || !scheduledAtRaw || !reason) {
       redirect('/admin/appointments?error=missing_fields')
     }
   } else {
-    if (!patientId || !doctorId || !scheduledAt || !reason) {
+    if (!patientId || !doctorId || !scheduledAtRaw || !reason) {
       redirect('/admin/appointments?error=missing_fields')
     }
   }

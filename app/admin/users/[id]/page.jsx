@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowLeft, UserCircle2 } from 'lucide-react'
 import { suspendUser, reactivateUser } from '@/app/admin/actions'
 import { DeleteUserDialog } from '@/components/admin/delete-user-dialog'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 export const dynamic = 'force-dynamic'
 
@@ -140,11 +141,11 @@ export default async function UserProfilePage({ params }) {
             <dl className="p-6 space-y-4 text-sm">
               <div>
                 <dt className="type-label text-zinc-400">Member Since</dt>
-                <dd className="text-zinc-900 font-semibold mt-0.5">{new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</dd>
+                <dd className="text-zinc-900 font-semibold mt-0.5">{new Date(profile.created_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE,  month: 'short', day: 'numeric', year: 'numeric' })}</dd>
               </div>
               <div>
                 <dt className="type-label text-zinc-400">Last Login</dt>
-                <dd className="text-zinc-900 font-semibold mt-0.5">{profile.last_login_at ? new Date(profile.last_login_at).toLocaleDateString() : 'Never'}</dd>
+                <dd className="text-zinc-900 font-semibold mt-0.5">{profile.last_login_at ? new Date(profile.last_login_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE }) : 'Never'}</dd>
               </div>
               {profile.phone && (
                 <div>
@@ -242,7 +243,7 @@ export default async function UserProfilePage({ params }) {
                       return (
                         <tr key={apt.id} className="hover:bg-zinc-50/50 transition">
                           <td className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-zinc-700">
-                            {new Date(apt.scheduled_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
+                            {new Date(apt.scheduled_at).toLocaleString([], { timeZone: GLOBAL_TIMEZONE,  dateStyle: 'short', timeStyle: 'short' })}
                           </td>
                           <td className="px-6 py-4">
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${aptClass}`}>{apt.status}</span>

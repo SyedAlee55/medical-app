@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { format } from 'date-fns'
 import { Clock } from 'lucide-react'
+import { formatGlobalDate, formatGlobalTime } from '@/utils/time'
 
 export default function RealTimeClock() {
     const [mounted, setMounted] = useState(false)
@@ -23,10 +23,10 @@ export default function RealTimeClock() {
         <div className="flex items-center gap-2 px-4 py-2 bg-white border rounded-full shadow-sm">
             <Clock className="h-4 w-4 text-blue-500 animate-pulse" />
             <span className="text-sm font-semibold text-slate-700">
-                {format(time, 'PPP')}
+                {formatGlobalDate(time)}
             </span>
             <span className="text-sm font-mono text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
-                {format(time, 'pp')}
+                {formatGlobalTime(time)}
             </span>
         </div>
     )

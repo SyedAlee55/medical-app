@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import AppointmentsFilter from './filter'
 import { OverrideAction } from './client-actions'
 import { CheckCircle2, AlertCircle } from 'lucide-react'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,9 +11,9 @@ function formatDate(isoString) {
   if (!isoString) return '—'
   const d = new Date(isoString)
   return (
-    d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+    d.toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE,  month: 'short', day: 'numeric', year: 'numeric' }) +
     ' ' +
-    d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+    d.toLocaleTimeString('en-US', { timeZone: GLOBAL_TIMEZONE,  hour: '2-digit', minute: '2-digit', hour12: false })
   )
 }
 
