@@ -1,9 +1,9 @@
 'use client'
 
+import { useState } from 'react'
 import { deleteUser } from '@/app/admin/actions'
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -24,36 +24,49 @@ const dialogFooterClass =
 const cancelButtonClass =
   'px-4 py-2.5 border border-zinc-200 text-zinc-600 rounded-lg text-xs font-semibold hover:bg-zinc-50 cursor-pointer bg-white shadow-none ring-0 outline-none'
 
-const deleteButtonClass =
-  'bg-red-600 text-white hover:bg-red-700 font-semibold px-4 py-2.5 rounded-lg text-xs transition cursor-pointer shadow-none ring-0 border-0 outline-none'
-
 export function DeleteUserDialog({ userId, trigger }) {
+  const [pending, setPending] = useState(false)
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent className={dialogContentClass}>
         <AlertDialogHeader className={dialogHeaderClass}>
           <AlertDialogTitle className="font-bold text-zinc-900 text-lg">
-            Are you absolutely sure?
+            Delete User Permanently?
           </AlertDialogTitle>
           <AlertDialogDescription className="!text-zinc-500 text-sm mt-2">
-            This action is permanent and cannot be undone. This will delete the user&apos;s
-            account, profile, and all associated data.
+            This action <strong className="text-zinc-700">cannot be undone</strong>. The user&apos;s
+            account, profile, and all associated data will be permanently removed from the database.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className={dialogFooterClass}>
           <AlertDialogCancel asChild>
-            <button type="button" className={cancelButtonClass}>
+            <button type="button" disabled={pending} className={cancelButtonClass}>
               Cancel
             </button>
           </AlertDialogCancel>
-          <form action={deleteUser}>
+
+          {/*
+            IMPORTANT: The submit button must NOT be wrapped by AlertDialogAction asChild.
+            Radix UI's AlertDialogAction fires preventDefault() on click for its exit animation,
+            which silently blocks form submission and the server action never runs.
+          */}
+          <form
+            action={async (formData) => {
+              setPending(true)
+              await deleteUser(formData)
+              setPending(false)
+            }}
+          >
             <input type="hidden" name="userId" value={userId} />
-            <AlertDialogAction asChild>
-              <button type="submit" className={deleteButtonClass}>
-                Delete
-              </button>
-            </AlertDialogAction>
+            <button
+              type="submit"
+              disabled={pending}
+              className="bg-red-600 text-white hover:bg-red-700 disabled:opacity-60 disabled:cursor-not-allowed font-semibold px-4 py-2.5 rounded-lg text-xs transition cursor-pointer shadow-none ring-0 border-0 outline-none"
+            >
+              {pending ? 'Deleting…' : 'Yes, delete permanently'}
+            </button>
           </form>
         </AlertDialogFooter>
       </AlertDialogContent>

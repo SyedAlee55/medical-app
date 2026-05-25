@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { approveDoctor, rejectDoctor } from '@/app/admin/actions'
 import { CheckCircle2, AlertCircle } from 'lucide-react'
 import ApprovalsTabs from '@/components/admin/approvals-tabs'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 // Force dynamic so it re-fetches stats on every reload
 export const dynamic = 'force-dynamic'
@@ -98,7 +99,7 @@ export default async function AdminApprovalsPage({ searchParams }) {
                     </div>
                     <p className="text-xs font-medium text-zinc-400">{applicant.email}</p>
                     <p className="text-xs text-zinc-500 font-medium mt-2">
-                      <span className="font-semibold text-zinc-700">Applied:</span> {new Date(applicant.created_at).toLocaleDateString('en-US', {
+                      <span className="font-semibold text-zinc-700">Applied:</span> {new Date(applicant.created_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE, 
                         month: 'short', day: 'numeric', year: 'numeric'
                       })}
                     </p>
@@ -166,7 +167,7 @@ export default async function AdminApprovalsPage({ searchParams }) {
                           </span>
                         </td>
                         <td className="px-6 py-4 text-xs text-zinc-400 font-medium">
-                          {new Date(applicant.updated_at).toLocaleDateString('en-US', {
+                          {new Date(applicant.updated_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE, 
                             month: 'short', day: 'numeric', year: 'numeric'
                           })}
                         </td>

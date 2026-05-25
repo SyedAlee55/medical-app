@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { cancelAppointment } from '@/app/appointments/actions'
 import { Calendar, Clock, MapPin, X } from 'lucide-react'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 const STATUS_BADGE = {
   pending:    { label: 'Pending',    className: 'bg-amber-50 text-amber-700 border border-amber-200' },
@@ -45,13 +46,13 @@ function AppointmentCard({ appt }) {
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 text-xs text-zinc-500 font-medium">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5 text-zinc-400" />
-                {new Date(appt.scheduled_at).toLocaleDateString('en-US', {
+                {new Date(appt.scheduled_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE, 
                   weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
                 })}
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                {new Date(appt.scheduled_at).toLocaleTimeString('en-US', {
+                {new Date(appt.scheduled_at).toLocaleTimeString('en-US', { timeZone: GLOBAL_TIMEZONE, 
                   hour: '2-digit', minute: '2-digit'
                 })}
               </span>

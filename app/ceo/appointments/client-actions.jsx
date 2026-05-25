@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import { ceoOverrideAppointment } from '@/app/appointments/actions'
+import { getGlobalDateTimeLocalString } from '@/utils/time'
 
 export function OverrideAction({ appointmentId, currentStatus, currentScheduledAt }) {
   const [editing, setEditing] = useState(false)
   const [newStatus, setNewStatus] = useState(currentStatus)
-  const [newDate, setNewDate] = useState(currentScheduledAt ? new Date(currentScheduledAt).toISOString().slice(0, 16) : '')
+  const [newDate, setNewDate] = useState(currentScheduledAt ? getGlobalDateTimeLocalString(new Date(currentScheduledAt)) : '')
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
 

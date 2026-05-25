@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { respondToAppointment } from '@/app/appointments/actions'
 import { Calendar, Clock, Phone, FileText, Check, X } from 'lucide-react'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 const STATUS_BADGE = {
   pending:   { label: 'Pending Review', className: 'bg-amber-50 text-amber-700 border border-amber-200' },
@@ -72,13 +73,13 @@ function RequestCard({ appt }) {
               <span className="flex items-center gap-1 text-brand-600">
                 <Calendar className="w-3.5 h-3.5" />
                 {new Date(appt.scheduled_at).toLocaleDateString('en-US', {
-                  weekday: 'short', month: 'short', day: 'numeric'
+                  timeZone: GLOBAL_TIMEZONE, weekday: 'short', month: 'short', day: 'numeric'
                 })}
               </span>
               <span className="flex items-center gap-1 text-zinc-400">
                 <Clock className="w-3.5 h-3.5" />
                 {new Date(appt.scheduled_at).toLocaleTimeString('en-US', {
-                  hour: '2-digit', minute: '2-digit'
+                  timeZone: GLOBAL_TIMEZONE, hour: '2-digit', minute: '2-digit'
                 })}
               </span>
             </div>

@@ -1,12 +1,13 @@
 import { getAllUsers } from '@/app/ceo/actions'
 import PatientsFilter from './filter'
 import { PatientActionButtons } from './client-actions'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 export const dynamic = 'force-dynamic'
 
 function formatDate(isoString) {
   if (!isoString) return '—'
-  return new Date(isoString).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(isoString).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE,  month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 const STATUS_CLASSES = {

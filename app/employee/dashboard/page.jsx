@@ -4,6 +4,7 @@ import AppointmentList from '@/components/appointment-list'
 import RealTimeClock from '@/components/real-time-clock'
 import { clearCompletedAppointments } from '@/app/appointments/actions'
 import { ShieldCheck, AlertCircle, Clock, FileText, User } from 'lucide-react'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 function SuccessBanner({ message }) {
   return (
@@ -164,7 +165,7 @@ export default async function DashboardPage({ searchParams }) {
                         </p>
                         <div className="flex items-center gap-3 text-xs text-zinc-400 mt-1 font-medium">
                           <span>
-                            {new Date(apt.scheduled_at).toLocaleString('en-US', {
+                            {new Date(apt.scheduled_at).toLocaleString('en-US', { timeZone: GLOBAL_TIMEZONE,  timeZone: GLOBAL_TIMEZONE, 
                               month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                             })}
                           </span>

@@ -3,12 +3,13 @@ import { redirect } from 'next/navigation'
 import EmployeeIdFilter from './filter'
 import { EmployeeIdActions } from './client-actions'
 import { BadgeCheck, XCircle } from 'lucide-react'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 export const dynamic = 'force-dynamic'
 
 function formatDate(isoString) {
   if (!isoString) return '—'
-  return new Date(isoString).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(isoString).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE,  month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 const ROLE_CLASSES = {

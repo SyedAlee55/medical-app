@@ -1,14 +1,15 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 export const dynamic = 'force-dynamic'
 
 function formatDate(isoString) {
   if (!isoString) return '-'
   const d = new Date(isoString)
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + 
-         d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+  return d.toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE,  month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + 
+         d.toLocaleTimeString('en-US', { timeZone: GLOBAL_TIMEZONE,  hour: '2-digit', minute: '2-digit', hour12: false })
 }
 
 export default async function PatientProfilePage({ params }) {
@@ -58,7 +59,7 @@ export default async function PatientProfilePage({ params }) {
             </div>
             <div>
               <span className="block text-zinc-500 text-xs uppercase tracking-wide">Date of Birth</span>
-              <span className="font-medium">{profile.date_of_birth ? new Date(profile.date_of_birth).toLocaleDateString() : '-'}</span>
+              <span className="font-medium">{profile.date_of_birth ? new Date(profile.date_of_birth).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE }) : '-'}</span>
             </div>
             <div>
               <span className="block text-zinc-500 text-xs uppercase tracking-wide">Gender</span>
