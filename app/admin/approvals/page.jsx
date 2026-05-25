@@ -2,7 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { approveDoctor, rejectDoctor } from '@/app/admin/actions'
 import { CheckCircle2, AlertCircle } from 'lucide-react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import ApprovalsTabs from '@/components/admin/approvals-tabs'
 
 // Force dynamic so it re-fetches stats on every reload
 export const dynamic = 'force-dynamic'
@@ -73,30 +73,10 @@ export default async function AdminApprovalsPage({ searchParams }) {
         </div>
       )}
 
-      <Tabs defaultValue="pending" className="w-full">
-        {/* Custom styled TabsList */}
-        <TabsList className="bg-zinc-100 rounded-xl p-1 flex gap-1 mb-6 w-fit h-auto">
-          <TabsTrigger 
-            value="pending" 
-            className="px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-sm text-zinc-500 hover:text-zinc-700"
-          >
-            Pending
-            {pendingApplicants?.length > 0 && (
-              <span className="bg-red-50 text-red-700 border border-red-100 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
-                {pendingApplicants.length}
-              </span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger 
-            value="reviewed"
-            className="px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer data-[state=active]:bg-white data-[state=active]:text-zinc-950 data-[state=active]:shadow-sm text-zinc-500 hover:text-zinc-700"
-          >
-            Reviewed
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="pending" className="space-y-4">
-          {pendingApplicants?.length === 0 ? (
+      <ApprovalsTabs
+        pendingCount={pendingApplicants?.length ?? 0}
+        pendingPanel={
+          pendingApplicants?.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-16 bg-white rounded-2xl border border-zinc-100 shadow-sm text-center">
               <CheckCircle2 className="h-12 w-12 text-emerald-500 mb-4" />
               <h3 className="text-base font-semibold text-zinc-900">No pending applications</h3>
@@ -148,10 +128,9 @@ export default async function AdminApprovalsPage({ searchParams }) {
                 </div>
               )
             })
-          )}
-        </TabsContent>
-
-        <TabsContent value="reviewed">
+          )
+        }
+        reviewedPanel={
           <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
@@ -205,8 +184,8 @@ export default async function AdminApprovalsPage({ searchParams }) {
               </table>
             </div>
           </div>
-        </TabsContent>
-      </Tabs>
+        }
+      />
     </div>
   )
 }
