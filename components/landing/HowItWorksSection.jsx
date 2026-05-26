@@ -18,39 +18,41 @@ export default function HowItWorksSection() {
   ]
 
   return (
-    <section className="bg-[#f8faff] py-24 border-b border-zinc-100 relative">
+    <section className="bg-black py-24">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        
-        {/* Section Heading */}
         <div className="text-center mb-16">
-          <span className="type-label text-brand-600 tracking-wider">
+          <span className="inline-block text-[11px] font-semibold tracking-widest uppercase text-zinc-300 bg-white/5 border border-white/10 px-3 py-1 rounded-full mb-4">
             HOW IT WORKS
           </span>
-          <h2 className="type-h2 mt-2 mb-4 text-zinc-900">
-            Up and running in three steps
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mt-3 mb-4">
+            Up and running in{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-emerald-400">
+              three steps
+            </span>
           </h2>
-          <p className="type-body text-zinc-500 max-w-2xl mx-auto text-center text-sm md:text-base">
+          <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
             We removed every unnecessary step from the healthcare booking experience. Because your time matters.
           </p>
         </div>
 
-        {/* 3-Column Step Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-12">
           {steps.map((step, idx) => (
-            <div key={idx} className="flex flex-col items-center text-center bg-transparent">
-              <span className="text-5xl font-extrabold text-brand-200 mb-4 block leading-none select-none text-center">
+            <div
+              key={idx}
+              className="bg-zinc-950/40 backdrop-blur-2xl rounded-3xl border border-white/6 p-8 flex flex-col items-center text-center hover:border-brand-500/20 hover:bg-black transition-all duration-300"
+            >
+              <span className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white/30 to-white/5 mb-5 leading-none select-none">
                 {step.num}
               </span>
-              <h3 className="type-h3 text-zinc-900 mb-2">
+              <h3 className="text-base font-semibold text-white mb-3 leading-snug">
                 {step.title}
               </h3>
-              <p className="type-body text-zinc-500 text-sm leading-relaxed">
+              <p className="text-zinc-400 text-sm leading-relaxed">
                 {step.body}
               </p>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   )

@@ -1,12 +1,12 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import PatientAppointmentList from "@/components/patient-appointment-list";
-import { Calendar, CheckCircle2, Star, Clock } from 'lucide-react'
+import { Calendar, CheckCircle2, Star, Clock, AlertTriangle } from 'lucide-react'
 
 function SuccessBanner({ message }) {
   return (
-    <div className="mb-6 p-4 text-sm font-medium text-emerald-800 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center gap-2.5 animate-fade-in">
-      <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+    <div className="mb-6 p-4 text-sm font-medium text-emerald-300 bg-emerald-500/5 backdrop-blur-xl border border-emerald-500/15 rounded-xl flex items-center gap-2.5 animate-fade-in shadow-[0_4px_20px_rgba(16,185,129,0.02)]">
+      <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
       <span>{message}</span>
     </div>
   );
@@ -14,7 +14,7 @@ function SuccessBanner({ message }) {
 
 function InfoBanner({ message }) {
   return (
-    <div className="mb-6 p-4 text-sm font-medium text-zinc-800 bg-zinc-50 border border-zinc-100 rounded-xl flex items-center gap-2.5 animate-fade-in">
+    <div className="mb-6 p-4 text-sm font-medium text-zinc-350 bg-white/5 backdrop-blur-xl border border-white/8 rounded-xl flex items-center gap-2.5 animate-fade-in">
       <CheckCircle2 className="w-5 h-5 text-zinc-500 shrink-0" />
       <span>{message}</span>
     </div>
@@ -23,8 +23,8 @@ function InfoBanner({ message }) {
 
 function ErrorBanner({ message }) {
   return (
-    <div className="mb-6 p-4 text-sm font-medium text-red-800 bg-red-50 border border-red-100 rounded-xl flex items-center gap-2.5 animate-fade-in">
-      <CheckCircle2 className="w-5 h-5 text-red-600 shrink-0" />
+    <div className="mb-6 p-4 text-sm font-medium text-red-400 bg-red-500/5 backdrop-blur-xl border border-red-500/15 rounded-xl flex items-center gap-2.5 animate-fade-in shadow-[0_4px_20px_rgba(239,68,68,0.02)]">
+      <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
       <span>{message}</span>
     </div>
   );
@@ -84,7 +84,7 @@ export default async function PatientDashboard({ searchParams }) {
   const completedCount = appointments?.filter(a => a.status === 'completed').length || 0;
 
   return (
-    <div className="p-8 bg-zinc-50 min-h-screen">
+    <div className="p-8 bg-black min-h-screen">
       <div className="max-w-5xl mx-auto">
         {isWelcome && <SuccessBanner message="Your profile has been saved. Welcome to Tj's Medical Hub." />}
         {params?.booked && <SuccessBanner message={banners.booked.msg} />}
@@ -94,49 +94,49 @@ export default async function PatientDashboard({ searchParams }) {
         {/* Dashboard Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight">Patient Dashboard</h1>
-            <p className="type-body text-zinc-500 mt-1">
-              Welcome back, <span className="font-semibold text-brand-600">{profile.full_name}</span>
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">Patient Dashboard</h1>
+            <p className="text-sm text-zinc-400 mt-1">
+              Welcome back, <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-emerald-400">{profile.full_name}</span>
             </p>
           </div>
         </div>
 
         {/* Stat Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-white rounded-2xl border border-zinc-100 p-6 flex items-center justify-between shadow-sm">
+          <div className="bg-zinc-950/30 backdrop-blur-2xl rounded-2xl border border-white/6 p-6 flex items-center justify-between hover:border-brand-500/15 hover:shadow-[0_10px_40px_rgba(6,148,162,0.02)] transition-all duration-300 group">
             <div>
-              <p className="type-label text-zinc-400">Active Consultations</p>
-              <h3 className="text-2xl font-bold text-zinc-900 mt-1">{activeCount}</h3>
+              <p className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Active Consultations</p>
+              <h3 className="text-3xl font-extrabold text-white mt-2 tracking-tight">{activeCount}</h3>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center text-brand-600">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-zinc-400 group-hover:bg-brand-500/10 group-hover:text-brand-300 transition-all">
               <Calendar className="w-6 h-6" />
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-zinc-100 p-6 flex items-center justify-between shadow-sm">
+          <div className="bg-zinc-950/30 backdrop-blur-2xl rounded-2xl border border-white/6 p-6 flex items-center justify-between hover:border-emerald-500/15 hover:shadow-[0_10px_40px_rgba(16,185,129,0.02)] transition-all duration-300 group">
             <div>
-              <p className="type-label text-zinc-400">Completed Visits</p>
-              <h3 className="text-2xl font-bold text-zinc-900 mt-1">{completedCount}</h3>
+              <p className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Completed Visits</p>
+              <h3 className="text-3xl font-extrabold text-white mt-2 tracking-tight">{completedCount}</h3>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-300 transition-all">
               <CheckCircle2 className="w-6 h-6" />
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-zinc-100 p-6 flex items-center justify-between shadow-sm">
+          <div className="bg-zinc-950/30 backdrop-blur-2xl rounded-2xl border border-white/6 p-6 flex items-center justify-between hover:border-white/20 hover:shadow-[0_10px_40px_rgba(255,255,255,0.01)] transition-all duration-300 group">
             <div>
-              <p className="type-label text-zinc-400">Care Rating</p>
-              <h3 className="text-2xl font-bold text-zinc-900 mt-1">4.9 / 5.0</h3>
+              <p className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Care Rating</p>
+              <h3 className="text-3xl font-extrabold text-white mt-2 tracking-tight">4.9 / 5.0</h3>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
-              <Star className="w-6 h-6 fill-amber-500" />
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-zinc-400 group-hover:bg-white/10 group-hover:text-white transition-all">
+              <Star className="w-6 h-6 fill-white/20 text-white" />
             </div>
           </div>
         </div>
 
         {/* Appointments List */}
         <div className="space-y-6">
-          <h2 className="type-h3 text-zinc-900 font-bold">Your Consultations</h2>
+          <h2 className="text-xl font-bold text-white tracking-tight">Your Consultations</h2>
           <PatientAppointmentList 
             initialAppointments={appointments || []} 
             userId={user.id} 

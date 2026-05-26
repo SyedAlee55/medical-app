@@ -17,16 +17,18 @@ export default async function BookAppointmentPage() {
         .eq('role', 'doctor');
 
     return (
-        <div className="max-w-2xl mx-auto p-8">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-900">Book an Appointment</h1>
-                <p className="text-slate-500">Select a medical specialty followed by a healthcare provider.</p>
-            </div>
+        <div className="p-8 bg-black min-h-screen">
+            <div className="max-w-2xl mx-auto">
+                <div className="mb-8">
+                    <h1 className="text-3xl font-extrabold text-white tracking-tight">Book an Appointment</h1>
+                    <p className="text-zinc-400 mt-1.5 text-sm">Select a medical specialty followed by a healthcare provider.</p>
+                </div>
 
-            <BookingForm 
-                specialties={specialties || []} 
-                doctors={doctors || []} 
-            />
+                <BookingForm 
+                    specialties={specialties || []} 
+                    doctors={doctors || []} 
+                />
+            </div>
         </div>
     );
 }

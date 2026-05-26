@@ -51,6 +51,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Softer white shade */
+  --color-white: #f4f4f5;
 }
 
 /* ============================================================
@@ -116,7 +119,8 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: #09090b; /* zinc-950 */
+    color: #e4e4e7; /* zinc-200 (softer white) */
     font-family: Inter, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -132,7 +136,7 @@
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.1;
-  color: #09090b; /* zinc-950 */
+  /* color intentionally omitted — inherits from body/parent */
 }
 
 .type-h2 {
@@ -141,7 +145,7 @@
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1.25;
-  color: #09090b;
+  /* color intentionally omitted — inherits from body/parent */
 }
 
 .type-h3 {
@@ -150,7 +154,7 @@
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.35;
-  color: #18181b; /* zinc-900 */
+  /* color intentionally omitted — inherits from body/parent */
 }
 
 .type-label {
@@ -168,7 +172,7 @@
   font-weight: 400;
   line-height: 1.7;
   letter-spacing: 0;
-  color: #52525b; /* zinc-600 */
+  /* color intentionally omitted — inherits from body/parent */
 }
 
 .type-meta {
@@ -176,7 +180,7 @@
   font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 0.01em;
-  color: #71717a; /* zinc-500 */
+  /* color intentionally omitted — inherits from body/parent */
 }
 
 /* ============================================================
