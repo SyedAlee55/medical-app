@@ -77,7 +77,7 @@ export default function HeroSection() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500" />
               </span>
               <span className="text-[11px] font-semibold tracking-wider text-brand-300 uppercase">
-                TRUSTED BY 50,000+ PATIENTS
+                TRUSTED BY 500+ PATIENTS
               </span>
             </motion.div>
 
@@ -98,7 +98,7 @@ export default function HeroSection() {
               variants={itemVariants}
               className="text-zinc-300/85 text-base sm:text-lg max-w-xl leading-relaxed mb-8"
             >
-              Connect with verified top-rated doctors for in-person visits and telemedicine. Experience HIPAA-compliant health tracking, seamless scheduling, and clinical excellence — all in one platform.
+              At TJ's Medical Hub, we deliver safe, reliable and compassionate care, focused on accurate diagnosis, modern treatment and making every patient feel respected and valued. Book an appointment with verified top-rated doctors now!
             </motion.p>
 
             {/* CTA buttons */}
@@ -144,7 +144,7 @@ export default function HeroSection() {
               <p className="text-xs sm:text-sm text-zinc-400">
                 Join{' '}
                 <strong className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-emerald-400">
-                  50,000+ patients
+                  500+ patients
                 </strong>
                 {' already managing their care here'}
               </p>
@@ -172,8 +172,8 @@ export default function HeroSection() {
                   DR
                 </div>
                 <div>
-                  <h4 className="font-semibold text-white text-sm tracking-wide">Dr. Aisha Rehman</h4>
-                  <p className="text-xs text-zinc-300">Primary Care Physician</p>
+                  <h4 className="font-semibold text-white text-sm tracking-wide">Dr. Tajammal Gauhar</h4>
+                  <p className="text-xs text-zinc-300">Medical Director</p>
                 </div>
               </div>
 
@@ -222,7 +222,7 @@ export default function HeroSection() {
               </div>
               <div>
                 <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">Security</p>
-                <p className="text-xs text-white font-semibold">HIPAA Compliant</p>
+                <p className="text-xs text-white font-semibold">Fully Encrypted</p>
               </div>
             </motion.div>
 

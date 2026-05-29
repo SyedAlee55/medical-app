@@ -33,7 +33,7 @@ export default function TestimonialsSection() {
             Real people. Real results.
           </h2>
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            Don&apos;t take our word for it &mdash; here&apos;s what patients and doctors say about Tj&apos;s Medical Hub.
+            Don&apos;t take our word for it, here&apos;s what patients and doctors say about Tj&apos;s Medical Hub.
           </p>
         </div>
 

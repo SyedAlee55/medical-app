@@ -43,10 +43,14 @@ export default function ServicesSection() {
             WHAT WE OFFER
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mt-3 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-400">
-            Everything your health journey needs
+            Everything your {' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-teal-300 to-emerald-400">
+              health journey needs
+            </span>
+
           </h2>
           <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            From instant appointment booking to secure telemedicine and digital prescriptions &mdash; we&apos;ve built the tools that make modern healthcare actually work.
+            From instant online appointment booking to secure profile creation, we&apos;ve built the tools that make modern healthcare actually work.
           </p>
         </div>
 

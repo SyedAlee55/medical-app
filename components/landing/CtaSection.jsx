@@ -10,7 +10,7 @@ export default function CtaSection() {
               Are you a healthcare provider?
             </h3>
             <p className="text-zinc-400 text-sm max-w-xl leading-relaxed">
-              Join 500+ doctors already using Tj&apos;s Medical Hub to manage their practice &mdash; from scheduling to prescriptions.
+              Join 50+ doctors already using Tj&apos;s Medical Hub to manage their practice, from scheduling to prescriptions.
             </p>
           </div>
           <div>
@@ -40,7 +40,7 @@ export default function CtaSection() {
             </span>
           </h2>
           <p className="text-zinc-400 text-center max-w-xl mx-auto mb-10 text-sm md:text-base leading-relaxed">
-            Join thousands of patients who manage their entire healthcare experience in one place &mdash; bookings, records, prescriptions, and more.
+            Join thousands of patients who manage their entire healthcare experience in one place, bookings, records, prescriptions, and more.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a

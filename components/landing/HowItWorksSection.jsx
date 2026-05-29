@@ -13,7 +13,7 @@ export default function HowItWorksSection() {
     {
       num: '03',
       title: 'Get care, stay connected',
-      body: 'Attend your visit in-person or via telemedicine. Receive follow-up notes, prescriptions, and lab results directly in your portal.',
+      body: 'Attend your visit in-person. Receive appointment updates, prescriptions, and lab results directly on your whatsapp.',
     },
   ]
 
