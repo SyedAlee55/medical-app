@@ -8,11 +8,24 @@ export default function Footer() {
 
           {/* Column 1 — Brand */}
           <div className="flex flex-col gap-4">
+            <style>{`
+              @keyframes coin-flip-y {
+                0% {
+                  transform: rotateY(0deg);
+                }
+                100% {
+                  transform: rotateY(360deg);
+                }
+              }
+              .animate-coin-flip {
+                animation: coin-flip-y 4.5s linear infinite;
+                transform-style: preserve-3d;
+                backface-visibility: visible;
+              }
+            `}</style>
             <a href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-brand-500/20 border border-brand-400/30 flex items-center justify-center text-white font-bold shadow-[0_0_12px_rgba(6,148,162,0.1)]">
-                <svg width="16" height="16" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2h4v10h10v4h-10v10h-4v-10H2v-4h10V2z" fill="currentColor" />
-                </svg>
+              <div className="w-12 h-12 rounded-full overflow-hidden border border-brand-400/30 flex items-center justify-center text-white font-bold shadow-[0_0_12px_rgba(6,148,162,0.1)] animate-coin-flip">
+                <img src="/logo3.png" alt="Logo" className="w-full h-full object-cover" />
               </div>
               <span className="font-bold text-white text-lg tracking-tight">Tj&apos;s Medical Hub</span>
             </a>
