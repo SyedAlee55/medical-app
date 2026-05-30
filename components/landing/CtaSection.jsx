@@ -1,21 +1,22 @@
 export default function CtaSection() {
   return (
-    <div className="w-full">
+    <div className="w-full bg-black">
+
       {/* Part A — Provider callout strip */}
-      <div className="bg-brand-50 border-y border-brand-100 py-10">
+      <div className="bg-zinc-950/40 backdrop-blur-2xl border border-white/5 py-10 mx-6 lg:mx-12 rounded-3xl my-6">
         <div className="max-w-5xl mx-auto px-6 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
-            <h3 className="type-h3 text-brand-900 mb-1">
+            <h3 className="text-lg font-semibold text-white mb-1">
               Are you a healthcare provider?
             </h3>
-            <p className="type-body text-brand-700 text-sm max-w-xl leading-relaxed">
-              Join 500+ doctors already using Tj&apos;s Medical Hub to manage their practice &mdash; from scheduling to prescriptions.
+            <p className="text-zinc-400 text-sm max-w-xl leading-relaxed">
+              Join 50+ doctors already using Tj&apos;s Medical Hub to manage their practice, from scheduling to prescriptions.
             </p>
           </div>
           <div>
             <a
               href="/login"
-              className="bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg px-6 py-3 text-center text-sm transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.08)] active:scale-[0.98] inline-block whitespace-nowrap"
+              className="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-brand-500/15 hover:border-brand-400/25 text-white font-semibold rounded-xl px-6 py-3 text-sm transition-all duration-300 active:scale-[0.98] inline-block whitespace-nowrap"
             >
               Join as a Doctor &rarr;
             </a>
@@ -24,27 +25,33 @@ export default function CtaSection() {
       </div>
 
       {/* Part B — Final CTA */}
-      <div className="bg-[#0a1628] py-20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-brand-900/10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-brand-900/10 blur-3xl pointer-events-none" />
+      <div className="py-24 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-brand-500/6 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-emerald-500/6 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
-          <h2 className="type-h2 !text-white text-center mb-3">
-            Your health journey starts today.
+          <span className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-wider text-zinc-350 uppercase mb-6">
+            Start for free today
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-4">
+            <span className="text-white">Your health journey </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-emerald-400">
+              starts today.
+            </span>
           </h2>
-          <p className="text-zinc-400 text-center max-w-xl mx-auto mt-3 mb-8 text-sm md:text-base leading-relaxed">
-            Join thousands of patients who manage their entire healthcare experience in one place &mdash; bookings, records, prescriptions, and more.
+          <p className="text-zinc-400 text-center max-w-xl mx-auto mb-10 text-sm md:text-base leading-relaxed">
+            Join thousands of patients who manage their entire healthcare experience in one place, bookings, records, prescriptions, and more.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
               href="/login"
-              className="w-full sm:w-auto bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg px-6 py-3 text-center text-sm transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.08)] active:scale-[0.98]"
+              className="w-full sm:w-auto bg-brand-500/10 backdrop-blur-md border border-brand-400/20 text-white hover:bg-brand-500/20 hover:border-brand-400/35 font-semibold rounded-xl px-8 py-3.5 text-center text-sm transition-all duration-300 shadow-[0_8px_30px_rgba(6,148,162,0.06)] active:scale-[0.98]"
             >
               Get Started Free
             </a>
             <a
               href="#services"
-              className="w-full sm:w-auto border border-zinc-600 text-zinc-300 hover:border-zinc-400 hover:text-white font-semibold rounded-lg px-6 py-3 text-center text-sm transition-all duration-200"
+              className="w-full sm:w-auto bg-white/4 border border-white/8 text-zinc-300 hover:text-white hover:bg-white/8 font-semibold rounded-xl px-8 py-3.5 text-center text-sm transition-all duration-300 active:scale-[0.98]"
             >
               Talk to our team
             </a>
