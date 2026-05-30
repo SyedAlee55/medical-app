@@ -1,22 +1,33 @@
 import React from 'react'
 import Link from 'next/link'
-import { Bell } from 'lucide-react'
 import { createClient } from '@/utils/supabase/server'
 import { logout } from '@/app/login/actions'
 import { PageTitle } from './page-title-client'
+import NotificationBell from './notification-bell'
 
 export default async function Header() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   let initials = 'U'
+  let role = null
+
   if (user && user.email) {
     initials = user.email.substring(0, 2).toUpperCase()
+
+    // Fetch role so the bell knows what type of notifications to show
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    role = profile?.role ?? null
   }
 
   return (
     <header className="sticky top-0 z-40 w-full h-16 bg-black/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-6">
-      {/* Left: Logo */}
+      {/* Left: Logo + Page Title */}
       <div className="flex items-center gap-6">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-8 h-8 rounded-full bg-brand-500/20 border border-brand-400/30 flex items-center justify-center text-white font-bold transition-transform group-hover:scale-105 shadow-[0_0_12px_rgba(6,148,162,0.1)]">
@@ -27,7 +38,6 @@ export default async function Header() {
           <span className="font-bold text-white text-lg tracking-tight">Tj&apos;s Medical Hub</span>
         </Link>
 
-        {/* Page Title (passed or resolved from path) */}
         <span className="text-white/10 hidden sm:inline">|</span>
         <div className="text-zinc-300 font-medium text-sm">
           <PageTitle />
@@ -35,23 +45,13 @@ export default async function Header() {
       </div>
 
       {/* Right cluster */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {user ? (
           <>
-            {/* Search Input (Desktop) */}
-            <div className="relative hidden md:block w-48 lg:w-64">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full bg-white/5 border border-white/8 text-white placeholder-zinc-500 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-transparent transition-all"
-              />
-            </div>
-
-            {/* Notification Bell */}
-            <button className="relative p-2 text-zinc-400 hover:text-white transition-colors rounded-full hover:bg-white/5 cursor-pointer">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-500/55 border border-brand-400/20 shadow-[0_0_8px_rgba(6,148,162,0.2)]" />
-            </button>
+            {/* Notification Bell — functional, role-aware */}
+            {role && (
+              <NotificationBell userId={user.id} role={role} />
+            )}
 
             {/* User Avatar Dropdown */}
             <details className="relative group">
