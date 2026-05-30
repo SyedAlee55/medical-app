@@ -29,7 +29,7 @@ export default function CtaSection() {
         <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-brand-900/10 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
-          <h2 className="type-h2 text-white text-center mb-3">
+          <h2 className="type-h2 !text-white text-center mb-3">
             Your health journey starts today.
           </h2>
           <p className="text-zinc-400 text-center max-w-xl mx-auto mt-3 mb-8 text-sm md:text-base leading-relaxed">

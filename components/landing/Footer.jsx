@@ -76,8 +76,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-zinc-400 hover:text-white text-sm transition-colors">
-                  Blog
+                <a href="/team" className="text-zinc-400 hover:text-white text-sm transition-colors">
+                  Team
                 </a>
               </li>
               <li>

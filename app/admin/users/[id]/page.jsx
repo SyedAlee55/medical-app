@@ -2,18 +2,9 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, UserCircle2 } from 'lucide-react'
-import { suspendUser, reactivateUser, deleteUser } from '@/app/admin/actions'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import { suspendUser, reactivateUser } from '@/app/admin/actions'
+import { DeleteUserDialog } from '@/components/admin/delete-user-dialog'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 export const dynamic = 'force-dynamic'
 
@@ -95,11 +86,7 @@ export default async function UserProfilePage({ params }) {
     .order('scheduled_at', { ascending: false })
     .limit(20)
 
-  const { count: blockingAppointmentsCount } = await supabase
-    .from('appointments')
-    .select('*', { count: 'exact', head: true })
-    .or(`patient_id.eq.${id},doctor_id.eq.${id}`)
-    .in('status', ['pending', 'confirmed'])
+  // blockingAppointmentsCount removed — admin force-delete now handles active appointments
 
   const statusClass = STATUS_CLASSES[profile.status] || 'bg-zinc-50 text-zinc-600 border border-zinc-200'
   const roleClass   = ROLE_CLASSES[profile.role]   || 'bg-zinc-50 text-zinc-600 border border-zinc-200'
@@ -136,25 +123,17 @@ export default async function UserProfilePage({ params }) {
               </div>
             </div>
 
-            {/* Blocking warning */}
-            {profile.role !== 'ceo' && blockingAppointmentsCount > 0 && (
-              <div className="mx-6 mt-5 p-4 border border-amber-200 bg-amber-50 rounded-xl">
-                <h4 className="text-amber-800 font-semibold text-xs mb-1">Cannot Delete User</h4>
-                <p className="text-amber-700 text-xs leading-relaxed">
-                  This user has <strong>{blockingAppointmentsCount}</strong> active or pending appointments. Resolve all appointments before deleting this account.
-                </p>
-              </div>
-            )}
+
 
             {/* Profile Details */}
             <dl className="p-6 space-y-4 text-sm">
               <div>
                 <dt className="type-label text-zinc-400">Member Since</dt>
-                <dd className="text-zinc-900 font-semibold mt-0.5">{new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</dd>
+                <dd className="text-zinc-900 font-semibold mt-0.5">{new Date(profile.created_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE,  month: 'short', day: 'numeric', year: 'numeric' })}</dd>
               </div>
               <div>
                 <dt className="type-label text-zinc-400">Last Login</dt>
-                <dd className="text-zinc-900 font-semibold mt-0.5">{profile.last_login_at ? new Date(profile.last_login_at).toLocaleDateString() : 'Never'}</dd>
+                <dd className="text-zinc-900 font-semibold mt-0.5">{profile.last_login_at ? new Date(profile.last_login_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE }) : 'Never'}</dd>
               </div>
               {profile.phone && (
                 <div>
@@ -168,10 +147,20 @@ export default async function UserProfilePage({ params }) {
                   <dd className="text-zinc-900 font-semibold mt-0.5">{profile.date_of_birth}</dd>
                 </div>
               )}
+              {profile.gender && (
+                <div>
+                  <dt className="type-label text-zinc-400">Gender</dt>
+                  <dd className="text-zinc-900 font-semibold mt-0.5 capitalize">{profile.gender.replace(/_/g, ' ')}</dd>
+                </div>
+              )}
 
               {['doctor', 'staff'].includes(profile.role) && (
                 <>
                   <div className="border-t border-zinc-100 pt-4">
+                    <dt className="type-label text-zinc-400">Employee ID</dt>
+                    <dd className="text-zinc-900 font-semibold mt-0.5">{profile.employee_id || 'Not assigned'}</dd>
+                  </div>
+                  <div>
                     <dt className="type-label text-zinc-400">Department</dt>
                     <dd className="text-zinc-900 font-semibold mt-0.5">{profile.department || 'Not assigned'}</dd>
                   </div>
@@ -181,14 +170,30 @@ export default async function UserProfilePage({ params }) {
                       <dd className="text-zinc-900 font-semibold mt-0.5">{profile.specialties.name}</dd>
                     </div>
                   )}
+                  {profile.bio && (
+                    <div className="border-t border-zinc-100 pt-4">
+                      <dt className="type-label text-zinc-400">Bio</dt>
+                      <dd className="text-zinc-700 text-xs leading-relaxed mt-1 whitespace-pre-wrap">{profile.bio}</dd>
+                    </div>
+                  )}
                 </>
               )}
 
-              {profile.bio && (
-                <div className="border-t border-zinc-100 pt-4">
-                  <dt className="type-label text-zinc-400">Bio</dt>
-                  <dd className="text-zinc-700 text-xs leading-relaxed mt-1 whitespace-pre-wrap">{profile.bio}</dd>
-                </div>
+              {profile.role === 'patient' && (
+                <>
+                  {profile.allergies && (
+                    <div className="border-t border-zinc-100 pt-4">
+                      <dt className="type-label text-zinc-400">Allergies</dt>
+                      <dd className="text-zinc-900 font-semibold mt-0.5">{profile.allergies}</dd>
+                    </div>
+                  )}
+                  {profile.medical_history && (
+                    <div className={profile.allergies ? '' : 'border-t border-zinc-100 pt-4'}>
+                      <dt className="type-label text-zinc-400">Medical History</dt>
+                      <dd className="text-zinc-700 text-xs leading-relaxed mt-1 whitespace-pre-wrap">{profile.medical_history}</dd>
+                    </div>
+                  )}
+                </>
               )}
             </dl>
 
@@ -211,30 +216,17 @@ export default async function UserProfilePage({ params }) {
                   </form>
                 )}
 
-                {!blockingAppointmentsCount && (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <button className="flex-1 border border-red-200 text-red-600 hover:bg-red-50 font-semibold rounded-lg px-3 py-2 text-xs transition cursor-pointer">
-                        Delete
-                      </button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-white rounded-2xl p-6 border border-zinc-100">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="font-bold text-zinc-900 text-lg">Are you absolutely sure?</AlertDialogTitle>
-                        <AlertDialogDescription className="text-zinc-500 text-sm mt-2">
-                          This action is permanent and cannot be undone. This will delete the user&apos;s account, profile, and all associated data.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter className="mt-6 flex gap-3">
-                        <AlertDialogCancel className="px-4 py-2.5 border border-zinc-200 text-zinc-600 rounded-lg text-xs font-semibold hover:bg-zinc-50 cursor-pointer">Cancel</AlertDialogCancel>
-                        <form action={deleteUser}>
-                          <input type="hidden" name="userId" value={profile.id} />
-                          <AlertDialogAction type="submit" className="bg-red-600 text-white hover:bg-red-700 font-semibold px-4 py-2.5 rounded-lg text-xs transition cursor-pointer">Delete</AlertDialogAction>
-                        </form>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                )}
+                <DeleteUserDialog
+                  userId={profile.id}
+                  trigger={
+                    <button
+                      type="button"
+                      className="flex-1 border border-red-200 text-red-600 hover:bg-red-50 font-semibold rounded-lg px-3 py-2 text-xs transition cursor-pointer"
+                    >
+                      Delete
+                    </button>
+                  }
+                />
               </div>
             )}
           </div>
@@ -263,7 +255,7 @@ export default async function UserProfilePage({ params }) {
                       return (
                         <tr key={apt.id} className="hover:bg-zinc-50/50 transition">
                           <td className="px-6 py-4 whitespace-nowrap text-xs font-semibold text-zinc-700">
-                            {new Date(apt.scheduled_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
+                            {new Date(apt.scheduled_at).toLocaleString([], { timeZone: GLOBAL_TIMEZONE,  dateStyle: 'short', timeStyle: 'short' })}
                           </td>
                           <td className="px-6 py-4">
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${aptClass}`}>{apt.status}</span>

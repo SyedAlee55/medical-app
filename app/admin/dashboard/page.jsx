@@ -1,6 +1,9 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { Users, Stethoscope, Briefcase, Calendar } from 'lucide-react'
+import RealTimeClock from '@/components/real-time-clock'
+import { formatGlobalDateTime } from '@/utils/time'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 // Force dynamic so it re-fetches stats on every reload
 export const dynamic = 'force-dynamic'
@@ -60,9 +63,12 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 tracking-tight">Admin Dashboard</h1>
-        <p className="type-body text-zinc-500 text-sm mt-0.5">Platform metrics and registration logs</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-zinc-900 tracking-tight">Admin Dashboard</h1>
+          <p className="type-body text-zinc-500 text-sm mt-0.5">Platform metrics and registration logs</p>
+        </div>
+        <RealTimeClock />
       </div>
 
       {/* Summary Stat Cards */}
@@ -143,7 +149,7 @@ export default async function AdminDashboardPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-xs text-zinc-400 font-medium">
-                      {new Date(profile.created_at).toLocaleDateString('en-US', {
+                      {new Date(profile.created_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE, 
                         month: 'short', day: 'numeric', year: 'numeric',
                         hour: '2-digit', minute: '2-digit'
                       })}

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { bookAppointment } from '@/app/appointments/actions'
+import { getGlobalDateTimeLocalString } from '@/utils/time'
 
 export default function BookingForm({ specialties, doctors }) {
     const [loading, setLoading] = useState(false)
@@ -17,12 +18,6 @@ export default function BookingForm({ specialties, doctors }) {
 
     async function handleSubmit(formData) {
         setLoading(true)
-        
-        // Convert local datetime to UTC ISO string for absolute time storage
-        const dateValue = formData.get('scheduledAt')
-        if (dateValue) {
-            formData.set('scheduledAt', new Date(dateValue).toISOString())
-        }
 
         // Note: bookAppointment returns a redirect on success, or redirect with error param
         // To handle errors properly via standard UI we can just await it since redirect throws
@@ -111,7 +106,7 @@ export default function BookingForm({ specialties, doctors }) {
                             type="datetime-local" 
                             name="scheduledAt" 
                             required 
-                            min={new Date().toISOString().slice(0, 16)} // Prevents selecting past dates
+                            min={getGlobalDateTimeLocalString()} // Prevents selecting past dates in Pakistan standard time
                         />
                     </div>
 

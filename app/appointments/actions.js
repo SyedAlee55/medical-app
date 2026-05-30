@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { localDateTimeToUTC } from '@/utils/time'
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 
@@ -41,14 +42,15 @@ export async function bookAppointment(formData) {
   if (profile.status !== 'active') redirect('/login')
 
   const doctorId     = formData.get('doctorId')
-  const scheduledAt  = formData.get('scheduledAt')
+  const scheduledAtRaw = formData.get('scheduledAt')
+  const scheduledAt    = localDateTimeToUTC(scheduledAtRaw)
   const reason       = (formData.get('reason') || '').slice(0, 500)
   const specialtyId  = formData.get('specialtyId') || null
   const durationMins = parseInt(formData.get('durationMinutes') || '30', 10)
   const notes        = (formData.get('notes') || '').slice(0, 500)
 
   // ── Validate inputs ───────────────────────────────────────────────────────
-  if (!doctorId || !scheduledAt) {
+  if (!doctorId || !scheduledAtRaw) {
     redirect('/patient/book?error=missing_fields')
   }
 
@@ -276,7 +278,8 @@ export async function ceoOverrideAppointment(formData) {
 
   const appointmentId  = formData.get('appointmentId')
   const newStatus      = formData.get('status')
-  const newScheduledAt = formData.get('scheduledAt') || null
+  const newScheduledAtRaw = formData.get('scheduledAt') || null
+  const newScheduledAt = newScheduledAtRaw ? localDateTimeToUTC(newScheduledAtRaw) : null
   const overrideNotes  = (formData.get('notes') || '').slice(0, 500)
 
   const validStatuses = ['confirmed','rejected','cancelled','completed','overridden','pending']

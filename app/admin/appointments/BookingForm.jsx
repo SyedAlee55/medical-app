@@ -3,15 +3,14 @@
 import { useState } from 'react'
 import { createAppointment } from '@/app/admin/actions'
 import { Loader2 } from 'lucide-react'
+import { getGlobalDateTimeLocalString } from '@/utils/time'
 
 export default function BookingForm({ patients, doctors }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [patientType, setPatientType] = useState('registered')
 
   // Disallow past dates
-  const now = new Date()
-  const offset = now.getTimezoneOffset() * 60000
-  const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16)
+  const localISOTime = getGlobalDateTimeLocalString()
 
   return (
     <div className="bg-white rounded-2xl border border-zinc-100 p-6 shadow-sm">

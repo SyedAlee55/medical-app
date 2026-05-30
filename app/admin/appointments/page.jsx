@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import BookingForm from './BookingForm'
 import { CheckCircle2, AlertCircle, ExternalLink, Calendar, Clock, TrendingUp, XCircle } from 'lucide-react'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 export const dynamic = 'force-dynamic'
 
@@ -219,7 +220,7 @@ export default async function AdminAppointmentsPage({ searchParams }) {
                       </td>
                       <td className="px-6 py-4 text-zinc-700">{a.doctor?.full_name || 'Unknown'}</td>
                       <td className="px-6 py-4 text-xs font-medium text-zinc-500">
-                        {new Date(a.scheduled_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
+                        {new Date(a.scheduled_at).toLocaleString([], { timeZone: GLOBAL_TIMEZONE,  dateStyle: 'short', timeStyle: 'short' })}
                       </td>
                       <td className="px-6 py-4 max-w-[180px] truncate text-xs text-zinc-400" title={parsed.isExternal ? parsed.reason : a.reason_for_visit}>
                         {parsed.isExternal ? parsed.reason : (a.reason_for_visit || '—')}

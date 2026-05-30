@@ -2,14 +2,14 @@
 
 import { useState } from 'react'
 import { bookAppointment } from '@/app/appointments/actions'
+import { getGlobalDateTimeLocalString } from '@/utils/time'
 
 export default function BookingInterface({ doctor }) {
   const [expanded, setExpanded] = useState(false)
   const [pending, setPending] = useState(false)
 
-  // Min datetime: 1 hour from now, formatted for datetime-local input
-  const minDateTime = new Date(Date.now() + 60 * 60 * 1000)
-    .toISOString().slice(0, 16)
+  // Min datetime: 1 hour from now, formatted for datetime-local input in global timezone
+  const minDateTime = getGlobalDateTimeLocalString(new Date(Date.now() + 60 * 60 * 1000))
 
   async function handleSubmit(formData) {
     setPending(true)

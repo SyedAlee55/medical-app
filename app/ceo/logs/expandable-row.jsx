@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 function formatDate(isoString) {
   if (!isoString) return '-'
   const d = new Date(isoString)
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + 
-         d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+  return d.toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE,  month: 'short', day: 'numeric', year: 'numeric' }) + ' ' + 
+         d.toLocaleTimeString('en-US', { timeZone: GLOBAL_TIMEZONE,  hour: '2-digit', minute: '2-digit', hour12: false })
 }
 
 export function ExpandableRow({ log }) {

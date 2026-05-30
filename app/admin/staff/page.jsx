@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { suspendUser, reactivateUser } from '@/app/admin/actions'
 import Link from 'next/link'
 import { Stethoscope, Briefcase } from 'lucide-react'
+import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 export const dynamic = 'force-dynamic'
 
@@ -124,7 +125,7 @@ export default async function AdminStaffPage() {
                     </span>
                     <span className="text-zinc-400 font-medium">Joined</span>
                     <span className="font-semibold text-zinc-700 text-right">
-                      {new Date(p.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {new Date(p.created_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE,  month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                   </div>
                 </div>

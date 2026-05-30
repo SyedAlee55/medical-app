@@ -35,13 +35,10 @@ export default function HowItWorksSection() {
         </div>
 
         {/* 3-Column Step Layout */}
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 z-10">
-          {/* Dashed connector line */}
-          <div className="hidden md:block absolute top-6 left-[16%] right-[16%] border-t-2 border-dashed border-brand-200 -z-10" />
-          
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
           {steps.map((step, idx) => (
-            <div key={idx} className="flex flex-col items-start bg-transparent">
-              <span className="text-5xl font-extrabold text-brand-200 mb-4 block leading-none select-none">
+            <div key={idx} className="flex flex-col items-center text-center bg-transparent">
+              <span className="text-5xl font-extrabold text-brand-200 mb-4 block leading-none select-none text-center">
                 {step.num}
               </span>
               <h3 className="type-h3 text-zinc-900 mb-2">

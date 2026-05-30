@@ -17,10 +17,10 @@ export default function StatsSection() {
                 idx < stats.length - 1 ? 'lg:border-r lg:border-brand-500/50' : ''
               }`}
             >
-              <span className="text-4xl font-extrabold text-white tracking-tight">
+              <span className="text-4xl font-extrabold !text-white tracking-tight">
                 {stat.value}
               </span>
-              <span className="type-label text-brand-200 mt-1">
+              <span className="mt-1 text-xs font-medium uppercase tracking-wider !text-white">
                 {stat.label}
               </span>
             </div>
