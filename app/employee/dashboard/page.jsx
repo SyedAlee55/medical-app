@@ -79,17 +79,21 @@ export default async function DashboardPage({ searchParams }) {
   }
 
   const STATUS_CLASSES = {
-    pending: 'bg-amber-50 text-amber-700 border border-amber-200',
-    confirmed: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-    rejected: 'bg-red-50 text-red-700 border border-red-200',
-    cancelled: 'bg-zinc-50 text-zinc-600 border border-zinc-200',
-    completed: 'bg-zinc-50 text-zinc-600 border border-zinc-200',
-    overridden: 'bg-brand-50 text-brand-700 border border-brand-200',
+    pending: 'bg-amber-500/15 text-amber-300 border border-amber-500/20',
+    confirmed: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/20',
+    rejected: 'bg-red-500/15 text-red-300 border border-red-500/20',
+    cancelled: 'bg-zinc-800/20 text-zinc-400 border border-zinc-750/50',
+    completed: 'bg-zinc-800/20 text-zinc-400 border border-zinc-750/50',
+    overridden: 'bg-brand-500/15 text-brand-300 border border-brand-500/20',
   }
 
   return (
-    <div className="p-8 bg-zinc-50 min-h-screen">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="p-8 bg-black min-h-screen text-white relative overflow-hidden">
+      {/* Ambient glow orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-brand-500/5 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
+
+      <div className="max-w-5xl mx-auto space-y-6 relative z-10">
         
         {params?.success && <SuccessBanner message={successMsgs[params.success] || 'Action successful.'} />}
         {params?.error && <ErrorBanner message={errorMsgs[params.error] || 'An error occurred.'} />}
@@ -97,8 +101,8 @@ export default async function DashboardPage({ searchParams }) {
         {/* Dashboard Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight">Medical Dashboard</h1>
-            <p className="type-body text-zinc-500 mt-1">Manage your active consultations and history</p>
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">Medical Dashboard</h1>
+            <p className="text-sm text-zinc-400 mt-1.5 leading-relaxed">Manage your active consultations and history</p>
           </div>
           <RealTimeClock />
         </div>
@@ -106,19 +110,19 @@ export default async function DashboardPage({ searchParams }) {
         <div className="grid gap-6 md:grid-cols-3">
           
           {/* Welcome/Profile Card */}
-          <div className="bg-white rounded-2xl border border-zinc-100 p-6 shadow-sm flex flex-col justify-between">
+          <div className="bg-zinc-900/60 border border-white/10 backdrop-blur-2xl rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-brand-500/25 transition-all duration-300">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center text-brand-600">
+                <div className="w-10 h-10 rounded-xl bg-brand-500/15 border border-brand-500/20 flex items-center justify-center text-brand-300">
                   <User className="w-5 h-5" />
                 </div>
-                <h3 className="font-semibold text-zinc-900 text-base">Doctor Profile</h3>
+                <h3 className="font-semibold text-white text-base">Doctor Profile</h3>
               </div>
-              <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Signed in as:</p>
-              <p className="font-semibold text-brand-600 truncate text-sm mt-1">{user.email}</p>
+              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Signed in as:</p>
+              <p className="font-semibold text-brand-300 truncate text-sm mt-1">{user.email}</p>
             </div>
 
-            <div className="mt-8 p-4 border border-dashed border-zinc-200 rounded-xl bg-zinc-50">
+            <div className="mt-8 p-4 border border-dashed border-white/10 rounded-xl bg-white/5">
               <p className="text-xs text-zinc-400 italic leading-relaxed">
                 Secure Staff Portal: Verified access for authorized healthcare providers.
               </p>
@@ -126,10 +130,10 @@ export default async function DashboardPage({ searchParams }) {
           </div>
 
           {/* Active Consultations Card */}
-          <div className="bg-white rounded-2xl border border-zinc-100 p-6 shadow-sm md:col-span-2">
+          <div className="bg-zinc-900/60 border border-white/10 backdrop-blur-2xl rounded-2xl p-6 shadow-sm md:col-span-2 hover:border-brand-500/25 transition-all duration-300">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-semibold text-zinc-900 text-base">Active Consultations</h3>
-              <span className="px-2.5 py-0.5 bg-brand-50 text-brand-700 text-[10px] font-semibold tracking-wider uppercase rounded-full animate-pulse">
+              <h3 className="font-semibold text-white text-base">Active Consultations</h3>
+              <span className="px-2.5 py-0.5 bg-brand-500/15 border border-brand-400/30 text-brand-300 text-[10px] font-semibold tracking-wider uppercase rounded-full animate-pulse">
                 Upcoming
               </span>
             </div>
@@ -140,13 +144,13 @@ export default async function DashboardPage({ searchParams }) {
           </div>
 
           {/* History Section Card */}
-          <div className="bg-white rounded-2xl border border-zinc-100 p-6 shadow-sm md:col-span-3">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-zinc-100">
-              <h3 className="font-semibold text-zinc-900 text-base">Consultation History</h3>
+          <div className="bg-zinc-900/60 border border-white/10 backdrop-blur-2xl rounded-2xl p-6 shadow-sm md:col-span-3 hover:border-brand-500/25 transition-all duration-300">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+              <h3 className="font-semibold text-white text-base">Consultation History</h3>
               <form action={clearCompletedAppointments}>
                 <button
                   type="submit"
-                  className="border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-semibold rounded-lg px-3 py-1.5 text-xs transition cursor-pointer"
+                  className="bg-white/5 border border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white font-semibold rounded-lg px-3 py-1.5 text-xs transition cursor-pointer"
                 >
                   Clear completed
                 </button>
@@ -156,21 +160,21 @@ export default async function DashboardPage({ searchParams }) {
             <div className="space-y-3">
               {historyAppointments && historyAppointments.length > 0 ? (
                 historyAppointments.map((apt) => {
-                  const statusClass = STATUS_CLASSES[apt.status] || 'bg-zinc-50 text-zinc-600 border border-zinc-200'
+                  const statusClass = STATUS_CLASSES[apt.status] || 'bg-zinc-800/20 text-zinc-400 border border-zinc-700/50'
                   return (
-                    <div key={apt.id} className="flex items-center justify-between p-4 bg-zinc-50 border border-zinc-100 rounded-xl hover:bg-zinc-100/50 transition">
+                    <div key={apt.id} className="flex items-center justify-between p-4 bg-white/5 border border-white/8 rounded-xl hover:bg-white/10 transition">
                       <div>
-                        <p className="font-semibold text-zinc-800 text-sm">
+                        <p className="font-semibold text-white text-sm">
                           {apt.profiles?.full_name || 'Patient'}
                         </p>
-                        <div className="flex items-center gap-3 text-xs text-zinc-400 mt-1 font-medium">
+                        <div className="flex items-center gap-3 text-xs text-zinc-450 mt-1 font-medium">
                           <span>
-                            {new Date(apt.scheduled_at).toLocaleString('en-US', { timeZone: GLOBAL_TIMEZONE,  timeZone: GLOBAL_TIMEZONE, 
+                            {new Date(apt.scheduled_at).toLocaleString('en-US', { timeZone: GLOBAL_TIMEZONE, 
                               month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                             })}
                           </span>
                           <span>•</span>
-                          <span className="text-brand-600">{apt.specialties?.name || 'General'}</span>
+                          <span className="text-brand-300">{apt.specialties?.name || 'General'}</span>
                         </div>
                       </div>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${statusClass}`}>
@@ -181,7 +185,7 @@ export default async function DashboardPage({ searchParams }) {
                 })
               ) : (
                 <div className="text-center py-10">
-                  <p className="text-sm text-zinc-400 font-medium italic">No past consultations found.</p>
+                  <p className="text-sm text-zinc-500 font-medium italic">No past consultations found.</p>
                 </div>
               )}
             </div>

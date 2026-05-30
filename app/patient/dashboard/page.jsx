@@ -103,32 +103,32 @@ export default async function PatientDashboard({ searchParams }) {
 
         {/* Stat Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-zinc-950/30 backdrop-blur-2xl rounded-2xl border border-white/6 p-6 flex items-center justify-between hover:border-brand-500/15 hover:shadow-[0_10px_40px_rgba(6,148,162,0.02)] transition-all duration-300 group">
+          <div className="bg-white/6 backdrop-blur-2xl rounded-2xl border border-white/12 p-6 flex items-center justify-between hover:border-brand-500/20 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group">
             <div>
               <p className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Active Consultations</p>
               <h3 className="text-3xl font-extrabold text-white mt-2 tracking-tight">{activeCount}</h3>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-zinc-400 group-hover:bg-brand-500/10 group-hover:text-brand-300 transition-all">
+            <div className="w-12 h-12 rounded-xl bg-white/8 border border-white/15 flex items-center justify-center text-zinc-350 group-hover:bg-brand-500/10 group-hover:text-brand-300 transition-all">
               <Calendar className="w-6 h-6" />
             </div>
           </div>
 
-          <div className="bg-zinc-950/30 backdrop-blur-2xl rounded-2xl border border-white/6 p-6 flex items-center justify-between hover:border-emerald-500/15 hover:shadow-[0_10px_40px_rgba(16,185,129,0.02)] transition-all duration-300 group">
+          <div className="bg-white/6 backdrop-blur-2xl rounded-2xl border border-white/12 p-6 flex items-center justify-between hover:border-emerald-500/20 hover:shadow-[0_10px_40px_rgba(16,185,129,0.04)] transition-all duration-300 group">
             <div>
               <p className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Completed Visits</p>
               <h3 className="text-3xl font-extrabold text-white mt-2 tracking-tight">{completedCount}</h3>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-zinc-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-300 transition-all">
+            <div className="w-12 h-12 rounded-xl bg-white/8 border border-white/15 flex items-center justify-center text-zinc-350 group-hover:bg-emerald-500/10 group-hover:text-emerald-300 transition-all">
               <CheckCircle2 className="w-6 h-6" />
             </div>
           </div>
 
-          <div className="bg-zinc-950/30 backdrop-blur-2xl rounded-2xl border border-white/6 p-6 flex items-center justify-between hover:border-white/20 hover:shadow-[0_10px_40px_rgba(255,255,255,0.01)] transition-all duration-300 group">
+          <div className="bg-white/6 backdrop-blur-2xl rounded-2xl border border-white/12 p-6 flex items-center justify-between hover:border-white/30 hover:shadow-[0_10px_40px_rgba(255,255,255,0.02)] transition-all duration-300 group">
             <div>
               <p className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Care Rating</p>
               <h3 className="text-3xl font-extrabold text-white mt-2 tracking-tight">4.9 / 5.0</h3>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-zinc-400 group-hover:bg-white/10 group-hover:text-white transition-all">
+            <div className="w-12 h-12 rounded-xl bg-white/8 border border-white/15 flex items-center justify-center text-zinc-350 group-hover:bg-white/15 group-hover:text-white transition-all">
               <Star className="w-6 h-6 fill-white/20 text-white" />
             </div>
           </div>
@@ -137,9 +137,9 @@ export default async function PatientDashboard({ searchParams }) {
         {/* Appointments List */}
         <div className="space-y-6">
           <h2 className="text-xl font-bold text-white tracking-tight">Your Consultations</h2>
-          <PatientAppointmentList 
-            initialAppointments={appointments || []} 
-            userId={user.id} 
+          <PatientAppointmentList
+            initialAppointments={appointments || []}
+            userId={user.id}
           />
         </div>
       </div>

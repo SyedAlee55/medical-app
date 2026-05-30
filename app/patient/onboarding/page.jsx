@@ -12,7 +12,7 @@ export default async function PatientOnboardingPage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-6">
-      <div className="bg-zinc-950/30 border border-white/6 backdrop-blur-2xl rounded-2xl p-8 w-full max-w-lg shadow-[0_10px_50px_rgba(0,0,0,0.3)]">
+      <div className="bg-zinc-900/60 border border-white/10 backdrop-blur-2xl rounded-2xl p-8 w-full max-w-lg shadow-[0_10px_50px_rgba(0,0,0,0.3)]">
         {/* Progress indicator */}
         <div className="flex items-center justify-between mb-8 max-w-xs mx-auto">
           <div className="flex flex-col items-center gap-1.5">
