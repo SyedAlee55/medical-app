@@ -71,7 +71,7 @@ export default function Footer() {
             <p className="type-label text-zinc-500 mb-4">Company</p>
             <ul className="space-y-2.5">
               <li>
-                <a href="#" className="text-zinc-400 hover:text-white text-sm transition-colors">
+                <a href="/about" className="text-zinc-400 hover:text-white text-sm transition-colors">
                   About
                 </a>
               </li>
