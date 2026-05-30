@@ -33,50 +33,50 @@ export default async function BookAppointmentPage({ searchParams }) {
   }
 
   return (
-    <div className="p-8 bg-zinc-50 min-h-screen">
+    <div className="p-8 bg-black min-h-screen">
       <div className="max-w-4xl mx-auto">
         
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight">
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">
             Book an Appointment
           </h1>
-          <p className="type-body text-zinc-500 mt-1">
+          <p className="text-zinc-400 mt-1.5 text-sm leading-relaxed">
             Browse available doctors and send a consultation request.
           </p>
         </div>
 
         {/* Error Banner */}
         {params?.error && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 flex items-center gap-2.5 animate-fade-in">
-            <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
+          <div className="mb-6 bg-red-500/5 backdrop-blur-xl border border-red-500/15 rounded-lg px-4 py-3 text-sm text-red-300 flex items-center gap-2.5 animate-fade-in shadow-[0_4px_20px_rgba(239,68,68,0.02)]">
+            <AlertCircle className="w-5 h-5 shrink-0 text-red-400" />
             <span>{errorMessages[params.error] || 'Something went wrong. Please try again.'}</span>
           </div>
         )}
 
         {/* Specialty Filter Card */}
-        <div className="bg-white rounded-2xl border border-zinc-100 p-6 shadow-sm mb-6">
+        <div className="bg-zinc-950/30 backdrop-blur-2xl border border-white/6 p-6 shadow-sm rounded-2xl mb-6">
           <form method="GET" className="flex flex-wrap gap-4 items-end">
             <div className="flex flex-col gap-1.5 flex-1 min-w-[200px]">
-              <label className="type-label">
+              <label className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
                 Filter by specialty
               </label>
               <select
                 name="specialty"
                 defaultValue={selectedSpecialtyId || ''}
-                className="w-full rounded-lg border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+                className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition cursor-pointer"
               >
-                <option value="">All specialties</option>
+                <option value="" className="bg-zinc-950">All specialties</option>
                 {specialties?.map(s => (
-                  <option key={s.id} value={s.id}>{s.name}</option>
+                  <option key={s.id} value={s.id} className="bg-zinc-950">{s.name}</option>
                 ))}
               </select>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <button
                 type="submit"
-                className="bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg px-5 py-2.5 text-sm transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.08)] active:scale-[0.98] inline-flex items-center gap-1.5 cursor-pointer h-[42px]"
+                className="bg-brand-500/10 backdrop-blur-md border border-brand-400/20 text-white hover:bg-brand-500/20 hover:border-brand-400/35 font-semibold rounded-xl px-5 py-2.5 text-sm transition-all duration-300 shadow-[0_4px_15px_rgba(6,148,162,0.05)] active:scale-[0.98] inline-flex items-center gap-1.5 cursor-pointer h-[42px] justify-center w-full sm:w-auto"
               >
                 <Filter className="w-4 h-4" />
                 Filter
@@ -85,7 +85,7 @@ export default async function BookAppointmentPage({ searchParams }) {
               {selectedSpecialtyId && (
                 <a
                   href="/patient/book"
-                  className="border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-semibold rounded-lg px-4 py-2.5 text-sm transition inline-flex items-center gap-1.5 h-[42px]"
+                  className="bg-white/5 border border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white font-semibold rounded-xl px-4 py-2.5 text-sm transition inline-flex items-center gap-1.5 h-[42px] justify-center w-full sm:w-auto"
                 >
                   <X className="w-4 h-4" />
                   Clear
@@ -97,8 +97,8 @@ export default async function BookAppointmentPage({ searchParams }) {
 
         {/* Doctor List */}
         {!doctors || doctors.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-zinc-100 p-12 text-center shadow-sm">
-            <p className="text-sm text-zinc-400 font-medium">
+          <div className="bg-zinc-950/30 backdrop-blur-2xl border border-white/6 p-12 text-center rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <p className="text-sm text-zinc-500 font-medium">
               {selectedSpecialtyId
                 ? 'No doctors available in this specialty right now.'
                 : 'No doctors are currently available.'}

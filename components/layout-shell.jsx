@@ -29,18 +29,18 @@ export default function LayoutShell({ header, children }) {
 
   // All other routes: standard app shell
   return (
-    <>
+    <div className="bg-black text-white min-h-screen flex flex-col">
       {header}
-      <main className="min-h-screen pt-16">
+      <main className="flex-1 pt-16 bg-black">
         {children}
       </main>
-      <footer className="border-t border-zinc-100 bg-white py-8">
+      <footer className="border-t border-white/5 bg-black py-8">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="text-xs text-zinc-400 font-medium">
+          <p className="text-xs text-zinc-500 font-medium">
             &copy; {new Date().getFullYear()} Tj&apos;s Medical Hub. Built with care.
           </p>
         </div>
       </footer>
-    </>
+    </div>
   )
 }
