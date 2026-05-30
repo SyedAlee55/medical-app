@@ -20,12 +20,27 @@ export default function Navbar({ theme = "light" }) {
 
   return (
     <nav className={`sticky top-0 z-50 w-full transition-all duration-500 ${navBgClass}`}>
+      <style>{`
+        @keyframes coin-flip-y {
+          0% {
+            transform: rotateY(0deg);
+          }
+          100% {
+            transform: rotateY(360deg);
+          }
+        }
+        .animate-coin-flip {
+          animation: coin-flip-y 4.5s linear infinite;
+          transform-style: preserve-3d;
+          backface-visibility: visible;
+        }
+      `}</style>
       <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16">
 
         {/* Logo */}
         <a href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-brand-400/30 flex items-center justify-center transition-transform group-hover:scale-105 shadow-[0_0_12px_rgba(6,148,162,0.1)]">
-            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+          <div className="w-12 h-12 rounded-full overflow-hidden border border-brand-400/30 flex items-center justify-center transition-transform group-hover:scale-105 shadow-[0_0_12px_rgba(6,148,162,0.1)] animate-coin-flip">
+            <img src="/logo3.png" alt="Logo" className="w-full h-full object-cover" />
           </div>
           <span className="font-bold text-lg tracking-tight text-white transition-colors">
             Tj&apos;s Medical Hub

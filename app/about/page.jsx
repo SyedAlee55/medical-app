@@ -1,14 +1,10 @@
 'use client'
 
-import { useState } from 'react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
 import { ShieldCheck, Award, Heart, Users, Quote, Sparkles } from 'lucide-react'
 
 export default function AboutPage() {
-  const [ceoError, setCeoError] = useState(false)
-  const [doc1Error, setDoc1Error] = useState(false)
-  const [doc2Error, setDoc2Error] = useState(false)
   return (
     <main className="min-h-screen bg-black text-white flex flex-col justify-between overflow-hidden">
       <div>
@@ -64,31 +60,18 @@ export default function AboutPage() {
               
               {/* CEO Picture side (Left) */}
               <div className="lg:col-span-5 flex justify-center">
-                <div className="relative w-full max-w-sm aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group flex items-center justify-center">
+                <div className="relative w-full max-w-sm aspect-[3/5] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group flex items-center justify-center">
                   {/* Aspect ratio frame for image_ceo.jpg */}
-                  {!ceoError ? (
-                    <img
-                      src="/image_ceo.jpg"
-                      alt="CEO Portrait"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      onError={() => setCeoError(true)}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-zinc-950/80 border border-dashed border-white/10 rounded-2xl">
-                      <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-brand-300 mb-4 shadow-[0_0_15px_rgba(6,148,162,0.15)]">
-                        <Users className="w-7 h-7" />
-                      </div>
-                      <p className="text-sm font-semibold text-white">CEO Portrait Placeholder</p>
-                      <p className="text-xs text-zinc-500 mt-2 max-w-[200px] leading-relaxed">
-                        Add <code className="bg-white/5 px-1 py-0.5 rounded text-[10px] text-zinc-400 border border-white/10 font-mono">image_ceo.jpg</code> to public/ folder to display image.
-                      </p>
-                    </div>
-                  )}
+                  <img
+                    src="/ceo.jpg"
+                    alt="CEO Portrait"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                   
                   {/* Subtle caption banner */}
                   <div className="absolute bottom-4 left-4 right-4 bg-zinc-950/80 backdrop-blur-md px-4 py-3.5 rounded-xl border border-white/10 shadow-lg">
-                    <h4 className="font-bold text-white text-sm">Thomas Jenkins</h4>
-                    <p className="text-xs text-brand-300 font-semibold tracking-wider uppercase mt-0.5">Founder & CEO</p>
+                    <h4 className="font-bold text-white text-sm">Tajammal Guahar</h4>
+                    <p className="text-xs text-brand-300 font-semibold tracking-wider uppercase mt-0.5">Medical Director</p>
                   </div>
                 </div>
               </div>
@@ -97,24 +80,19 @@ export default function AboutPage() {
               <div className="lg:col-span-7 flex flex-col justify-center">
                 <div className="flex items-center gap-2.5 mb-4">
                   <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-300">
-                    <Quote className="w-4 h-4" />
                   </div>
-                  <span className="text-[10px] font-bold tracking-widest text-brand-300 uppercase">A Message from our CEO</span>
                 </div>
                 
                 <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-6 leading-tight">
-                  Healthcare reimagined, <br />
+                  A Message From Our, <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-teal-300 to-emerald-400">
-                    centered entirely around you
+                    Medical Director
                   </span>
                 </h2>
                 
                 <div className="space-y-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
                   <p>
-                    At Tj&apos;s Medical Hub, our mission is simple yet profound: to combine premium, compassionate clinical care with modern technology to make healthcare simple, accessible, and high-quality for everyone.
-                  </p>
-                  <p>
-                    We realized that navigating the healthcare system was too often confusing, disjointed, and stressful. That is why we built a unified digital home. By connecting top-tier verified clinical talent directly with modern tools, we give you control over your appointments, medical histories, and virtual consultations.
+                    At Tj&apos;s Medical Hub, we deliver safe, reliable and compassionate care, focused on accurate diagnosis, modern treatment and making every patient feel respected and valued.
                   </p>
                   <p className="font-medium text-zinc-200 italic border-l-2 border-brand-400/40 pl-4 py-1">
                     &ldquo;We don&apos;t just treat symptoms. We care for patients as people, with the respect and urgency they deserve.&rdquo;
@@ -126,8 +104,8 @@ export default function AboutPage() {
                     TJ
                   </div>
                   <div>
-                    <h5 className="font-semibold text-white text-sm">Thomas Jenkins</h5>
-                    <p className="text-xs text-zinc-500 font-medium">CEO, Tj&apos;s Medical Hub</p>
+                    <h5 className="font-semibold text-white text-sm">Tajammal Guahar</h5>
+                    <p className="text-xs text-zinc-500 font-medium">Medical Director, Tj&apos;s Medical Hub</p>
                   </div>
                 </div>
               </div>
@@ -228,22 +206,12 @@ export default function AboutPage() {
               
               {/* Doctor 1 */}
               <div className="bg-zinc-950/40 backdrop-blur-2xl rounded-2xl border border-white/6 p-8 flex flex-col items-center text-center hover:bg-black hover:border-brand-500/20 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group">
-                <div className="relative w-36 h-36 rounded-full overflow-hidden mb-6 shadow-xl border-2 border-white/10 bg-zinc-900 group-hover:border-brand-400/40 transition-all duration-300 flex items-center justify-center">
-                  {!doc1Error ? (
-                    <img
-                      src="/image_doctor.jpg"
-                      alt="Dr. Aisha Rehman"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      onError={() => setDoc1Error(true)}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center bg-zinc-950">
-                      <p className="text-xs font-bold text-white">Dr. Aisha Rehman</p>
-                      <p className="text-[9px] text-zinc-500 mt-2 leading-relaxed">
-                        Add <code className="bg-white/5 px-1 py-0.5 rounded text-[8px] text-zinc-400 border border-white/5 font-mono">image_doctor.jpg</code>
-                      </p>
-                    </div>
-                  )}
+                <div className="relative w-40 h-45 rounded-[20%] overflow-hidden mb-6 shadow-xl border-2 border-white/10 bg-zinc-900 group-hover:border-brand-400/40 transition-all duration-300 flex items-center justify-center">
+                  <img
+                    src="/doctor1.jpg"
+                    alt="Dr. Aisha Rehman"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
 
                 <h3 className="font-bold text-white text-lg mb-1 group-hover:text-brand-300 transition-colors">
@@ -259,22 +227,12 @@ export default function AboutPage() {
 
               {/* Doctor 2 */}
               <div className="bg-zinc-950/40 backdrop-blur-2xl rounded-2xl border border-white/6 p-8 flex flex-col items-center text-center hover:bg-black hover:border-brand-500/20 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group">
-                <div className="relative w-36 h-36 rounded-full overflow-hidden mb-6 shadow-xl border-2 border-white/10 bg-zinc-900 group-hover:border-brand-400/40 transition-all duration-300 flex items-center justify-center">
-                  {!doc2Error ? (
-                    <img
-                      src="/image_doctor2.jpg"
-                      alt="Dr. Marcus Chen"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      onError={() => setDoc2Error(true)}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center bg-zinc-950">
-                      <p className="text-xs font-bold text-white">Dr. Marcus Chen</p>
-                      <p className="text-[9px] text-zinc-500 mt-2 leading-relaxed">
-                        Add <code className="bg-white/5 px-1 py-0.5 rounded text-[8px] text-zinc-400 border border-white/5 font-mono">image_doctor2.jpg</code>
-                      </p>
-                    </div>
-                  )}
+                <div className="relative w-40 h-45 rounded-[20%] overflow-hidden mb-6 shadow-xl border-2 border-white/10 bg-zinc-900 group-hover:border-brand-400/40 transition-all duration-300 flex items-center justify-center">
+                  <img
+                    src="/doctor2.jpg"
+                    alt="Dr. Marcus Chen"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
 
                 <h3 className="font-bold text-white text-lg mb-1 group-hover:text-brand-300 transition-colors">
