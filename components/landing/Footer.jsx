@@ -51,19 +51,33 @@ export default function Footer() {
 
           {/* Column 3 — Company */}
           <div>
-            <p className="text-[10px] font-semibold tracking-widest uppercase text-zinc-600 mb-4">Company</p>
-            <ul className="space-y-3">
-              {[
-                { label: 'About', href: '#' },
-                { label: 'Team', href: '/team' },
-                { label: 'Careers', href: '#' },
-                { label: 'Press', href: '#' },
-                { label: 'Contact Us', href: '#' },
-              ].map((item) => (
-                <li key={item.label}>
-                  <a href={item.href} className="text-zinc-500 hover:text-white text-sm transition-colors">{item.label}</a>
-                </li>
-              ))}
+            <p className="type-label text-zinc-500 mb-4">Company</p>
+            <ul className="space-y-2.5">
+              <li>
+                <a href="/about" className="text-zinc-400 hover:text-white text-sm transition-colors">
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="/team" className="text-zinc-400 hover:text-white text-sm transition-colors">
+                  Team
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-zinc-400 hover:text-white text-sm transition-colors">
+                  Careers
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-zinc-400 hover:text-white text-sm transition-colors">
+                  Press
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-zinc-400 hover:text-white text-sm transition-colors">
+                  Contact Us
+                </a>
+              </li>
             </ul>
           </div>
 

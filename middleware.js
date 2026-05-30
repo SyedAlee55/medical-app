@@ -33,6 +33,7 @@ const PUBLIC_ROUTES = [
   '/404',
   '/',
   '/schedule',
+  '/about',
 ]
 
 function isPublic(pathname) {

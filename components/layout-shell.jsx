@@ -20,6 +20,7 @@ export default function LayoutShell({ header, children }) {
   const isShellFree = pathname.startsWith('/admin')
                    || pathname.startsWith('/ceo')
                    || pathname.startsWith('/login')
+                   || pathname.startsWith('/about')
 
   // These routes manage their own full-page layouts — no global shell
   if (isLanding || isShellFree) {
