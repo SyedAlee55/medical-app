@@ -93,13 +93,13 @@ export default function Navbar({ theme = "light" }) {
           </div>
 
           <a href="/schedule" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-            Book in app
+            Book appointment
           </a>
           <a href="/about" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
             About
           </a>
           <a href="/team" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-            Team
+            
           </a>
         </div>
 
