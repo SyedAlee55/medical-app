@@ -24,10 +24,8 @@ export default function Navbar({ theme = "light" }) {
 
         {/* Logo */}
         <a href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-full bg-brand-500/20 border border-brand-400/30 flex items-center justify-center text-white font-bold transition-transform group-hover:scale-105 shadow-[0_0_12px_rgba(6,148,162,0.1)]">
-            <svg width="16" height="16" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2h4v10h10v4h-10v10h-4v-10H2v-4h10V2z" fill="currentColor" />
-            </svg>
+          <div className="w-8 h-8 rounded-full overflow-hidden border border-brand-400/30 flex items-center justify-center transition-transform group-hover:scale-105 shadow-[0_0_12px_rgba(6,148,162,0.1)]">
+            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
           <span className="font-bold text-lg tracking-tight text-white transition-colors">
             Tj&apos;s Medical Hub
@@ -79,13 +77,13 @@ export default function Navbar({ theme = "light" }) {
             </div>
           </div>
 
-          <a href="/schedule" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
+          <a href="/schedule" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
             Book in app
           </a>
-          <a href="/about" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
+          <a href="/about" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
             About
           </a>
-          <a href="/team" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
+          <a href="/team" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
             Team
           </a>
         </div>
