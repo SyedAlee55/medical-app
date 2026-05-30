@@ -99,7 +99,7 @@ export default function Navbar({ theme = "light" }) {
             About
           </a>
           <a href="/team" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-            Team
+            
           </a>
         </div>
 
