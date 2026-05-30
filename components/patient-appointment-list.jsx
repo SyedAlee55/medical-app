@@ -26,12 +26,12 @@ function AppointmentCard({ appt }) {
   const badge = STATUS_BADGE[appt.status] || { label: appt.status, className: 'bg-white/5 text-zinc-400 border border-white/10' }
 
   return (
-    <div className="bg-zinc-950/30 backdrop-blur-2xl rounded-2xl border border-white/6 p-6 shadow-sm hover:border-brand-500/15 hover:shadow-[0_10px_30px_rgba(6,148,162,0.02)] transition duration-300 flex flex-col gap-4 group">
+    <div className="bg-white/6 backdrop-blur-2xl rounded-2xl border border-white/12 p-6 shadow-sm hover:border-brand-500/20 hover:shadow-[0_10px_30px_rgba(6,148,162,0.04)] transition duration-300 flex flex-col gap-4 group">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         
         {/* Left Side: Doctor & Time Details */}
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-zinc-350 font-bold shrink-0 shadow-[0_0_10px_rgba(6,148,162,0.02)] group-hover:bg-brand-500/10 group-hover:text-brand-300 transition-all duration-300">
+          <div className="w-12 h-12 rounded-xl bg-white/8 border border-white/15 flex items-center justify-center text-zinc-350 font-bold shrink-0 shadow-[0_0_10px_rgba(6,148,162,0.02)] group-hover:bg-brand-500/10 group-hover:text-brand-300 transition-all duration-300">
             DR
           </div>
           <div>
@@ -59,7 +59,7 @@ function AppointmentCard({ appt }) {
             </div>
 
             {appt.reason_for_visit && (
-              <p className="text-xs text-zinc-350 mt-3 bg-white/5 border border-white/8 rounded-lg px-2.5 py-1.5 inline-block leading-relaxed">
+              <p className="text-xs text-zinc-350 mt-3 bg-white/8 border border-white/15 rounded-lg px-2.5 py-1.5 inline-block leading-relaxed">
                 <strong className="font-semibold text-zinc-400">Reason:</strong> {appt.reason_for_visit}
               </p>
             )}
@@ -184,7 +184,7 @@ export default function PatientAppointmentList({ initialAppointments }) {
       </div>
 
       {displayed.length === 0 ? (
-        <div className="text-center py-16 bg-zinc-950/30 backdrop-blur-2xl border border-white/6 rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.2)]">
+        <div className="text-center py-16 bg-white/6 backdrop-blur-2xl border border-white/12 rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,0.2)]">
           <p className="text-sm text-zinc-500 font-medium">
             {filter === 'active'
               ? 'No active appointments. Book one above.'

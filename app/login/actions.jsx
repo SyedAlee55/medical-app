@@ -45,7 +45,7 @@ export async function signUp(formData) {
     redirect('/login?message=check_email')
   }
 
-  const { error } = await supabase.auth.signUp({
+  const { data: signUpData, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -56,8 +56,17 @@ export async function signUp(formData) {
     }
   })
 
-  // Always return same message — never confirm if signup succeeded or failed
   if (error) redirect('/login?message=check_email')
+
+  // For doctors/staff: return a redirect target instead of calling redirect().
+  // Calling redirect() throws immediately and can race with Supabase writing the
+  // session cookie to the response — leaving the browser with no session.
+  // Returning a plain object lets the action finish, cookies are committed first,
+  // then the client navigates. Patients get the standard check-email flow.
+  if (['doctor', 'staff'].includes(role) && signUpData?.user) {
+    return { redirectTo: '/employee/onboarding' }
+  }
+
   redirect('/login?message=check_email')
 }
 
