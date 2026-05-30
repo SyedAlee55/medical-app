@@ -1,36 +1,37 @@
-import { Calendar, UserCheck, Video, FileText, FolderOpen, MessageCircle } from 'lucide-react'
+import { Stethoscope, CalendarCheck, BedDouble, Activity, HeartPulse, Microscope } from 'lucide-react'
 
 const services = [
   {
-    icon: Calendar,
-    title: 'Instant Appointment Booking',
-    description: 'Search by specialty, location, and availability. Book a confirmed slot in under 2 minutes.',
+    icon: Stethoscope,
+    title: 'Emergency checkups',
+    description: 'Our team quickly evaluates and manage urgent health issues with care. Your safety is our top priority when every second counts.',
   },
   {
-    icon: UserCheck,
-    title: 'Verified Doctor Profiles',
-    description: 'Every doctor on our platform is license-verified, peer-reviewed, and rated by real patients.',
+    icon: CalendarCheck,
+    title: 'Routine OPD',
+    description: 'Regular doctor consultations, checkups, and preventative care tailored to you. Our team is here to keep you healthy and answer any questions you have.',
   },
   {
-    icon: Video,
-    title: 'Secure Telemedicine',
-    description: 'Consult with your doctor from anywhere — encrypted, HIPAA-compliant video sessions, no app download required.',
+    icon: BedDouble,
+    title: 'Emergency Retention',
+    description: "Our retention service keeps you safe. We monitor your vitals and recovery in a comfortable setting until you are ready to head home.",
   },
   {
-    icon: FileText,
-    title: 'Digital Prescriptions',
-    description: 'Receive, manage, and refill prescriptions directly through your patient portal. No more pharmacy phone tag.',
+    icon: Activity,
+    title: 'Ultrasound & ECG',
+    description: "Modern equipment to check your internal organs and heart activity accurately. These quick tests help our doctors find the right treatment plan for you.",
   },
   {
-    icon: FolderOpen,
-    title: 'Shared Medical Records',
-    description: 'Your complete health history, accessible to you and your care team — always current, always secure.',
+    icon: HeartPulse,
+    title: 'Cardiac Monitoring',
+    description: "We track your heart's rhythm to spot any irregularities early and prevent serious issues. Our specialized team watches over your heart health to give you complete peace of mind.",
   },
   {
-    icon: MessageCircle,
-    title: 'HIPAA-Compliant Messaging',
-    description: 'Direct, secure messaging between patients and providers. No sensitive data in your email inbox.',
-  },
+    icon: Microscope,
+    title: 'Advanced Blood Diagnostics',
+    description: " From routine blood work to complex tests with fast, reliable results. We give your doctor the exact data they need to guide your recovery.",
+  }
+
 ]
 
 export default function ServicesSection() {
@@ -60,12 +61,12 @@ export default function ServicesSection() {
             return (
               <div
                 key={idx}
-                className="bg-zinc-950/40 backdrop-blur-2xl rounded-2xl border border-white/6 p-6 hover:bg-black hover:border-brand-500/20 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group"
+                className="bg-zinc-950/40 backdrop-blur-2xl rounded-2xl border border-white/6 p-6 hover:bg-black hover:border-zinc-700 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group"
               >
-                <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center mb-4 group-hover:bg-brand-500/10 group-hover:border-brand-400/20 transition-colors">
-                  <Icon className="text-zinc-350 w-5 h-5 group-hover:text-brand-300 transition-colors" />
+                <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center mb-4 group-hover:bg-zinc-950 group-hover:border-zinc-400/20 transition-colors">
+                  <Icon className="text-zinc-350 w-5 h-5 group-hover:text-white  transition-colors" />
                 </div>
-                <h3 className="font-semibold text-white text-base mb-2">
+                <h3 className="font-semibold text-zinc-300 text-base mb-2">
                   {svc.title}
                 </h3>
                 <p className="text-zinc-400 text-sm leading-relaxed">

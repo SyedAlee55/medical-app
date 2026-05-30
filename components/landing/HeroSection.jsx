@@ -98,7 +98,7 @@ export default function HeroSection() {
               variants={itemVariants}
               className="text-zinc-300/85 text-base sm:text-lg max-w-xl leading-relaxed mb-8"
             >
-              At TJ's Medical Hub, we deliver safe, reliable and compassionate care, focused on accurate diagnosis, modern treatment and making every patient feel respected and valued. Book an appointment with verified top-rated doctors now!
+                    We realized that navigating the healthcare system was too often confusing, disjointed, and stressful. That is why we built a unified digital home. By connecting top-tier verified clinical talent directly with modern tools, we give you control over your appointments, medical histories, and virtual consultations.
             </motion.p>
 
             {/* CTA buttons */}

@@ -70,7 +70,7 @@ export default function AboutPage() {
                   
                   {/* Subtle caption banner */}
                   <div className="absolute bottom-4 left-4 right-4 bg-zinc-950/80 backdrop-blur-md px-4 py-3.5 rounded-xl border border-white/10 shadow-lg">
-                    <h4 className="font-bold text-white text-sm">Tajammal Guahar</h4>
+                    <h4 className="font-bold text-white text-sm">Tajammal Gauhar</h4>
                     <p className="text-xs text-brand-300 font-semibold tracking-wider uppercase mt-0.5">Medical Director</p>
                   </div>
                 </div>
@@ -104,7 +104,7 @@ export default function AboutPage() {
                     TJ
                   </div>
                   <div>
-                    <h5 className="font-semibold text-white text-sm">Tajammal Guahar</h5>
+                    <h5 className="font-semibold text-white text-sm">Tajammal Gauhar</h5>
                     <p className="text-xs text-zinc-500 font-medium">Medical Director, Tj&apos;s Medical Hub</p>
                   </div>
                 </div>

@@ -46,19 +46,17 @@ export default function TestimonialsSection() {
               <div>
                 <div className="flex items-center gap-1 mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-white fill-white" />
+                    <Star key={i} className="w-4 h-4 text-zinc-400 fill-zinc-400" />
                   ))}
                 </div>
-                <p className="text-zinc-350 italic text-sm leading-relaxed mb-6">
+                <p className="text-zinc-400 italic text-sm leading-relaxed mb-6">
                   &ldquo;{t.quote}&rdquo;
                 </p>
               </div>
               <div className="flex items-center gap-3 border-t border-white/5 pt-4">
-                <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/8 flex items-center justify-center text-zinc-350 font-bold text-sm shrink-0 group-hover:bg-brand-500/10 group-hover:text-brand-300 transition-colors">
-                  {t.initials}
-                </div>
+                
                 <div>
-                  <h4 className="text-sm font-semibold text-white">{t.name}</h4>
+                  <h4 className="text-sm font-semibold text-zinc-300">{t.name}</h4>
                   <p className="text-zinc-500 text-xs">{t.role}</p>
                 </div>
               </div>

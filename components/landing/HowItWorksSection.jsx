@@ -24,7 +24,7 @@ export default function HowItWorksSection() {
           <span className="inline-block text-[11px] font-semibold tracking-widest uppercase text-zinc-300 bg-white/5 border border-white/10 px-3 py-1 rounded-full mb-4">
             HOW IT WORKS
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mt-3 mb-4">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-300 mt-3 mb-4">
             Up and running in{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-emerald-400">
               three steps
@@ -39,9 +39,9 @@ export default function HowItWorksSection() {
           {steps.map((step, idx) => (
             <div
               key={idx}
-              className="bg-zinc-950/40 backdrop-blur-2xl rounded-3xl border border-white/6 p-8 flex flex-col items-center text-center hover:border-brand-500/20 hover:bg-black transition-all duration-300"
+              className="bg-zinc-950/50 backdrop-blur-2xl rounded-3xl border border-white/6 p-8 flex flex-col items-center text-center hover:border-brand-500/20 hover:bg-black transition-all duration-300"
             >
-              <span className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white/30 to-white/5 mb-5 leading-none select-none">
+              <span className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white/35 to-white/10 mb-5 leading-none select-none mb-4">
                 {step.num}
               </span>
               <h3 className="text-base font-semibold text-white mb-3 leading-snug">

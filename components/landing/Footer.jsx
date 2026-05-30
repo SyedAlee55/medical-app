@@ -116,8 +116,6 @@ export default function Footer() {
         <div className="border-t border-white/5 mt-14 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-zinc-600 text-sm">
           <span>&copy; {new Date().getFullYear()} Tj&apos;s Medical Hub. All rights reserved.</span>
           <div className="flex items-center gap-3">
-            <span className="bg-emerald-500/5 backdrop-blur-sm border border-emerald-500/10 text-emerald-400 text-xs font-semibold px-2.5 py-1 rounded-lg">HIPAA Compliant</span>
-            <span className="bg-brand-500/5 backdrop-blur-sm border border-brand-500/10 text-brand-300 text-xs font-semibold px-2.5 py-1 rounded-lg">SSL Secured</span>
           </div>
         </div>
       </div>
