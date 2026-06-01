@@ -293,7 +293,7 @@ export default function AboutPage() {
                 <div className="lg:col-span-6 lg:order-2 flex justify-center">
                   <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group transition-all duration-500 hover:border-brand-400/40 hover:shadow-[0_0_30px_rgba(6,148,162,0.15)]">
                     <img
-                      src="/Patient%20without%20blood%20+%20Logo.png"
+                      src="/Treatment.png"
                       alt="Patient receiving treatment"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
