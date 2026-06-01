@@ -367,8 +367,8 @@ export default function AboutPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              
-              {/* Doctor 1 */}
+{/*               
+              {/* Doctor 1 
               <div className="bg-zinc-950/40 backdrop-blur-2xl rounded-2xl border border-white/6 p-8 flex flex-col items-center text-center hover:bg-black hover:border-brand-500/20 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group">
                 <div className="relative w-40 h-45 rounded-[20%] overflow-hidden mb-6 shadow-xl border-2 border-white/10 bg-zinc-900 group-hover:border-brand-400/40 transition-all duration-300 flex items-center justify-center">
                   <img
@@ -389,7 +389,7 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              {/* Doctor 2 */}
+              {/* Doctor 2 
               <div className="bg-zinc-950/40 backdrop-blur-2xl rounded-2xl border border-white/6 p-8 flex flex-col items-center text-center hover:bg-black hover:border-brand-500/20 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group">
                 <div className="relative w-40 h-45 rounded-[20%] overflow-hidden mb-6 shadow-xl border-2 border-white/10 bg-zinc-900 group-hover:border-brand-400/40 transition-all duration-300 flex items-center justify-center">
                   <img
@@ -408,7 +408,7 @@ export default function AboutPage() {
                 <p className="text-zinc-400 text-sm leading-relaxed max-w-xs">
                   Dr. Marcus Chen focuses on advanced cardiovascular health and stroke prevention. Combining patient-centric therapeutic options with telehealth, he guides clients toward optimal heart wellness.
                 </p>
-              </div>
+              </div> */}
 
             </div>
           </div>

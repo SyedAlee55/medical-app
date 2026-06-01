@@ -2,12 +2,12 @@ import { Users, HeartPulse, Star, Zap } from 'lucide-react'
 
 const stats = [
   {
-    value: '500+',
+    value: '10+',
     label: 'Verified Doctors',
     icon: Users,
   },
   {
-    value: '50,000+',
+    value: '500+',
     label: 'Patients Served',
     icon: HeartPulse,
   },
@@ -25,7 +25,7 @@ const stats = [
 
 export default function StatsSection() {
   return (
-    <section className="w-full rounded-md bg-zinc-950 border-y border-white/5 px-8">
+    <section className="w-full rounded-md border-y border-white/5 px-8">
       {/* Full-bleed grid — no max-width, no padding, no rounded corners */}
       <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-white/5">
         {stats.map((stat, idx) => {
