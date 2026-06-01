@@ -21,6 +21,7 @@ export default function LayoutShell({ header, children }) {
                    || pathname.startsWith('/ceo')
                    || pathname.startsWith('/login')
                    || pathname.startsWith('/about')
+                   || pathname.startsWith('/schedule')
 
   // These routes manage their own full-page layouts — no global shell
   if (isLanding || isShellFree) {
