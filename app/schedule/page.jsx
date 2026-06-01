@@ -60,7 +60,7 @@ export default function GuestBookingPage() {
               </div>
 
               {/* Calendly Widget — scaled down to fit viewport without scrolling */}
-              <div style={{ height: 'calc(800px * 0.82)', overflow: 'hidden' }}>
+              <div className="bg-black" style={{ height: 'calc(800px * 0.82)', overflow: 'hidden' }}>
                 <div style={{ transform: 'scale(0.82)', transformOrigin: 'top center', width: `${(1/0.82)*100}%`, marginLeft: `${((1/0.82)-1)/2*-100}%` }}>
                   <CalendlyWidget />
                 </div>
