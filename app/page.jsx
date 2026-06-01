@@ -5,8 +5,10 @@ import ServicesSection from '@/components/landing/ServicesSection'
 import HowItWorksSection from '@/components/landing/HowItWorksSection'
 import StatsSection from '@/components/landing/StatsSection'
 import TestimonialsSection from '@/components/landing/TestimonialsSection'
+import ContactSection from '@/components/landing/ContactSection'
 import CtaSection from '@/components/landing/CtaSection'
 import Footer from '@/components/landing/Footer'
+import FloatingContact from '@/components/landing/FloatingContact'
 
 export const metadata = {
   title: "Tj's Medical Hub — Modern Healthcare Platform",
@@ -70,11 +72,18 @@ export default function Home() {
 
       <div className="px-4 lg:px-6 pb-6">
         <div className="rounded-3xl overflow-hidden border border-white/5">
+          <ContactSection />
+        </div>
+      </div>
+
+      <div className="px-4 lg:px-6 pb-6">
+        <div className="rounded-3xl overflow-hidden border border-white/5">
           <CtaSection />
         </div>
       </div>
 
       <Footer />
+      <FloatingContact />
     </main>
   )
 }
