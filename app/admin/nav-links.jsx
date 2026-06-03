@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ClipboardList, Users, Stethoscope, CalendarDays, Settings } from 'lucide-react'
+import { LayoutDashboard, ClipboardList, Users, Stethoscope, CalendarDays, AlertCircle } from 'lucide-react'
 
-export default function NavLinks({ pendingCount = 0, pendingApptsCount = 0 }) {
+export default function NavLinks({ pendingCount = 0, pendingApptsCount = 0, pendingEmergenciesCount = 0 }) {
   const pathname = usePathname()
 
   const links = [
@@ -13,7 +13,7 @@ export default function NavLinks({ pendingCount = 0, pendingApptsCount = 0 }) {
     { name: 'User Management', href: '/admin/users', icon: Users },
     { name: 'Doctors & Staff', href: '/admin/staff', icon: Stethoscope },
     { name: 'Appointments', href: '/admin/appointments', icon: CalendarDays, badge: pendingApptsCount },
-    { name: 'System Settings', href: '/admin/settings', icon: Settings },
+    { name: 'Emergency Requests', href: '/admin/emergencies', icon: AlertCircle, badge: pendingEmergenciesCount },
   ]
 
   return (

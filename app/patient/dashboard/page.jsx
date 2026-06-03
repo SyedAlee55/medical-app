@@ -1,7 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import PatientAppointmentList from "@/components/patient-appointment-list";
-import { Calendar, CheckCircle2, Star, Clock, AlertTriangle } from 'lucide-react'
+import { Calendar, CheckCircle2, Clock, AlertTriangle } from 'lucide-react'
+import RealTimeClock from "@/components/real-time-clock";
+import AppointmentStatusCard from "@/components/appointment-status-card";
 
 function SuccessBanner({ message }) {
   return (
@@ -99,6 +101,7 @@ export default async function PatientDashboard({ searchParams }) {
               Welcome back, <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-emerald-400">{profile.full_name}</span>
             </p>
           </div>
+          <RealTimeClock />
         </div>
 
         {/* Stat Cards */}
@@ -123,15 +126,7 @@ export default async function PatientDashboard({ searchParams }) {
             </div>
           </div>
 
-          <div className="bg-white/6 backdrop-blur-2xl rounded-2xl border border-white/12 p-6 flex items-center justify-between hover:border-white/30 hover:shadow-[0_10px_40px_rgba(255,255,255,0.02)] transition-all duration-300 group">
-            <div>
-              <p className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">Care Rating</p>
-              <h3 className="text-3xl font-extrabold text-white mt-2 tracking-tight">4.9 / 5.0</h3>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-white/8 border border-white/15 flex items-center justify-center text-zinc-350 group-hover:bg-white/15 group-hover:text-white transition-all">
-              <Star className="w-6 h-6 fill-white/20 text-white" />
-            </div>
-          </div>
+          <AppointmentStatusCard appointments={appointments || []} />
         </div>
 
         {/* Appointments List */}

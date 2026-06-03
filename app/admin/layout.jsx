@@ -39,6 +39,14 @@ export default async function AdminLayout({ children }) {
     .gte('scheduled_at', todayStart.toISOString())
     .lte('scheduled_at', todayEnd.toISOString())
 
+  // Fetch pending emergency requests count for the sidebar badge
+  const { count: pendingEmergenciesCount } = await supabase
+    .from('appointments')
+    .select('*, profiles!appointments_doctor_id_fkey!inner(department)', { count: 'exact', head: true })
+    .eq('status', 'pending')
+    .eq('profiles.department', 'Emergency')
+    .is('deleted_at', null)
+
   const initials = (profile.full_name || 'A')
     .split(' ')
     .map(n => n[0])
@@ -67,7 +75,11 @@ export default async function AdminLayout({ children }) {
 
         {/* Nav links */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          <NavLinks pendingCount={pendingCount || 0} pendingApptsCount={pendingApptsCount || 0} />
+          <NavLinks
+            pendingCount={pendingCount || 0}
+            pendingApptsCount={pendingApptsCount || 0}
+            pendingEmergenciesCount={pendingEmergenciesCount || 0}
+          />
         </nav>
 
         {/* Sidebar footer — user identity + logout */}

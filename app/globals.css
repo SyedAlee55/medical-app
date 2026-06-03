@@ -247,3 +247,28 @@ input:-webkit-autofill:active {
 *::-webkit-scrollbar-thumb:hover {
   background: #52525b; /* zinc-600 */
 }
+
+/* ============================================================
+   LINEAR LOADING BAR ANIMATION
+   ============================================================ */
+@keyframes progressLinear {
+  0% {
+    left: -40%;
+    width: 40%;
+  }
+  100% {
+    left: 100%;
+    width: 40%;
+  }
+}
+
+.animate-progress-linear {
+  animation: progressLinear 1.2s infinite linear;
+}
+
+/* Force date and time picker elements to render in dark mode (white calendar/icons) */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  color-scheme: dark;
+}

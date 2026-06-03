@@ -22,13 +22,13 @@ export default function Navbar({ theme = "light" }) {
     setMobileOpen(false)
   }
 
-  // Always dark — scrolled just adds a slightly denser blur + border glow
+  // Transparent at top (blends with hero). Frosted-glass blur when scrolled.
   const navBgClass = scrolled
-    ? 'bg-zinc-950/85 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
-    : 'bg-zinc-950/40 backdrop-blur-md border-b border-white/5'
+    ? 'bg-white/8 backdrop-blur-2xl border-b border-white/10 shadow-[0_4px_40px_rgba(0,0,0,0.25)]'
+    : 'bg-transparent border-b border-transparent'
 
   return (
-    <nav className={`sticky top-0 z-50 w-full transition-all duration-500 ${navBgClass}`}>
+    <nav className={`fixed top-0 z-50 w-full transition-all duration-500 ${navBgClass}`}>
       <style>{`
         @keyframes coin-flip-y {
           0% {

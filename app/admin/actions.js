@@ -376,3 +376,71 @@ export async function deleteUser(formData) {
   redirect('/admin/users?success=deleted')
 }
 
+// ─── RESPOND TO EMERGENCY APPOINTMENT ──────────────────────────────────────────
+export async function respondToEmergencyAppointment(formData) {
+  const supabase = await createClient()
+  const { user, profile } = await requireAdminOrCeo(supabase)
+
+  const appointmentId    = formData.get('appointmentId')
+  const newStatus        = formData.get('status')
+  const rejectionReason  = (formData.get('rejectionReason') || '').slice(0, 500)
+
+  if (!['confirmed', 'rejected'].includes(newStatus)) {
+    redirect('/admin/emergencies?error=invalid_status')
+  }
+
+  // Fetch the appointment and confirm it is indeed an Emergency appointment
+  const { data: appt } = await supabase
+    .from('appointments')
+    .select('id, doctor_id, patient_id, status, scheduled_at, profiles!appointments_doctor_id_fkey(department)')
+    .eq('id', appointmentId)
+    .single()
+
+  if (!appt) redirect('/admin/emergencies?error=not_found')
+  if (appt.status !== 'pending') {
+    redirect('/admin/emergencies?error=already_responded')
+  }
+
+  // Confirm doctor department is Emergency
+  if (appt.profiles?.department?.toLowerCase() !== 'emergency') {
+    redirect('/403')
+  }
+
+  // If confirming, check for conflicts
+  if (newStatus === 'confirmed') {
+    const { data: conflictCheck } = await supabase.rpc('check_appointment_conflict', {
+      p_doctor_id:     appt.doctor_id,
+      p_scheduled_at:  appt.scheduled_at,
+      p_duration_mins: 30,
+      p_exclude_id:    appointmentId
+    })
+    if (conflictCheck?.has_conflict) {
+      redirect('/admin/emergencies?error=time_conflict')
+    }
+  }
+
+  const now = new Date().toISOString()
+  const updates = {
+    status:     newStatus,
+    updated_at: now,
+    ...(newStatus === 'confirmed' && { confirmed_at: now }),
+    ...(newStatus === 'rejected'  && { rejected_at: now, rejection_reason: rejectionReason }),
+  }
+
+  await supabase
+    .from('appointments')
+    .update(updates)
+    .eq('id', appointmentId)
+
+  logAudit(supabase, {
+    p_actor_id: user.id, p_actor_role: profile.role,
+    p_action: newStatus === 'confirmed' ? 'EMERGENCY_APPOINTMENT_CONFIRMED' : 'EMERGENCY_APPOINTMENT_REJECTED',
+    p_target_type: 'appointment', p_target_id: appointmentId,
+    p_metadata: { new_status: newStatus, rejection_reason: rejectionReason, patient_id: appt.patient_id, doctor_id: appt.doctor_id },
+    p_ip_address: null, p_user_agent: null
+  })
+
+  redirect('/admin/emergencies?success=updated')
+}
+
+
