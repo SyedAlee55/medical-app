@@ -34,6 +34,10 @@ const PUBLIC_ROUTES = [
   '/',
   '/schedule',
   '/about',
+  '/forgot-password',
+  '/reset-password',
+  '/auth/callback',
+  '/auth/confirm',
 ]
 
 function isPublic(pathname) {
@@ -56,7 +60,7 @@ export async function middleware(request) {
   response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
   response.headers.set(
     'Content-Security-Policy',
-    "default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: https://*.supabase.co https://assets.calendly.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://assets.calendly.com; frame-src 'self' https://calendly.com"
+    "default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: https://*.supabase.co https://assets.calendly.com https://images.unsplash.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://assets.calendly.com; frame-src 'self' https://calendly.com"
   )
 
   // ── Build Supabase client that reads/writes cookies ───────────────────────
@@ -77,7 +81,7 @@ export async function middleware(request) {
           response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
           response.headers.set(
             'Content-Security-Policy',
-            "default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: https://*.supabase.co https://assets.calendly.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://assets.calendly.com; frame-src 'self' https://calendly.com"
+            "default-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data: https://*.supabase.co https://assets.calendly.com https://images.unsplash.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://assets.calendly.com; frame-src 'self' https://calendly.com"
           )
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options))
@@ -133,7 +137,7 @@ export async function middleware(request) {
   }
 
   // ── GATE 4: CEO must complete MFA before accessing anything ───────────────
-  if (role === 'ceo' || role === 'admin') {
+  if ((role === 'ceo' || role === 'admin') && !isPublic(pathname)) {
     const { data: mfaData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
     const mfaLevel = mfaData?.currentLevel || 'aal1'
     if (mfaLevel !== 'aal2' && !pathname.startsWith('/verify-mfa')) {

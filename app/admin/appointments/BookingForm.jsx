@@ -13,10 +13,10 @@ export default function BookingForm({ patients, doctors }) {
   const localISOTime = getGlobalDateTimeLocalString()
 
   return (
-    <div className="bg-white rounded-2xl border border-zinc-100 p-6 shadow-sm">
+    <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-6 shadow-sm">
       <div className="mb-6">
-        <h2 className="text-lg font-bold text-zinc-900">Book New Appointment</h2>
-        <p className="text-xs text-zinc-500 mt-1">Manually schedule an appointment on behalf of a patient</p>
+        <h2 className="text-lg font-bold text-zinc-100">Book New Appointment</h2>
+        <p className="text-xs text-zinc-400 mt-1">Manually schedule an appointment on behalf of a patient</p>
       </div>
 
       <form action={async (formData) => {
@@ -27,28 +27,28 @@ export default function BookingForm({ patients, doctors }) {
         <input type="hidden" name="patient_type" value={patientType} />
         
         {/* Toggle radio buttons */}
-        <div className="flex gap-6 pb-2 border-b border-zinc-100">
-          <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 cursor-pointer group">
+        <div className="flex gap-6 pb-2 border-b border-zinc-800">
+          <label className="flex items-center gap-2 text-sm font-semibold text-zinc-300 cursor-pointer group">
             <input
               type="radio"
               name="patient_type_toggle"
               value="registered"
               checked={patientType === 'registered'}
               onChange={() => setPatientType('registered')}
-              className="w-4 h-4 text-brand-600 border-zinc-300 focus:ring-brand-500"
+              className="w-4 h-4 text-brand-600 border-zinc-600 focus:ring-brand-500"
             />
-            <span className="group-hover:text-zinc-900 transition-colors">Registered Patient</span>
+            <span className="group-hover:text-zinc-100 transition-colors">Registered Patient</span>
           </label>
-          <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 cursor-pointer group">
+          <label className="flex items-center gap-2 text-sm font-semibold text-zinc-300 cursor-pointer group">
             <input
               type="radio"
               name="patient_type_toggle"
               value="external"
               checked={patientType === 'external'}
               onChange={() => setPatientType('external')}
-              className="w-4 h-4 text-brand-600 border-zinc-300 focus:ring-brand-500"
+              className="w-4 h-4 text-brand-600 border-zinc-600 focus:ring-brand-500"
             />
-            <span className="group-hover:text-zinc-900 transition-colors">External Patient (Non-registered)</span>
+            <span className="group-hover:text-zinc-100 transition-colors">External Patient (Non-registered)</span>
           </label>
         </div>
 
@@ -59,7 +59,7 @@ export default function BookingForm({ patients, doctors }) {
               <select
                 id="patient_id"
                 name="patient_id"
-                className="w-full bg-white rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+                className="w-full bg-zinc-950 rounded-xl border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-500 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-700 focus:border-transparent transition"
                 required={patientType === 'registered'}
               >
                 <option value="">Select a patient...</option>
@@ -79,7 +79,7 @@ export default function BookingForm({ patients, doctors }) {
                   id="external_name"
                   name="external_name"
                   placeholder="e.g. John Doe"
-                  className="w-full bg-white rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+                  className="w-full bg-zinc-950 rounded-xl border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-700 focus:border-transparent transition"
                   required={patientType === 'external'}
                 />
               </div>
@@ -90,7 +90,7 @@ export default function BookingForm({ patients, doctors }) {
                   id="external_contact"
                   name="external_contact"
                   placeholder="e.g. email@example.com"
-                  className="w-full bg-white rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+                  className="w-full bg-zinc-950 rounded-xl border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-700 focus:border-transparent transition"
                   required={patientType === 'external'}
                 />
               </div>
@@ -102,7 +102,7 @@ export default function BookingForm({ patients, doctors }) {
             <select
               id="doctor_id"
               name="doctor_id"
-              className="w-full bg-white rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+              className="w-full bg-zinc-950 rounded-xl border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-500 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-700 focus:border-transparent transition"
               required
             >
               <option value="">Select a doctor...</option>
@@ -122,7 +122,7 @@ export default function BookingForm({ patients, doctors }) {
             id="scheduled_at"
             name="scheduled_at"
             min={localISOTime}
-            className="w-full bg-white rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+            className="w-full bg-zinc-950 rounded-xl border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-500 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-700 focus:border-transparent transition"
             required
           />
         </div>
@@ -133,7 +133,7 @@ export default function BookingForm({ patients, doctors }) {
             id="reason_for_visit"
             name="reason_for_visit"
             rows={3}
-            className="w-full bg-white rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition resize-none"
+            className="w-full bg-zinc-950 rounded-xl border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-700 focus:border-transparent transition resize-none"
             placeholder="Primary reason for the appointment..."
             required
           />
@@ -145,7 +145,7 @@ export default function BookingForm({ patients, doctors }) {
             id="notes"
             name="notes"
             rows={2}
-            className="w-full bg-white rounded-xl border border-zinc-200 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition resize-none"
+            className="w-full bg-zinc-950 rounded-xl border border-zinc-800 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-700 focus:border-transparent transition resize-none"
             placeholder="Internal notes (not visible to patient)"
           />
         </div>

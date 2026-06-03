@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { cancelAppointment } from '@/app/appointments/actions'
-import { Calendar, Clock, MapPin, X } from 'lucide-react'
+import { Calendar, Clock, MapPin, X, Loader2 } from 'lucide-react'
 import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 const STATUS_BADGE = {
@@ -21,12 +21,18 @@ function canCancel(appt) {
 }
 
 function AppointmentCard({ appt }) {
-  const [cancelling, setCancelling] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  const cancelling = isPending
   const [showCancelForm, setShowCancelForm] = useState(false)
   const badge = STATUS_BADGE[appt.status] || { label: appt.status, className: 'bg-white/5 text-zinc-400 border border-white/10' }
 
   return (
-    <div className="bg-white/6 backdrop-blur-2xl rounded-2xl border border-white/12 p-6 shadow-sm hover:border-brand-500/20 hover:shadow-[0_10px_30px_rgba(6,148,162,0.04)] transition duration-300 flex flex-col gap-4 group">
+    <div className="relative overflow-hidden bg-white/6 backdrop-blur-2xl rounded-2xl border border-white/12 p-6 shadow-sm hover:border-brand-500/20 hover:shadow-[0_10px_30px_rgba(6,148,162,0.04)] transition duration-300 flex flex-col gap-4 group">
+      {cancelling && (
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-red-500/10 overflow-hidden z-50">
+          <div className="absolute top-0 bottom-0 left-0 bg-red-500 animate-progress-linear" />
+        </div>
+      )}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         
         {/* Left Side: Doctor & Time Details */}
@@ -93,9 +99,16 @@ function AppointmentCard({ appt }) {
       {/* Cancel Confirmation Form */}
       {showCancelForm && (
         <form
-          action={async (fd) => {
-            setCancelling(true)
-            await cancelAppointment(fd)
+          action={(fd) => {
+            startTransition(async () => {
+              try {
+                await cancelAppointment(fd)
+              } catch (err) {
+                if (err && err.digest && err.digest.startsWith('NEXT_REDIRECT')) {
+                  throw err
+                }
+              }
+            })
           }}
           className="border-t border-white/5 pt-4 mt-2 flex flex-col gap-3 animate-fade-in"
         >
@@ -124,8 +137,9 @@ function AppointmentCard({ appt }) {
             <button
               type="submit"
               disabled={cancelling}
-              className="bg-red-500/10 backdrop-blur-md border border-red-400/20 text-red-300 hover:bg-red-500/20 hover:border-red-400/35 font-semibold px-4 py-2 rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
+              className="bg-red-500/10 backdrop-blur-md border border-red-400/20 text-red-300 hover:bg-red-500/20 hover:border-red-400/35 font-semibold px-4 py-2 rounded-lg text-xs transition disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
             >
+              {cancelling && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               {cancelling ? 'Cancelling...' : 'Confirm cancellation'}
             </button>
           </div>

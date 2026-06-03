@@ -1,51 +1,78 @@
-import CalendlyWidget from '@/components/CalendlyWidget'
-import Link from 'next/link'
+"use client"
 
-export const dynamic = 'force-dynamic'
+import Link from 'next/link'
+import Navbar from '@/components/landing/Navbar'
+import Footer from '@/components/landing/Footer'
+import CalendlyWidget from '@/components/CalendlyWidget'
+import { Sparkles, Info, ArrowRight } from 'lucide-react'
 
 export default function GuestBookingPage() {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950">
+    <div className="min-h-screen bg-black text-white flex flex-col justify-between overflow-hidden">
+      <div>
+        {/* Navbar */}
+        <Navbar />
 
-      {/* ── Centered header + banner ── */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 space-y-6">
-        <div className="text-center space-y-3">
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-zinc-50 tracking-tight sm:text-4xl">
-            Book an Appointment
-          </h1>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
-            Fill in the form below to request an appointment. Our team will review your
-            request and assign the right doctor for you. Already have an account?{' '}
-            <Link
-              href="/login"
-              className="font-semibold text-blue-600 hover:text-blue-500 underline transition-colors"
-            >
-              Sign in here
-            </Link>{' '}
-            to book directly with your preferred doctor.
-          </p>
-        </div>
+        {/* Booking Container with Landing Page Margins and Styling */}
+        <div className="px-4 lg:px-6 py-6">
+          <div className="rounded-3xl overflow-hidden border border-white/5 bg-zinc-950/20 backdrop-blur-2xl p-8 sm:p-12 relative">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none -z-10" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-brand-500/5 blur-3xl pointer-events-none -z-10" />
 
-        {/* Info Banner */}
-        <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-4 dark:border-amber-900/30 dark:bg-amber-950/10">
-          <div className="flex items-start gap-3">
-            <svg className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-500" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-400">
-              This form is for new or guest patients. If you are a registered patient,
-              logging in allows you to book directly with specific doctors and view your
-              appointment history.
-            </p>
+            <div className="max-w-4xl mx-auto space-y-8 relative z-10">
+
+              {/* Header */}
+              <div className="text-center space-y-4">
+                <span className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-wider text-zinc-400 uppercase">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  APPOINTMENT SCHEDULER
+                </span>
+                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-400">
+                  Book an Appointment
+                </h1>
+                <p className="max-w-2xl mx-auto text-sm sm:text-base text-zinc-400 leading-relaxed">
+                  Fill in the details below to request a clinical consultation. Our team will review your request and assign the right specialist for you.
+                </p>
+              </div>
+
+              {/* Info Banner */}
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 max-w-2xl mx-auto shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-450 shrink-0">
+                    <Info className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-1">
+                    <h5 className="font-semibold text-white text-sm">Guest & New Patient Booking</h5>
+                    <p className="text-xs text-zinc-400 leading-relaxed">
+                      This form is for guest patients. If you are already registered,{' '}
+                      <Link
+                        href="/login"
+                        className="text-emerald-400 hover:text-emerald-350 underline underline-offset-2 transition-colors font-medium inline-flex items-center gap-0.5"
+                      >
+                        Sign in here
+                        <ArrowRight className="w-3 h-3 inline" />
+                      </Link>{' '}
+                      to book directly with your preferred doctor.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Calendly Widget — scaled down to fit viewport without scrolling */}
+              <div className="bg-black" style={{ height: 'calc(800px * 0.82)', overflow: 'hidden' }}>
+                <div style={{ transform: 'scale(0.82)', transformOrigin: 'top center', width: `${(1/0.82)*100}%`, marginLeft: `${((1/0.82)-1)/2*-100}%` }}>
+                  <CalendlyWidget />
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Full-width Calendly widget — no side padding ── */}
-      <div className="w-full px-0 pb-12">
-        <CalendlyWidget />
-      </div>
-
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

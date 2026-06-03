@@ -72,7 +72,7 @@ export default function CalendlyWidget() {
           >
             <div className="flex flex-col items-center gap-2">
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-300 border-t-zinc-600 dark:border-zinc-700 dark:border-t-zinc-400" />
-              <span className="text-zinc-500 dark:text-zinc-400 text-sm font-medium">Loading scheduler...</span>
+              <span className="text-zinc-500 dark:text-zinc-400 text-sm font-medium">Loading Appointment Form...</span>
             </div>
           </div>
         )}

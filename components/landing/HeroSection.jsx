@@ -43,12 +43,12 @@ export default function HeroSection() {
 
   return (
     /* No rounded-3xl here — the page.jsx wrapper provides it */
-    <section className="relative min-h-[calc(100vh-4rem)] w-full flex items-center justify-center overflow-hidden bg-zinc-950">
+    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-zinc-950 rounded-b-3xl">
 
       {/* Background medical image + gradient overlay */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center scale-105"
-        style={{ backgroundImage: `url("https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2070&auto=format&fit=crop")` }}
+        style={{ backgroundImage: `url("https://images.unsplash.com/photo-1553951166-a83106dde04b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")` }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-950/92 via-zinc-950/78 to-zinc-900/65" />
       </div>
@@ -67,24 +67,10 @@ export default function HeroSection() {
             animate="visible"
             className="flex flex-col items-start lg:col-span-7"
           >
-            {/* Live-dot badge */}
-            <motion.div
-              variants={itemVariants}
-              className="inline-flex items-center gap-2 bg-white/8 backdrop-blur-md border border-white/12 px-3 py-1.5 rounded-full mb-6"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500" />
-              </span>
-              <span className="text-[11px] font-semibold tracking-wider text-brand-300 uppercase">
-                TRUSTED BY 500+ PATIENTS
-              </span>
-            </motion.div>
-
             {/* Headline */}
             <motion.h1
               variants={itemVariants}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08] mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08] mb-6 mt-18"
             >
               Modern healthcare,{' '}
               <br className="hidden sm:block" />
@@ -125,7 +111,7 @@ export default function HeroSection() {
               variants={itemVariants}
               className="flex items-center gap-4 border-t border-white/5 pt-6 w-full max-w-lg"
             >
-              <div className="flex -space-x-2">
+              {/* <div className="flex -space-x-2">
                 {[
                   'bg-brand-500/40 text-brand-300',
                   'bg-emerald-500/40 text-emerald-300',
@@ -140,14 +126,14 @@ export default function HeroSection() {
                     {String.fromCharCode(65 + idx)}
                   </div>
                 ))}
-              </div>
-              <p className="text-xs sm:text-sm text-zinc-400">
+              </div> */}
+              {/* <p className="text-xs sm:text-sm text-zinc-400">
                 Join{' '}
                 <strong className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-emerald-400">
                   500+ patients
                 </strong>
                 {' already managing their care here'}
-              </p>
+              </p> */}
             </motion.div>
           </motion.div>
 
@@ -215,7 +201,7 @@ export default function HeroSection() {
             <motion.div
               variants={badgeFloatVariants}
               animate="animate"
-              className="absolute -bottom-4 -left-4 bg-zinc-950/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex items-center gap-3 shadow-xl z-20 max-w-[200px]"
+              className="absolute -bottom-4 -left-4 bg-zinc-950/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 flex items-center gap-3 shadow-xl z-20 max-w-[200px]"
             >
               <div className="w-8 h-8 rounded-xl bg-emerald-500/15 flex items-center justify-center border border-emerald-500/25">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />

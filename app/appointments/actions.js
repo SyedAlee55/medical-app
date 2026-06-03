@@ -291,7 +291,7 @@ export async function ceoOverrideAppointment(formData) {
     .eq('id', appointmentId)
     .single()
 
-  if (!before) redirect('/ceo/appointments?error=not_found')
+  if (!before) redirect('/admin/appointments?error=not_found')
 
   // If rescheduling, check conflict for the new time
   if (newScheduledAt && newScheduledAt !== before.scheduled_at) {
@@ -302,7 +302,7 @@ export async function ceoOverrideAppointment(formData) {
       p_exclude_id:    appointmentId
     })
     if (conflictCheck?.has_conflict) {
-      redirect('/ceo/appointments?error=reschedule_conflict')
+      redirect('/admin/appointments?error=reschedule_conflict')
     }
   }
 
@@ -330,6 +330,6 @@ export async function ceoOverrideAppointment(formData) {
     p_ip_address: null, p_user_agent: null
   })
 
-  revalidatePath('/ceo/appointments')
-  redirect('/ceo/appointments?success=overridden')
+  revalidatePath('/admin/appointments')
+  redirect('/admin/appointments?success=overridden')
 }

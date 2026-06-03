@@ -27,7 +27,7 @@ export default function FloatingContact() {
               href="https://wa.me/923331682726"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3.5 bg-zinc-900 border border-zinc-800 hover:border-emerald-500/30 hover:bg-zinc-850 px-4 py-3 rounded-2xl text-white transition-all duration-200 shadow-xl group"
+              className="flex items-center gap-3.5 bg-zinc-950 border border-zinc-800 hover:border-emerald-500/30 hover:bg-zinc-850 px-4 py-3 rounded-2xl text-white transition-all duration-200 shadow-xl group"
             >
               <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
                 <svg className="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24">
@@ -43,7 +43,7 @@ export default function FloatingContact() {
             {/* Landline Option */}
             <a
               href="tel:0516108351"
-              className="flex items-center gap-3.5 bg-zinc-900 border border-zinc-800 hover:border-emerald-500/30 hover:bg-zinc-850 px-4 py-3 rounded-2xl text-white transition-all duration-200 shadow-xl group"
+              className="flex items-center gap-3.5 bg-zinc-950 border border-zinc-800 hover:border-emerald-500/30 hover:bg-zinc-850 px-4 py-3 rounded-2xl text-white transition-all duration-200 shadow-xl group"
             >
               <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
                 <Phone className="w-4 h-4" />
@@ -60,7 +60,7 @@ export default function FloatingContact() {
       {/* Main Floating Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-white rounded-full px-5 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-250 active:scale-95 group relative z-10 cursor-pointer"
+        className="flex items-center gap-2.5 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 text-white rounded-full px-5 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-250 active:scale-95 group relative z-10 cursor-pointer"
       >
         <span className="relative flex h-2.5 w-2.5">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/60 opacity-75" />

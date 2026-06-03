@@ -1,33 +1,39 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { updateProfile } from '@/app/profile/actions'
 import { toast } from "sonner"
 import { Loader2 } from 'lucide-react'
 
 export default function ProfileForm({ profile, specialties, role }) {
-    const [loading, setLoading] = useState(false)
+    const [isPending, startTransition] = useTransition()
+    const loading = isPending
 
-    async function handleSubmit(formData) {
-        setLoading(true)
-        const result = await updateProfile(formData)
-        
-        if (result.success) {
-            toast.success("Profile updated!", {
-                description: "Your changes have been saved successfully."
-            })
-        } else {
-            toast.error("Update failed", {
-                description: result.error
-            })
-        }
-        setLoading(false)
+    function handleSubmit(formData) {
+        startTransition(async () => {
+            const result = await updateProfile(formData)
+            
+            if (result.success) {
+                toast.success("Profile updated!", {
+                    description: "Your changes have been saved successfully."
+                })
+            } else {
+                toast.error("Update failed", {
+                    description: result.error
+                })
+            }
+        })
     }
 
     if (role === 'doctor' || role === 'staff') {
         // --- DOCTOR & STAFF MIDNIGHT-BLACK GLASSMORPHIC PROFILE FORM ---
         return (
-            <div className="bg-zinc-900/60 border border-white/10 backdrop-blur-2xl rounded-2xl p-8 w-full max-w-xl mx-auto shadow-[0_10px_50px_rgba(0,0,0,0.3)]">
+            <div className="relative overflow-hidden bg-zinc-900/60 border border-white/10 backdrop-blur-2xl rounded-2xl p-8 w-full max-w-xl mx-auto shadow-[0_10px_50px_rgba(0,0,0,0.3)]">
+                {loading && (
+                    <div className="absolute top-0 left-0 right-0 h-[3px] bg-brand-500/10 overflow-hidden z-50">
+                        <div className="absolute top-0 bottom-0 left-0 bg-brand-500 animate-progress-linear" />
+                    </div>
+                )}
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h2 className="text-2xl font-bold text-white tracking-tight">Update Professional Profile</h2>
@@ -135,7 +141,12 @@ export default function ProfileForm({ profile, specialties, role }) {
 
     // --- PATIENT MIDNIGHT-BLACK GLASSMORPHIC STYLE FORM ---
     return (
-        <div className="bg-zinc-900/60 border border-white/10 backdrop-blur-2xl rounded-2xl p-8 w-full max-w-xl mx-auto shadow-[0_10px_50px_rgba(0,0,0,0.3)]">
+        <div className="relative overflow-hidden bg-zinc-900/60 border border-white/10 backdrop-blur-2xl rounded-2xl p-8 w-full max-w-xl mx-auto shadow-[0_10px_50px_rgba(0,0,0,0.3)]">
+            {loading && (
+                <div className="absolute top-0 left-0 right-0 h-[3px] bg-brand-500/10 overflow-hidden z-50">
+                    <div className="absolute top-0 bottom-0 left-0 bg-brand-500 animate-progress-linear" />
+                </div>
+            )}
             {/* Header */}
             <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-white tracking-tight">Update Personal Profile</h2>

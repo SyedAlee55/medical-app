@@ -12,6 +12,7 @@ export default async function LoginPage({ searchParams }) {
     <LoginClient
       errorMessage={params?.error || null}
       infoMessage={params?.message || null}
+      errorMsgDetail={params?.msg || null}
     />
   )
 }

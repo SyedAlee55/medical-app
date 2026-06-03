@@ -35,13 +35,11 @@ export const metadata = {
 export default function Home() {
   return (
     <main className="min-h-screen bg-black">
+      {/* Fixed transparent navbar — overlays the hero */}
       <Navbar theme="dark" />
 
-      <div className="px-4 lg:px-6 pb-6">
-        <div className="rounded-3xl overflow-hidden">
-          <HeroSection />
-        </div>
-      </div>
+      {/* Hero — full-bleed, navbar floats over it */}
+      <HeroSection />
 
       <div className="px-4 lg:px-6 pb-6">
         <div className="rounded-3xl overflow-hidden border border-white/5">
