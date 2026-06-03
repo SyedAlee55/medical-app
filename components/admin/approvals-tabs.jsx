@@ -18,7 +18,7 @@ export default function ApprovalsTabs({ pendingCount = 0, pendingPanel, reviewed
         role="tablist"
         aria-label="Application review tabs"
       >
-        <div className="box-border grid h-11 w-[17.75rem] max-w-full grid-cols-2 gap-1 rounded-xl bg-zinc-100 p-1">
+        <div className="box-border grid h-11 w-[17.75rem] max-w-full grid-cols-2 gap-1 rounded-xl bg-zinc-800 p-1">
           <button
             type="button"
             role="tab"
@@ -27,14 +27,14 @@ export default function ApprovalsTabs({ pendingCount = 0, pendingPanel, reviewed
             className={cn(
               TAB_BUTTON_CLASS,
               activeTab === 'pending'
-                ? 'bg-white text-zinc-950'
-                : 'bg-transparent text-zinc-500 hover:text-zinc-700'
+                ? 'bg-zinc-900 text-zinc-100 shadow-sm border border-zinc-700'
+                : 'bg-transparent text-zinc-400 hover:text-zinc-200'
             )}
           >
             Pending
             <span
               className={cn(
-                'min-w-[1.125rem] rounded-full border border-red-100 bg-red-50 px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-red-700 tabular-nums',
+                'min-w-[1.125rem] rounded-full border border-red-500/20 bg-red-500/10 px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-red-400 tabular-nums',
                 pendingCount === 0 && 'invisible'
               )}
               aria-hidden={pendingCount === 0}
@@ -50,8 +50,8 @@ export default function ApprovalsTabs({ pendingCount = 0, pendingPanel, reviewed
             className={cn(
               TAB_BUTTON_CLASS,
               activeTab === 'reviewed'
-                ? 'bg-white text-zinc-950'
-                : 'bg-transparent text-zinc-500 hover:text-zinc-700'
+                ? 'bg-zinc-900 text-zinc-100 shadow-sm border border-zinc-700'
+                : 'bg-transparent text-zinc-400 hover:text-zinc-200'
             )}
           >
             Reviewed

@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
     startTransition(async () => {
       const result = await updatePassword(formData)
       if (result?.error) {
-        setError(errorMessages[result.error] || 'Something went wrong. Please try again.')
+        setError(result.message || errorMessages[result.error] || 'Something went wrong. Please try again.')
         return
       }
       if (result?.redirectTo) {

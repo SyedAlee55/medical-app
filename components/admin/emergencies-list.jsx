@@ -6,12 +6,12 @@ import { Calendar, Clock, User, Phone, Mail, FileText, Check, X, Loader2, AlertT
 import { GLOBAL_TIMEZONE } from '@/utils/time'
 
 const STATUS_BADGE = {
-  pending:    { label: 'Pending',    className: 'bg-amber-50 text-amber-700 border border-amber-100 animate-pulse' },
-  confirmed:  { label: 'Confirmed',  className: 'bg-emerald-50 text-emerald-700 border border-emerald-100' },
-  rejected:   { label: 'Rejected',   className: 'bg-red-50 text-red-700 border border-red-100' },
-  cancelled:  { label: 'Cancelled',  className: 'bg-zinc-100 text-zinc-650 border border-zinc-200' },
-  completed:  { label: 'Completed',  className: 'bg-zinc-100 text-zinc-650 border border-zinc-200' },
-  overridden: { label: 'Rescheduled', className: 'bg-brand-50 text-brand-700 border border-brand-100' },
+  pending:    { label: 'Pending',    className: 'bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse' },
+  confirmed:  { label: 'Confirmed',  className: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' },
+  rejected:   { label: 'Rejected',   className: 'bg-red-500/10 text-red-400 border border-red-500/20' },
+  cancelled:  { label: 'Cancelled',  className: 'bg-zinc-800 text-zinc-400 border border-zinc-700' },
+  completed:  { label: 'Completed',  className: 'bg-zinc-800 text-zinc-400 border border-zinc-700' },
+  overridden: { label: 'Rescheduled', className: 'bg-brand-500/10 text-brand-400 border border-brand-500/20' },
 }
 
 export default function EmergenciesList({ initialEmergencies }) {
@@ -49,13 +49,13 @@ export default function EmergenciesList({ initialEmergencies }) {
   return (
     <div className="space-y-6">
       {/* Tab Switcher */}
-      <div className="bg-zinc-100 p-1 rounded-xl flex gap-1 w-fit">
+      <div className="bg-zinc-800 p-1 rounded-xl flex gap-1 w-fit">
         <button
           onClick={() => setFilter('active')}
           className={`px-4 py-2 text-xs font-semibold rounded-lg transition cursor-pointer ${
             filter === 'active'
-              ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200/50'
-              : 'text-zinc-500 hover:text-zinc-900'
+              ? 'bg-zinc-900 text-zinc-100 shadow-sm border border-zinc-700'
+              : 'text-zinc-400 hover:text-zinc-100'
           }`}
         >
           Active Requests ({active.length})
@@ -64,8 +64,8 @@ export default function EmergenciesList({ initialEmergencies }) {
           onClick={() => setFilter('history')}
           className={`px-4 py-2 text-xs font-semibold rounded-lg transition cursor-pointer ${
             filter === 'history'
-              ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200/50'
-              : 'text-zinc-500 hover:text-zinc-900'
+              ? 'bg-zinc-900 text-zinc-100 shadow-sm border border-zinc-700'
+              : 'text-zinc-400 hover:text-zinc-100'
           }`}
         >
           History ({history.length})
@@ -74,9 +74,9 @@ export default function EmergenciesList({ initialEmergencies }) {
 
       {/* List */}
       {displayed.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-16 bg-white rounded-2xl border border-zinc-100 shadow-sm text-center">
-          <Check className="h-12 w-12 text-emerald-500 mb-4 bg-emerald-50 p-2.5 rounded-full border border-emerald-100" />
-          <h3 className="text-base font-semibold text-zinc-900">
+        <div className="flex flex-col items-center justify-center p-16 bg-zinc-900 rounded-2xl border border-zinc-800 shadow-sm text-center">
+          <Check className="h-12 w-12 text-emerald-400 mb-4 bg-emerald-500/10 p-2.5 rounded-full border border-emerald-500/20" />
+          <h3 className="text-base font-semibold text-zinc-100">
             {filter === 'active' ? 'No active emergency requests' : 'No emergency history'}
           </h3>
           <p className="text-xs text-zinc-400 font-medium max-w-sm mt-1">
@@ -94,7 +94,7 @@ export default function EmergenciesList({ initialEmergencies }) {
             return (
               <div
                 key={appt.id}
-                className="bg-white rounded-2xl border border-zinc-100 p-6 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md flex flex-col gap-5"
+                className="bg-zinc-900 rounded-2xl border border-zinc-800 p-6 shadow-sm relative overflow-hidden transition-all duration-300 hover:shadow-md flex flex-col gap-5"
               >
                 {/* Visual indicator bar on the left for pending emergency */}
                 {appt.status === 'pending' && (
@@ -106,7 +106,7 @@ export default function EmergenciesList({ initialEmergencies }) {
                   {/* Patient Identity */}
                   <div className="space-y-1">
                     <div className="flex items-center gap-3 flex-wrap">
-                      <h3 className="font-bold text-zinc-900 text-lg">
+                      <h3 className="font-bold text-zinc-100 text-lg">
                         {appt.patient?.full_name || 'Patient'}
                       </h3>
                       <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${badge.className}`}>
@@ -136,7 +136,7 @@ export default function EmergenciesList({ initialEmergencies }) {
                           <button
                             disabled={isPending}
                             onClick={() => setDeclineId(appt.id)}
-                            className="bg-red-50 text-red-700 hover:bg-red-100 border border-red-100 font-semibold rounded-lg px-4 py-2 text-xs transition duration-200 active:scale-[0.98] cursor-pointer flex items-center gap-1.5"
+                            className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/30 font-semibold rounded-lg px-4 py-2 text-xs transition duration-200 active:scale-[0.98] cursor-pointer flex items-center gap-1.5"
                           >
                             <X className="w-3.5 h-3.5" />
                             Decline
@@ -163,25 +163,25 @@ export default function EmergenciesList({ initialEmergencies }) {
                 </div>
 
                 {/* Details Section */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-100">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-800">
                   {/* Left: Consultation Target details */}
                   <div className="space-y-3">
                     <div className="text-xs">
-                      <span className="font-semibold text-zinc-550 block">Assigned Doctor:</span>
-                      <span className="font-bold text-zinc-800 text-sm mt-0.5 inline-block">
+                      <span className="font-semibold text-zinc-400 block">Assigned Doctor:</span>
+                      <span className="font-bold text-zinc-100 text-sm mt-0.5 inline-block">
                         Dr. {appt.doctor?.full_name || 'Emergency Physician'}
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-zinc-650">
-                      <span className="flex items-center gap-1 bg-zinc-50 border border-zinc-150 px-2.5 py-1 rounded-lg">
-                        <Calendar className="w-3.5 h-3.5 text-zinc-400" />
+                    <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-zinc-400">
+                      <span className="flex items-center gap-1 bg-zinc-950/50 border border-zinc-800 px-2.5 py-1 rounded-lg">
+                        <Calendar className="w-3.5 h-3.5 text-zinc-500" />
                         {new Date(appt.scheduled_at).toLocaleDateString('en-US', { timeZone: GLOBAL_TIMEZONE, 
                           weekday: 'short', month: 'short', day: 'numeric'
                         })}
                       </span>
-                      <span className="flex items-center gap-1 bg-zinc-50 border border-zinc-150 px-2.5 py-1 rounded-lg">
-                        <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                      <span className="flex items-center gap-1 bg-zinc-950/50 border border-zinc-800 px-2.5 py-1 rounded-lg">
+                        <Clock className="w-3.5 h-3.5 text-zinc-500" />
                         {new Date(appt.scheduled_at).toLocaleTimeString('en-US', { timeZone: GLOBAL_TIMEZONE, 
                           hour: '2-digit', minute: '2-digit'
                         })}
@@ -190,22 +190,22 @@ export default function EmergenciesList({ initialEmergencies }) {
                   </div>
 
                   {/* Right: Reason for Visit / Symptoms */}
-                  <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-4 flex flex-col gap-2">
+                  <div className="bg-zinc-950/50 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2">
                     <div className="flex items-start gap-2">
-                      <FileText className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
+                      <FileText className="w-4 h-4 text-zinc-500 shrink-0 mt-0.5" />
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">
                           Reason for Urgent Visit
                         </span>
-                        <p className="text-xs text-zinc-800 leading-relaxed font-semibold mt-1">
+                        <p className="text-xs text-zinc-200 leading-relaxed font-semibold mt-1">
                           {appt.reason_for_visit || 'No reason provided.'}
                         </p>
                       </div>
                     </div>
 
                     {appt.notes && (
-                      <p className="text-xs text-zinc-500 italic mt-2 border-t border-zinc-200/60 pt-2">
-                        <span className="font-semibold not-italic text-zinc-400 text-[10px] uppercase tracking-wider block mb-0.5">Notes:</span>
+                      <p className="text-xs text-zinc-500 italic mt-2 border-t border-zinc-800 pt-2">
+                        <span className="font-semibold not-italic text-zinc-500 text-[10px] uppercase tracking-wider block mb-0.5">Notes:</span>
                         {appt.notes}
                       </p>
                     )}
@@ -214,20 +214,20 @@ export default function EmergenciesList({ initialEmergencies }) {
 
                 {/* Optional metadata: rejection or cancellation reason */}
                 {appt.status === 'rejected' && appt.rejection_reason && (
-                  <div className="bg-red-50 border border-red-100 text-red-800 rounded-xl p-4 flex items-start gap-2.5">
-                    <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                  <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl p-4 flex items-start gap-2.5">
+                    <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-red-600 block">Rejection Reason</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-red-400 block">Rejection Reason</span>
                       <p className="text-xs mt-1 font-semibold">{appt.rejection_reason}</p>
                     </div>
                   </div>
                 )}
 
                 {appt.status === 'cancelled' && appt.cancellation_reason && (
-                  <div className="bg-zinc-100 border border-zinc-200 text-zinc-700 rounded-xl p-4 flex items-start gap-2.5">
-                    <AlertTriangle className="w-4 h-4 text-zinc-450 shrink-0 mt-0.5" />
+                  <div className="bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-xl p-4 flex items-start gap-2.5">
+                    <AlertTriangle className="w-4 h-4 text-zinc-500 shrink-0 mt-0.5" />
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-550 block">Cancellation Reason</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">Cancellation Reason</span>
                       <p className="text-xs mt-1 font-semibold">{appt.cancellation_reason}</p>
                     </div>
                   </div>
@@ -235,10 +235,10 @@ export default function EmergenciesList({ initialEmergencies }) {
 
                 {/* Decline Form overlay inside the card */}
                 {isDeclining && (
-                  <div className="border-t border-zinc-100 pt-4 flex flex-col gap-3 animate-fade-in">
+                  <div className="border-t border-zinc-800 pt-4 flex flex-col gap-3 animate-fade-in">
                     <div className="flex flex-col gap-1">
                       <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
-                        Reason for decline/rejection <span className="text-red-500">*</span>
+                        Reason for decline/rejection <span className="text-red-400">*</span>
                       </label>
                       <textarea
                         required
@@ -246,7 +246,7 @@ export default function EmergenciesList({ initialEmergencies }) {
                         onChange={(e) => setRejectionReason(e.target.value)}
                         placeholder="Please explain why this emergency appointment is declined..."
                         rows={2}
-                        className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-400 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition resize-none font-medium"
+                        className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 placeholder-zinc-600 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition resize-none font-medium"
                       />
                     </div>
                     <div className="flex justify-end gap-3">
@@ -256,7 +256,7 @@ export default function EmergenciesList({ initialEmergencies }) {
                           setDeclineId(null)
                           setRejectionReason('')
                         }}
-                        className="px-4 py-2 border border-zinc-200 hover:bg-zinc-50 text-zinc-650 rounded-lg text-xs font-semibold cursor-pointer transition"
+                        className="px-4 py-2 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 rounded-lg text-xs font-semibold cursor-pointer transition"
                       >
                         Cancel
                       </button>

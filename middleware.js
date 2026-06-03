@@ -137,7 +137,7 @@ export async function middleware(request) {
   }
 
   // ── GATE 4: CEO must complete MFA before accessing anything ───────────────
-  if (role === 'ceo' || role === 'admin') {
+  if ((role === 'ceo' || role === 'admin') && !isPublic(pathname)) {
     const { data: mfaData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
     const mfaLevel = mfaData?.currentLevel || 'aal1'
     if (mfaLevel !== 'aal2' && !pathname.startsWith('/verify-mfa')) {

@@ -2,6 +2,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import { localDateTimeToUTC } from '@/utils/time'
 
 async function logAudit(supabase, payload) {
@@ -442,5 +443,141 @@ export async function respondToEmergencyAppointment(formData) {
 
   redirect('/admin/emergencies?success=updated')
 }
+
+// ─── VERIFY EMPLOYEE ID ──────────────────────────────────────────────────────
+export async function verifyEmployeeId(formData) {
+  const supabase = await createClient()
+  const { user, profile } = await requireAdminOrCeo(supabase)
+  
+  const targetId = formData.get('userId')
+  const approved = formData.get('approved') === 'true'
+
+  const now = new Date().toISOString()
+  if (approved) {
+    await supabase
+      .from('profiles')
+      .update({
+        employee_id_verified: true,
+        employee_id_verified_by: user.id,
+        employee_id_verified_at: now,
+        updated_at: now
+      })
+      .eq('id', targetId)
+  } else {
+    await supabase
+      .from('profiles')
+      .update({
+        employee_id_verified: false,
+        employee_id_verified_by: null,
+        employee_id_verified_at: null,
+        employee_id: null,
+        updated_at: now
+      })
+      .eq('id', targetId)
+  }
+
+  logAudit(supabase, {
+    p_actor_id: user.id,
+    p_actor_role: profile.role,
+    p_action: approved ? 'EMPLOYEE_ID_VERIFIED' : 'EMPLOYEE_ID_REJECTED',
+    p_target_type: 'profile',
+    p_target_id: targetId,
+    p_metadata: {},
+    p_ip_address: null,
+    p_user_agent: null
+  })
+
+  revalidatePath('/admin/employee-ids')
+  redirect('/admin/employee-ids?success=' + (approved ? 'verified' : 'rejected'))
+}
+
+// ─── EXPORT ACTIVITY LOGS ────────────────────────────────────────────────────
+export async function exportActivityLogs(formData) {
+  const supabase = await createClient()
+  await requireAdminOrCeo(supabase)
+
+  const from = formData.get('from') || null
+  const to = formData.get('to') || null
+  const actorIdRaw = formData.get('actorId')
+  const actionRaw = formData.get('action')
+
+  const actorId = actorIdRaw && actorIdRaw.trim() !== '' ? actorIdRaw.trim() : null
+  const action = actionRaw && actionRaw.trim() !== '' ? actionRaw.trim() : null
+
+  const p_from = from ? new Date(from).toISOString() : null
+  const p_to = to ? new Date(to).toISOString() : null
+
+  const { data, error } = await supabase.rpc('export_audit_logs', {
+    p_from,
+    p_to,
+    p_actor_id: actorId,
+    p_action: action
+  })
+
+  if (error) {
+    console.error('export_audit_logs RPC failed:', error)
+    return { data: null, error: error.message }
+  }
+
+  const jsonString = JSON.stringify(data, null, 2)
+  const filename = `audit-log-export-${new Date().toISOString().split('T')[0]}.json`
+
+  return {
+    data: jsonString,
+    filename,
+    error: null
+  }
+}
+
+// ─── UPDATE USER PROFILE ──────────────────────────────────────────────────────
+export async function updateUserProfile(formData) {
+  const supabase = await createClient()
+  const { user, profile } = await requireAdminOrCeo(supabase)
+
+  const targetId = formData.get('userId')
+  const full_name = formData.get('full_name')
+  const email = formData.get('email')
+  const phone = formData.get('phone')
+  const department = formData.get('department')
+  const specialtyIdRaw = formData.get('specialty_id')
+  const employee_id = formData.get('employee_id')
+  const notes = formData.get('notes')
+
+  const specialty_id = specialtyIdRaw && specialtyIdRaw.trim() !== '' ? specialtyIdRaw.trim() : null
+
+  const now = new Date().toISOString()
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      full_name,
+      email,
+      phone,
+      department,
+      specialty_id,
+      employee_id,
+      notes,
+      updated_at: now
+    })
+    .eq('id', targetId)
+
+  if (error) {
+    console.error('updateUserProfile failed:', error)
+    redirect(`/admin/users/${targetId}/edit?error=update_failed`)
+  }
+
+  logAudit(supabase, {
+    p_actor_id: user.id,
+    p_actor_role: profile.role,
+    p_action: 'USER_PROFILE_UPDATED_BY_ADMIN',
+    p_target_type: 'profile',
+    p_target_id: targetId,
+    p_metadata: { updated_fields: { full_name, email, phone, department, specialty_id, employee_id } },
+    p_ip_address: null,
+    p_user_agent: null
+  })
+
+  redirect('/admin/users?success=updated')
+}
+
 
 

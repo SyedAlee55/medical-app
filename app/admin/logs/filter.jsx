@@ -23,37 +23,37 @@ export default function LogsFilter() {
   return (
     <div className="flex flex-wrap gap-4 items-center mb-6 text-sm">
       <div className="flex items-center gap-2">
-        <label className="text-zinc-500">From:</label>
+        <label className="text-zinc-400 font-medium text-xs">From:</label>
         <input 
           type="date" 
           value={from}
           onChange={(e) => updateParams('from', e.target.value)}
-          className="border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-1.5 rounded"
+          className="border border-zinc-800 bg-zinc-950 text-zinc-300 p-1.5 rounded text-xs outline-none focus:ring-1 focus:ring-zinc-700 transition"
         />
       </div>
 
       <div className="flex items-center gap-2">
-        <label className="text-zinc-500">To:</label>
+        <label className="text-zinc-400 font-medium text-xs">To:</label>
         <input 
           type="date" 
           value={to}
           onChange={(e) => updateParams('to', e.target.value)}
-          className="border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-1.5 rounded"
+          className="border border-zinc-800 bg-zinc-950 text-zinc-300 p-1.5 rounded text-xs outline-none focus:ring-1 focus:ring-zinc-700 transition"
         />
       </div>
 
       <input 
         type="text" 
-        placeholder="Action type..." 
+        placeholder="Filter by action..." 
         value={action}
         onChange={(e) => updateParams('action', e.target.value)}
-        className="border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-1.5 rounded"
+        className="border border-zinc-800 bg-zinc-950 text-zinc-300 p-1.5 rounded text-xs outline-none focus:ring-1 focus:ring-zinc-700 transition placeholder-zinc-600"
       />
 
       <select 
         value={role} 
         onChange={(e) => updateParams('role', e.target.value)}
-        className="border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-1.5 rounded"
+        className="border border-zinc-800 bg-zinc-950 text-zinc-300 p-1.5 rounded text-xs outline-none focus:ring-1 focus:ring-zinc-700 transition"
       >
         <option value="">All Roles</option>
         <option value="ceo">CEO</option>
@@ -66,3 +66,4 @@ export default function LogsFilter() {
     </div>
   )
 }
+

@@ -22,6 +22,13 @@ export default function LayoutShell({ header, children }) {
                    || pathname.startsWith('/login')
                    || pathname.startsWith('/about')
                    || pathname.startsWith('/schedule')
+                   || pathname.startsWith('/verify-mfa')
+                   || pathname.startsWith('/reset-password')
+                   || pathname.startsWith('/forgot-password')
+                   || pathname.startsWith('/auth')
+                   || pathname.startsWith('/waiting-room')
+                   || pathname.startsWith('/suspended')
+                   || pathname.startsWith('/rejected')
 
   // These routes manage their own full-page layouts — no global shell
   if (isLanding || isShellFree) {

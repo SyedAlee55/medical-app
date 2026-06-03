@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import { logout } from '@/app/login/actions'
 
 export default function VerifyMfaPage() {
   const [factors, setFactors] = useState(null)
@@ -10,6 +11,10 @@ export default function VerifyMfaPage() {
   const [verifying, setVerifying] = useState(false)
   const [error, setError] = useState(null)
   const [code, setCode] = useState('')
+
+  const handleSignOut = async () => {
+    await logout()
+  }
   
   useEffect(() => {
     async function loadMfa() {
@@ -94,8 +99,19 @@ export default function VerifyMfaPage() {
       // 2. Force token refresh to stamp 'aal2' claims immediately into cookies
       await supabase.auth.refreshSession()
 
-      // 3. Navigate successfully
-      window.location.href = '/admin/dashboard'
+      // 3. Navigate successfully based on role
+      const { data: { user } } = await supabase.auth.getUser()
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user?.id)
+        .single()
+
+      if (profile?.role === 'ceo' || profile?.role === 'admin') {
+        window.location.href = '/admin/dashboard'
+      } else {
+        window.location.href = '/admin/dashboard'
+      }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.')
       setVerifying(false)
@@ -114,8 +130,18 @@ export default function VerifyMfaPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 space-y-6 text-center border border-slate-100">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 relative">
+      {/* Sign Out Button in Top-Right Corner */}
+      <div className="absolute top-4 right-4 md:top-6 md:right-6 z-50">
+        <button
+          onClick={handleSignOut}
+          className="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-100 shadow-sm transition cursor-pointer"
+        >
+          Sign out
+        </button>
+      </div>
+
+      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 space-y-6 text-center border border-slate-100 relative">
         <h1 className="text-2xl font-bold text-slate-900">Two-Factor Authentication</h1>
         <p className="text-slate-600 text-sm">Enter the 6-digit code from your authenticator app.</p>
         
@@ -143,7 +169,8 @@ export default function VerifyMfaPage() {
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
             disabled={verifying}
-            className="w-full text-center text-3xl tracking-[0.4em] font-mono border border-slate-300 rounded-lg p-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:bg-slate-50 disabled:text-slate-400"
+            style={{ color: '#000000', backgroundColor: '#ffffff' }}
+            className="w-full text-center text-3xl tracking-[0.4em] font-mono border border-slate-300 rounded-lg p-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:bg-slate-50 disabled:text-slate-400 text-black bg-white placeholder-slate-400"
           />
           <button 
             type="submit" 

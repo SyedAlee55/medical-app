@@ -328,16 +328,46 @@ export async function updatePassword(formData) {
   if (!pwCheck.valid) return { error: 'weak_password' }
   if (password !== confirm) return { error: 'passwords_mismatch' }
 
-  const { error } = await supabase.auth.updateUser({ password })
+  // Get the logged in user to check their session
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  if (userError || !user) {
+    return { error: 'update_failed', message: 'You must be logged in to reset your password.' }
+  }
+
+  // Use the admin client to update the password.
+  // This bypasses the Supabase requirement for an AAL2 session when MFA is enabled.
+  const supabaseAdmin = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+
+  const { error } = await supabaseAdmin.auth.admin.updateUserById(user.id, {
+    password
+  })
 
   if (error) {
     console.error('[updatePassword] error:', error.message)
-    return { error: 'update_failed' }
+    return { error: 'update_failed', message: error.message }
   }
 
-  // Sign the user out so they log in fresh with the new password
-  await supabase.auth.signOut()
-  return { success: true, redirectTo: '/login?message=password_updated' }
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  const role = profile?.role || 'patient'
+
+  let redirectTo = '/login?message=password_updated'
+  if (role === 'ceo' || role === 'admin') {
+    redirectTo = '/verify-mfa'
+  } else if (role === 'patient') {
+    redirectTo = '/patient/dashboard'
+  } else if (['doctor', 'staff'].includes(role)) {
+    redirectTo = '/employee/dashboard'
+  }
+
+  return { success: true, redirectTo }
 }
 
 // ─── RESEND VERIFICATION EMAIL ────────────────────────────────────────────────

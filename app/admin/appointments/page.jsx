@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import BookingForm from './BookingForm'
+import OverrideAction from './OverrideAction'
 import { CheckCircle2, AlertCircle, ExternalLink, Calendar, Clock, TrendingUp, XCircle } from 'lucide-react'
 import { GLOBAL_TIMEZONE } from '@/utils/time'
 
@@ -16,11 +17,11 @@ function parseExternalReason(reason) {
 }
 
 const STATUS_CLASSES = {
-  completed: 'bg-zinc-50 text-zinc-600 border border-zinc-200',
-  confirmed: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
-  pending:   'bg-amber-50 text-amber-700 border border-amber-100',
-  cancelled: 'bg-red-50 text-red-700 border border-red-100',
-  rejected:  'bg-red-50 text-red-700 border border-red-100',
+  completed: 'bg-zinc-500/10 text-zinc-400 border border-zinc-800',
+  confirmed: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
+  pending:   'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+  cancelled: 'bg-red-500/10 text-red-400 border border-red-500/20',
+  rejected:  'bg-red-500/10 text-red-400 border border-red-500/20',
 }
 
 export default async function AdminAppointmentsPage({ searchParams }) {
@@ -103,29 +104,29 @@ export default async function AdminAppointmentsPage({ searchParams }) {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 tracking-tight">Appointments</h1>
-        <p className="type-body text-zinc-500 text-sm mt-0.5">Manage all appointments across the platform.</p>
+        <h1 className="text-2xl font-extrabold text-zinc-100 tracking-tight">Appointments</h1>
+        <p className="type-body text-zinc-400 text-sm mt-0.5">Manage all appointments across the platform.</p>
       </div>
 
       {/* Banners */}
       {params?.success === 'created' && (
-        <div className="p-4 text-sm font-medium text-emerald-800 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center gap-2.5">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+        <div className="p-4 text-sm font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-2.5">
+          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
           <span>Appointment successfully booked.</span>
         </div>
       )}
       {params?.error && (
-        <div className="p-4 text-sm font-medium text-red-800 bg-red-50 border border-red-100 rounded-xl flex items-center gap-2.5">
-          <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+        <div className="p-4 text-sm font-medium text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-2.5">
+          <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
           <span>{errorMessages[params.error] || 'An unexpected error occurred.'}</span>
         </div>
       )}
 
       {/* External Requests Notice */}
-      <div className="bg-white rounded-2xl border-l-4 border-l-brand-500 border border-zinc-100 shadow-sm p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-zinc-900 rounded-2xl border-l-4 border-l-brand-500 border border-zinc-800 shadow-sm p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-base font-semibold text-zinc-900">External Appointment Requests</h2>
-          <p className="text-xs text-zinc-500 mt-1 max-w-xl leading-relaxed">
+          <h2 className="text-base font-semibold text-zinc-100">External Appointment Requests</h2>
+          <p className="text-xs text-zinc-400 mt-1 max-w-xl leading-relaxed">
             Appointments booked via the public Calendly form are sent to the admin email. Review them there and use the &apos;Book New Appointment&apos; form below to add them into the system manually.
           </p>
         </div>
@@ -143,15 +144,15 @@ export default async function AdminAppointmentsPage({ searchParams }) {
       {/* Summary stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {[
-          { label: 'Total Today',        value: totalToday,         icon: Calendar,    colorClass: 'bg-zinc-50 text-zinc-500' },
-          { label: 'Upcoming',           value: upcomingCount,      icon: Clock,       colorClass: 'bg-brand-50 text-brand-600' },
-          { label: 'Completed (Month)',  value: completedThisMonth, icon: TrendingUp,  colorClass: 'bg-emerald-50 text-emerald-600' },
-          { label: 'Cancelled (Month)',  value: cancelledThisMonth, icon: XCircle,     colorClass: 'bg-red-50 text-red-600' },
+          { label: 'Total Today',        value: totalToday,         icon: Calendar,    colorClass: 'bg-zinc-950 border border-zinc-800 text-zinc-400' },
+          { label: 'Upcoming',           value: upcomingCount,      icon: Clock,       colorClass: 'bg-brand-500/10 border border-brand-500/20 text-brand-400' },
+          { label: 'Completed (Month)',  value: completedThisMonth, icon: TrendingUp,  colorClass: 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' },
+          { label: 'Cancelled (Month)',  value: cancelledThisMonth, icon: XCircle,     colorClass: 'bg-red-500/10 border border-red-500/20 text-red-400' },
         ].map(({ label, value, icon: Icon, colorClass }) => (
-          <div key={label} className="bg-white rounded-2xl border border-zinc-100 p-5 flex items-center justify-between shadow-sm">
+          <div key={label} className="bg-zinc-900 rounded-2xl border border-zinc-800 p-5 flex items-center justify-between shadow-sm">
             <div>
               <p className="type-label text-zinc-400">{label}</p>
-              <h3 className="text-2xl font-bold text-zinc-900 mt-1">{value}</h3>
+              <h3 className="text-2xl font-bold text-zinc-100 mt-1">{value}</h3>
             </div>
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colorClass}`}>
               <Icon className="w-5 h-5" />
@@ -161,24 +162,24 @@ export default async function AdminAppointmentsPage({ searchParams }) {
       </div>
 
       {/* Appointments Table with tab bar */}
-      <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden">
+      <div className="bg-zinc-900 rounded-2xl border border-zinc-800 shadow-sm overflow-hidden">
         {/* Tab bar */}
-        <div className="border-b border-zinc-100 px-6 flex gap-1 overflow-x-auto">
+        <div className="border-b border-zinc-800 px-6 flex gap-1 overflow-x-auto">
           {tabs.map(tab => (
             <Link
               key={tab.id}
               href={`/admin/appointments?tab=${tab.id}`}
               className={`py-4 px-3 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'border-brand-500 text-brand-700'
-                  : 'border-transparent text-zinc-400 hover:text-zinc-700'
+                  ? 'border-brand-500 text-brand-400'
+                  : 'border-transparent text-zinc-500 hover:text-zinc-300'
               }`}
             >
               {tab.label}
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                 activeTab === tab.id
-                  ? 'bg-brand-50 text-brand-700'
-                  : 'bg-zinc-100 text-zinc-500'
+                  ? 'bg-brand-500/10 text-brand-400'
+                  : 'bg-zinc-800 text-zinc-400'
               }`}>
                 {counts[tab.id]}
               </span>
@@ -189,7 +190,7 @@ export default async function AdminAppointmentsPage({ searchParams }) {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse whitespace-nowrap">
             <thead>
-              <tr className="bg-zinc-50 border-b border-zinc-100 text-zinc-400 font-semibold tracking-wider text-[10px] uppercase">
+              <tr className="bg-zinc-950/50 border-b border-zinc-800 text-zinc-400 font-semibold tracking-wider text-[10px] uppercase">
                 <th className="px-6 py-3">Patient</th>
                 <th className="px-6 py-3">Doctor</th>
                 <th className="px-6 py-3">Date &amp; Time</th>
@@ -198,28 +199,28 @@ export default async function AdminAppointmentsPage({ searchParams }) {
                 <th className="px-6 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100 text-sm">
+            <tbody className="divide-y divide-zinc-800 text-sm">
               {filteredAppointments.length > 0 ? (
                 filteredAppointments.map(a => {
                   const parsed = parseExternalReason(a.reason_for_visit)
-                  const statusClass = STATUS_CLASSES[a.status] || 'bg-zinc-50 text-zinc-600 border border-zinc-200'
+                  const statusClass = STATUS_CLASSES[a.status] || 'bg-zinc-500/10 text-zinc-400 border border-zinc-800'
                   return (
-                    <tr key={a.id} className="hover:bg-zinc-50/50 transition">
-                      <td className="px-6 py-4 font-semibold text-zinc-900">
+                    <tr key={a.id} className="hover:bg-zinc-800/20 transition">
+                      <td className="px-6 py-4 font-semibold text-zinc-100">
                         {parsed.isExternal ? (
                           <div className="flex flex-col">
                             <span className="flex items-center gap-1.5">
                               {parsed.name}
-                              <span className="bg-amber-50 text-amber-700 border border-amber-100 text-[10px] font-bold px-1.5 py-0.5 rounded-full">External</span>
+                              <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-bold px-1.5 py-0.5 rounded-full">External</span>
                             </span>
-                            <span className="text-xs text-zinc-400 font-normal">{parsed.contact}</span>
+                            <span className="text-xs text-zinc-500 font-normal">{parsed.contact}</span>
                           </div>
                         ) : (
                           a.patient?.full_name || 'Unknown'
                         )}
                       </td>
-                      <td className="px-6 py-4 text-zinc-700">{a.doctor?.full_name || 'Unknown'}</td>
-                      <td className="px-6 py-4 text-xs font-medium text-zinc-500">
+                      <td className="px-6 py-4 text-zinc-300">{a.doctor?.full_name || 'Unknown'}</td>
+                      <td className="px-6 py-4 text-xs font-medium text-zinc-400">
                         {new Date(a.scheduled_at).toLocaleString([], { timeZone: GLOBAL_TIMEZONE,  dateStyle: 'short', timeStyle: 'short' })}
                       </td>
                       <td className="px-6 py-4 max-w-[180px] truncate text-xs text-zinc-400" title={parsed.isExternal ? parsed.reason : a.reason_for_visit}>
@@ -231,25 +232,32 @@ export default async function AdminAppointmentsPage({ searchParams }) {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-2 items-center">
                           {parsed.isExternal ? (
-                            <span className="border border-zinc-200 text-zinc-400 font-semibold rounded-lg px-2.5 py-1.5 text-xs">
+                            <span className="border border-zinc-800 text-zinc-500 font-semibold rounded-lg px-2.5 py-1.5 text-xs">
                               External Patient
                             </span>
                           ) : (
                             <Link
                               href={`/admin/users/${a.patient_id}`}
-                              className="border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer"
+                              className="border border-zinc-800 text-zinc-300 hover:bg-zinc-800 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer whitespace-nowrap"
                             >
                               View Patient
                             </Link>
                           )}
                           <Link
                             href={`/admin/users/${a.doctor_id}`}
-                            className="border border-zinc-200 text-zinc-600 hover:bg-zinc-50 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer"
+                            className="border border-zinc-800 text-zinc-300 hover:bg-zinc-800 font-semibold rounded-lg px-2.5 py-1.5 text-xs transition cursor-pointer whitespace-nowrap"
                           >
                             View Doctor
                           </Link>
+                          <div className="relative">
+                            <OverrideAction 
+                              appointmentId={a.id} 
+                              currentStatus={a.status} 
+                              currentScheduledAt={a.scheduled_at} 
+                            />
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -257,7 +265,7 @@ export default async function AdminAppointmentsPage({ searchParams }) {
                 })
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-14 text-center text-zinc-400 italic text-sm">
+                  <td colSpan={6} className="px-6 py-14 text-center text-zinc-500 italic text-sm">
                     {activeTab === 'upcoming'  && 'No upcoming appointments scheduled.'}
                     {activeTab === 'completed' && 'No completed appointments found.'}
                     {activeTab === 'cancelled' && 'No cancelled appointments found.'}

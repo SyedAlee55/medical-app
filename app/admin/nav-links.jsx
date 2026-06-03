@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ClipboardList, Users, Stethoscope, CalendarDays, AlertCircle } from 'lucide-react'
+import { LayoutDashboard, ClipboardList, Users, Stethoscope, CalendarDays, AlertCircle, BadgeCheck, ScrollText } from 'lucide-react'
 
-export default function NavLinks({ pendingCount = 0, pendingApptsCount = 0, pendingEmergenciesCount = 0 }) {
+export default function NavLinks({ pendingCount = 0, pendingApptsCount = 0, pendingEmergenciesCount = 0, pendingEmployeeIdsCount = 0 }) {
   const pathname = usePathname()
 
   const links = [
@@ -12,8 +12,10 @@ export default function NavLinks({ pendingCount = 0, pendingApptsCount = 0, pend
     { name: 'Application Reviews', href: '/admin/approvals', icon: ClipboardList, badge: pendingCount },
     { name: 'User Management', href: '/admin/users', icon: Users },
     { name: 'Doctors & Staff', href: '/admin/staff', icon: Stethoscope },
+    { name: 'Employee IDs', href: '/admin/employee-ids', icon: BadgeCheck, badge: pendingEmployeeIdsCount },
     { name: 'Appointments', href: '/admin/appointments', icon: CalendarDays, badge: pendingApptsCount },
     { name: 'Emergency Requests', href: '/admin/emergencies', icon: AlertCircle, badge: pendingEmergenciesCount },
+    { name: 'Activity Logs', href: '/admin/logs', icon: ScrollText },
   ]
 
   return (
@@ -26,10 +28,10 @@ export default function NavLinks({ pendingCount = 0, pendingApptsCount = 0, pend
           <Link
             key={link.name}
             href={link.href}
-            className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer ${
+            className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide border transition-all cursor-pointer ${
               isActive 
-                ? 'bg-brand-50 text-brand-700' 
-                : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
+                ? 'bg-brand-500/10 text-brand-400 border-brand-500/25' 
+                : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100 border-transparent'
             }`}
           >
             <div className="flex items-center gap-2.5">
@@ -38,7 +40,7 @@ export default function NavLinks({ pendingCount = 0, pendingApptsCount = 0, pend
             </div>
             
             {link.badge > 0 && (
-              <span className="bg-red-50 text-red-700 border border-red-100 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+              <span className="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
                 {link.badge}
               </span>
             )}

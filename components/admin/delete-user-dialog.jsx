@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog'
 
 const dialogContentClass =
-  'bg-white rounded-2xl p-6 border-0 shadow-xl ring-0 outline-none text-zinc-900 sm:max-w-md gap-0'
+  'bg-zinc-900 rounded-2xl p-6 border border-zinc-800 shadow-xl ring-0 outline-none text-zinc-100 sm:max-w-md gap-0'
 
 const dialogHeaderClass = 'text-left sm:place-items-start sm:text-left'
 
@@ -22,7 +22,7 @@ const dialogFooterClass =
   'mt-6 flex flex-row justify-end gap-3 border-0 bg-transparent p-0 -mx-0 -mb-0 rounded-none'
 
 const cancelButtonClass =
-  'px-4 py-2.5 border border-zinc-200 text-zinc-600 rounded-lg text-xs font-semibold hover:bg-zinc-50 cursor-pointer bg-white shadow-none ring-0 outline-none'
+  'px-4 py-2.5 border border-zinc-800 text-zinc-300 rounded-lg text-xs font-semibold hover:bg-zinc-800 cursor-pointer bg-zinc-900 shadow-none ring-0 outline-none'
 
 export function DeleteUserDialog({ userId, trigger }) {
   const [pending, setPending] = useState(false)
@@ -32,11 +32,11 @@ export function DeleteUserDialog({ userId, trigger }) {
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent className={dialogContentClass}>
         <AlertDialogHeader className={dialogHeaderClass}>
-          <AlertDialogTitle className="font-bold text-zinc-900 text-lg">
+          <AlertDialogTitle className="font-bold text-zinc-100 text-lg">
             Delete User Permanently?
           </AlertDialogTitle>
-          <AlertDialogDescription className="!text-zinc-500 text-sm mt-2">
-            This action <strong className="text-zinc-700">cannot be undone</strong>. The user&apos;s
+          <AlertDialogDescription className="!text-zinc-400 text-sm mt-2">
+            This action <strong className="text-zinc-200">cannot be undone</strong>. The user&apos;s
             account, profile, and all associated data will be permanently removed from the database.
           </AlertDialogDescription>
         </AlertDialogHeader>

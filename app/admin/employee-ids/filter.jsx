@@ -6,7 +6,7 @@ export default function EmployeeIdFilter() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const filter = searchParams.get('filter') || 'all'
+  const filter = searchParams.get('filter') || 'unverified'
 
   function updateParams(value) {
     const params = new URLSearchParams(searchParams.toString())
@@ -20,7 +20,7 @@ export default function EmployeeIdFilter() {
       <select 
         value={filter} 
         onChange={(e) => updateParams(e.target.value)}
-        className="border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm p-2 rounded"
+        className="border border-zinc-800 bg-zinc-950 text-zinc-300 text-sm p-2 rounded outline-none focus:ring-1 focus:ring-zinc-700 transition"
       >
         <option value="all">All IDs</option>
         <option value="verified">Verified Only</option>
@@ -29,3 +29,4 @@ export default function EmployeeIdFilter() {
     </div>
   )
 }
+
