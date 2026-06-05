@@ -1,12 +1,10 @@
 const institutions = [
-  'General Hospital',
-  'City Medical Center',
-  'HealthFirst Clinic',
-  'MedCore Institute',
-  'National Health Network',
-  'Sunrise Hospital',
-  'CarePoint Medical',
-  'Mercy Health Group',
+  'Emergency checkups',
+  'Routine OPD',
+  'Emergency Retention',
+  'Ultrasound & ECG',
+  'Cardiac Monitoring',
+  'Advanced Blood Diagnostics'
 ]
 
 export default function TrustStrip() {
@@ -14,7 +12,7 @@ export default function TrustStrip() {
     <div className="w-full bg-black py-8">
       <div className="max-w-7xl mx-auto px-6">
         <p className="text-[12px] font-semibold tracking-widest uppercase text-zinc-400 mb-6 text-center">
-          Trusted by healthcare institutions nationwide
+          Services Trusted By Healthcare Institutions
         </p>
         <div className="relative w-full overflow-hidden">
           <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />

@@ -43,7 +43,7 @@ export default function AboutPage() {
                 with a modern approach
               </span>
             </h1>
-            
+
             <p className="text-zinc-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
               We believe healthcare should be seamless, deeply personal, and powered by state-of-the-art technology. Learn more about the principles and medical professionals that guide us every single day.
             </p>
@@ -57,7 +57,7 @@ export default function AboutPage() {
 
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-              
+
               {/* CEO Picture side (Left) */}
               <div className="lg:col-span-5 flex justify-center">
                 <div className="relative w-full max-w-sm aspect-[3/5] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group flex items-center justify-center">
@@ -67,7 +67,7 @@ export default function AboutPage() {
                     alt="CEO Portrait"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  
+
                   {/* Subtle caption banner */}
                   <div className="absolute bottom-4 left-4 right-4 bg-zinc-950/80 backdrop-blur-md px-4 py-3.5 rounded-xl border border-white/10 shadow-lg">
                     <h4 className="font-bold text-white text-sm">Tajammal Gauhar</h4>
@@ -82,14 +82,14 @@ export default function AboutPage() {
                   <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-300">
                   </div>
                 </div>
-                
+
                 <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-6 leading-tight">
                   A Message From Our, <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-teal-300 to-emerald-400">
                     Medical Director
                   </span>
                 </h2>
-                
+
                 <div className="space-y-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
                   <p>
                     At Tj&apos;s Medical Hub, we deliver safe, reliable and compassionate care, focused on accurate diagnosis, modern treatment and making every patient feel respected and valued.
@@ -120,7 +120,7 @@ export default function AboutPage() {
           <div className="absolute top-1/4 right-1/4 w-80 h-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none -z-10" />
 
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            
+
             <div className="text-center mb-16">
               <span className="inline-block text-[11px] font-semibold tracking-widest uppercase text-zinc-300 bg-white/5 border border-white/10 px-3 py-1 rounded-full mb-3">
                 OUR VALUES
@@ -131,7 +131,7 @@ export default function AboutPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              
+
               {/* Card 1: Trusted */}
               <div className="bg-zinc-950/40 backdrop-blur-2xl rounded-2xl border border-white/6 p-8 hover:bg-black hover:border-brand-500/20 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group">
                 <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center mb-6 group-hover:bg-brand-500/10 group-hover:border-brand-400/20 transition-colors">
@@ -207,7 +207,7 @@ export default function AboutPage() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 {/* Image Side */}
                 <div className="lg:col-span-6 flex justify-center">
-                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group transition-all duration-500 hover:border-brand-400/40 hover:shadow-[0_0_30px_rgba(6,148,162,0.15)]">
+                  <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group transition-all duration-500 hover:border-brand-400/40 hover:shadow-[0_0_30px_rgba(6,148,162,0.15)]">
                     <img
                       src="/Clinic%20Front%20view.png"
                       alt="Clinic Front View"
@@ -263,7 +263,7 @@ export default function AboutPage() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 {/* Image Side */}
                 <div className="lg:col-span-6 flex justify-center">
-                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group transition-all duration-500 hover:border-brand-400/40 hover:shadow-[0_0_30px_rgba(6,148,162,0.15)]">
+                  <div className="relative w-full aspect-5/4 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group transition-all duration-500 hover:border-brand-400/40 hover:shadow-[0_0_30px_rgba(6,148,162,0.15)]">
                     <img
                       src="/beds.jpeg"
                       alt="Clinic recovery beds"
@@ -319,7 +319,7 @@ export default function AboutPage() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 {/* Image Side */}
                 <div className="lg:col-span-6 flex justify-center">
-                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group transition-all duration-500 hover:border-brand-400/40 hover:shadow-[0_0_30px_rgba(6,148,162,0.15)]">
+                  <div className="relative w-full aspect-6/5 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group transition-all duration-500 hover:border-brand-400/40 hover:shadow-[0_0_30px_rgba(6,148,162,0.15)]">
                     <img
                       src="/Ultrasound%20Gadget.jpeg"
                       alt="Diagnostic Ultrasound Technology"
@@ -353,7 +353,7 @@ export default function AboutPage() {
           <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-brand-500/5 blur-3xl pointer-events-none -z-10" />
 
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            
+
             <div className="text-center mb-16">
               <span className="inline-block text-[11px] font-semibold tracking-widest uppercase text-zinc-300 bg-white/5 border border-white/10 px-3 py-1 rounded-full mb-3">
                 TEAM EXPERTS
@@ -361,54 +361,44 @@ export default function AboutPage() {
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-400 mt-2 mb-4">
                 Dedicated professionals centered on your well-being
               </h2>
-              <p className="text-zinc-400 max-w-xl mx-auto text-sm leading-relaxed">
+              <p className="text-zinc-400 max-w-xl mx-auto text-md leading-relaxed">
                 Our board-certified clinical specialists bring years of experience and specialized knowledge to manage your healthcare journey safely and comprehensively.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-{/*               
-              {/* Doctor 1 
-              <div className="bg-zinc-950/40 backdrop-blur-2xl rounded-2xl border border-white/6 p-8 flex flex-col items-center text-center hover:bg-black hover:border-brand-500/20 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group">
-                <div className="relative w-40 h-45 rounded-[20%] overflow-hidden mb-6 shadow-xl border-2 border-white/10 bg-zinc-900 group-hover:border-brand-400/40 transition-all duration-300 flex items-center justify-center">
-                  <img
-                    src="/doctor1.jpg"
-                    alt="Dr. Aisha Rehman"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
+          </div>
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <div className="text-center mb-20">
+            </div>
 
-                <h3 className="font-bold text-white text-lg mb-1 group-hover:text-brand-300 transition-colors">
-                  Dr. Aisha Rehman
-                </h3>
-                <span className="text-[10px] font-bold tracking-widest text-brand-300 bg-brand-500/10 border border-brand-400/20 px-2.5 py-0.5 rounded-full mb-5 uppercase">
-                  Lead Primary Care Physician
-                </span>
-                <p className="text-zinc-400 text-sm leading-relaxed max-w-xs">
-                  Dr. Aisha Rehman specializes in preventative medicine and family health. She is committed to forming long-term, supportive partnerships to help patients prevent diseases and adopt healthy lifestyles.
-                </p>
+            <div className="space-y-24">
+              {/* 1. Staff Members */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                {/* Image Side */}
+                <div className="lg:col-span-6 flex justify-center">
+                  <div className="relative w-full aspect-[6/5] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-2xl group transition-all duration-500 hover:border-brand-400/40 hover:shadow-[0_0_30px_rgba(6,148,162,0.15)]">
+                    <img
+                      src="/Staff.jpeg"
+                      alt="Clinic Front View"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                  </div>
+                </div>
+                {/* Text Side */}
+                <div className="lg:col-span-6 space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-semibold">
+                    <Stethoscope className="w-3.5 h-3.5" />
+                    Exceptional Nursing Team
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">
+                    The Heart of Our Care
+                  </h3>
+                  <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
+Our clinic is empowered by an exceptional nursing team, standing as the vital backbone of our healthcare mission. Driven by a deep respect for life, their compassionate care and unwavering support are crucial to our patients' healing and our growth. Through love and dedication, they proudly contribute to a healthier society.
+                  </p>
+                </div>
               </div>
-
-              {/* Doctor 2 
-              <div className="bg-zinc-950/40 backdrop-blur-2xl rounded-2xl border border-white/6 p-8 flex flex-col items-center text-center hover:bg-black hover:border-brand-500/20 hover:shadow-[0_10px_40px_rgba(6,148,162,0.04)] transition-all duration-300 group">
-                <div className="relative w-40 h-45 rounded-[20%] overflow-hidden mb-6 shadow-xl border-2 border-white/10 bg-zinc-900 group-hover:border-brand-400/40 transition-all duration-300 flex items-center justify-center">
-                  <img
-                    src="/doctor2.jpg"
-                    alt="Dr. Marcus Chen"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-
-                <h3 className="font-bold text-white text-lg mb-1 group-hover:text-brand-300 transition-colors">
-                  Dr. Marcus Chen
-                </h3>
-                <span className="text-[10px] font-bold tracking-widest text-brand-300 bg-brand-500/10 border border-brand-400/20 px-2.5 py-0.5 rounded-full mb-5 uppercase">
-                  Consultant Cardiologist
-                </span>
-                <p className="text-zinc-400 text-sm leading-relaxed max-w-xs">
-                  Dr. Marcus Chen focuses on advanced cardiovascular health and stroke prevention. Combining patient-centric therapeutic options with telehealth, he guides clients toward optimal heart wellness.
-                </p>
-              </div> */}
 
             </div>
           </div>
