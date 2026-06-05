@@ -2,22 +2,22 @@ import { Star } from 'lucide-react'
 
 const testimonials = [
   {
-    initials: 'SM',
-    name: 'Sarah M.',
-    role: 'Patient since 2022',
-    quote: "I booked a specialist appointment in under 3 minutes. No hold music, no forms to fax. I genuinely didn't know healthcare could feel this easy.",
+    initials: 'SI',
+    name: 'Sabina Imran',
+    role: 'Satisfied Patient',
+    quote: "Dr Tj is serving the community with honesty, dedication, and compassion, where quality healthcare meets genuine care i repeat GENUINE care. He puts his heart and soul for overall wellbeing of a patient both physically and mentally. God bless you keep up the hard work.",
   },
   {
-    initials: 'KA',
-    name: 'Dr. Khalid A.',
-    role: 'Cardiologist',
-    quote: "The doctor-side portal is the first system I've used that actually fits into my workflow rather than fighting it. My admin burden dropped by 40%.",
+    initials: 'MM',
+    name: 'Meli Mughal',
+    role: 'Satisfied Patient',
+    quote: "Today I visited Tj's Medical Hub for a checkup, and I had a really good experience there. The environment was clean and comfortable, and all the doctors were very kind and professional. Especially, the staff guided me very well and were extremely helpful and respectful. Overall, I am very satisfied with their service and highly appreciate the staff and doctors.",
   },
   {
-    initials: 'JT',
-    name: 'James T.',
-    role: 'Patient',
-    quote: 'After moving cities, I was dreading finding a new GP. I had a verified doctor booked within the hour and my records transferred automatically. Remarkable.',
+    initials: 'NS',
+    name: 'Neha Salman',
+    role: 'Satisfied Patient',
+    quote: 'Doctor Tajjammal is the best Doctor highly recommend. Excellent care and quick response from the medical team. The staff treated patients with kindness and respect. One of the best healthcare experiences I’ve had',
   },
 ]
 
